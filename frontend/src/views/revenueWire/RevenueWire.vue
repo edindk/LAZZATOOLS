@@ -54,7 +54,7 @@
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="">
+          <input class="form-check-input" type="checkbox" value="" v-model="wrapWithQuotes">
           <label class="form-check-label">
             Wrap med quotes: " "
           </label>
@@ -158,6 +158,7 @@ export default {
       list1: [],
       list2: [],
       list3: [],
+      wrapWithQuotes: false,
       includeFirst: true,
       includeSecond: true,
       includeThird: true,
@@ -181,9 +182,12 @@ export default {
       if (this.includeFirst && this.includeSecond && this.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list1) {
-          this.combinedList.push(this.list1[key] + ' ' + this.list2[key] + ' ' + this.list3[key] + '\n')
-          this.showCombinedList()
+          this.combinedList.push(this.list1[key] + ' ' + this.list2[key] + ' ' + this.list3[key])
         }
+        if (this.wrapWithQuotes) {
+          this.wrapTxtWithQuotes()
+        }
+        this.showCombinedList()
       } else if (this.includeFirst && this.includeSecond === false && this.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list1) {
@@ -202,8 +206,7 @@ export default {
           this.combinedList.push(this.list1[key] + ' ' + this.list2[key] + '\n')
         }
         this.showCombinedList()
-      } else if (this.includeSecond && this.includeThird)
-      {
+      } else if (this.includeSecond && this.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list1) {
           this.combinedList.push(this.list2[key] + ' ' + this.list3[key] + '\n')
@@ -225,7 +228,22 @@ export default {
     ,
     showCombinedList() {
       // sets the value of resultarea to combinedList
+      let newList = new Array()
+      for(const key in this.combinedList)
+      {
+        newList.push(this.combinedList[key] + '\n')
+      }
+      this.combinedList = newList
+
       this.$refs.resultarea.value = this.combinedList.join("")
+    },
+    wrapTxtWithQuotes() {
+      let newList = new Array();
+      for (const key in this.combinedList) {
+        const val = this.combinedList[key]
+        newList.push('"'+val+'"')
+      }
+      this.combinedList = newList
     }
   }
 }
