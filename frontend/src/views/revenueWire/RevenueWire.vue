@@ -26,19 +26,19 @@
       <div class="col-4">
         <h5>Inkluder</h5>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" v-model="includeFirst">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.includeFirst">
           <label class="form-check-label">
             Inkluder første liste
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" v-model="includeSecond">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.includeSecond">
           <label class="form-check-label">
             Inkluder anden liste
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" v-model="includeThird">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.includeThird">
           <label class="form-check-label">
             Inkluder tredje liste
           </label>
@@ -54,21 +54,21 @@
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" v-model="wrapWithQuotes">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithQuotes">
           <label class="form-check-label">
             Wrap med quotes: " "
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" v-model="wrapWithBrackets">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithBrackets">
           <label class="form-check-label">
             Wrap med brackets: []
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="">
-          <label class="form-check-label">
-            Wrap med:
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithInput">
+          <label class="form-check-label">Wrap med: <input type="text" style="width: 50px" ref="wrapInput"> <input
+              type="text" style="width: 50px" ref="wrapInput2">
           </label>
         </div>
         <div class="form-check">
@@ -159,11 +159,24 @@ export default {
       list1: [],
       list2: [],
       list3: [],
-      wrapWithBrackets: false,
-      wrapWithQuotes: false,
-      includeFirst: true,
-      includeSecond: true,
-      includeThird: true,
+      listOfBools: [{
+        wrapWithBrackets: false
+      },
+        {
+          wrapWithQuotes: false
+        },
+        {
+          includeFirst: true
+        },
+        {
+          includeSecond: true
+        },
+        {
+          includeThird: true
+        },
+        {
+          wrapWithInput: false
+        }]
     }
   },
   computed: {},
@@ -181,75 +194,75 @@ export default {
       this.$refs.resultarea.value = '';
 
       // checks which checkboxes are checked and populates the combinedList
-      if (this.includeFirst && this.includeSecond && this.includeThird) {
+      if (this.listOfBools.includeFirst && this.listOfBools.includeSecond && this.listOfBools.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list1) {
           this.combinedList.push(this.list1[key] + ' ' + this.list2[key] + ' ' + this.list3[key])
         }
-        if (this.wrapWithQuotes) {
+        if (this.listOfBools.wrapWithQuotes) {
           this.wrapTxtWithQuotes()
         }
-        if(this.wrapWithBrackets)
-        {
+        if (this.listOfBools.wrapWithBrackets) {
           this.wrapTxtWithBrackets()
         }
+        if (this.listOfBools.wrapWithInput) {
+          this.wrapTxtWithInput()
+        }
         this.showCombinedList()
-      } else if (this.includeFirst && this.includeSecond === false && this.includeThird) {
+      } else if (this.listOfBools.includeFirst && this.listOfBools.includeSecond === false && this.listOfBools.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list1) {
           this.combinedList.push(this.list1[key] + ' ' + this.list3[key])
         }
-        if (this.wrapWithQuotes) {
+        if (this.listOfBools.wrapWithQuotes) {
           this.wrapTxtWithQuotes()
         }
-        if(this.wrapWithBrackets)
-        {
+        if (this.listOfBools.wrapWithBrackets) {
           this.wrapTxtWithBrackets()
         }
         this.showCombinedList()
-      } else if (this.includeFirst === false && this.includeSecond && this.includeThird) {
+      } else if (this.listOfBools.includeFirst === false && this.listOfBools.includeSecond && this.listOfBools.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list2) {
           this.combinedList.push(this.list2[key] + ' ' + this.list3[key])
         }
-        if (this.wrapWithQuotes) {
+        if (this.listOfBools.wrapWithQuotes) {
           this.wrapTxtWithQuotes()
         }
-        if(this.wrapWithBrackets)
-        {
+        if (this.listOfBools.wrapWithBrackets) {
           this.wrapTxtWithBrackets()
         }
         this.showCombinedList()
-      } else if (this.includeFirst && this.includeSecond) {
+      } else if (this.listOfBools.includeFirst && this.listOfBools.includeSecond) {
         this.emptyCombinedList()
         for (const key in this.list1) {
           this.combinedList.push(this.list1[key] + ' ' + this.list2[key])
         }
-        if (this.wrapWithQuotes) {
+        if (this.listOfBools.wrapWithQuotes) {
           this.wrapTxtWithQuotes()
         }
-        if(this.wrapWithBrackets)
-        {
+        if (this.listOfBools.wrapWithBrackets) {
           this.wrapTxtWithBrackets()
         }
         this.showCombinedList()
-      } else if (this.includeSecond && this.includeThird) {
+      } else if (this.listOfBools.includeSecond && this.listOfBools.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list1) {
           this.combinedList.push(this.list2[key] + ' ' + this.list3[key])
         }
-        if (this.wrapWithQuotes) {
+        if (this.listOfBools.wrapWithQuotes) {
           this.wrapTxtWithQuotes()
         }
-        if(this.wrapWithBrackets)
-        {
+        if (this.listOfBools.wrapWithBrackets) {
           this.wrapTxtWithBrackets()
         }
         this.showCombinedList()
       }
     },
-    clearOptions(){
-
+    clearOptions() {
+      for (const key in this.listOfBools) {
+        this.listOfBools[key] = false
+      }
     },
     emptyCombinedList() {
       // empties the combinedList
@@ -286,6 +299,17 @@ export default {
       for (const key in this.combinedList) {
         const val = this.combinedList[key]
         newList.push('[' + val + ']')
+      }
+      this.combinedList = newList
+    },
+    wrapTxtWithInput() {
+      let newList = new Array();
+      let wrapInput = this.$refs.wrapInput.value
+      let wrapInput2 = this.$refs.wrapInput2.value
+
+      for (const key in this.combinedList) {
+        const val = this.combinedList[key]
+        newList.push(wrapInput + val + wrapInput2)
       }
       this.combinedList = newList
     }
