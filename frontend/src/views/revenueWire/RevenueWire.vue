@@ -60,7 +60,7 @@
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="">
+          <input class="form-check-input" type="checkbox" value="" v-model="wrapWithBrackets">
           <label class="form-check-label">
             Wrap med brackets: []
           </label>
@@ -127,6 +127,7 @@
     </div>
 
     <button type="button" class="btn btn-success" v-on:click="combineList()">Generer resultat</button>
+    <button type="button" class="btn btn-warning ml-2" v-on:click="clearOptions()">Nulstil valg</button>
 
     <!-- Text area showing the result -->
     <div class="row">
@@ -158,6 +159,7 @@ export default {
       list1: [],
       list2: [],
       list3: [],
+      wrapWithBrackets: false,
       wrapWithQuotes: false,
       includeFirst: true,
       includeSecond: true,
@@ -187,32 +189,67 @@ export default {
         if (this.wrapWithQuotes) {
           this.wrapTxtWithQuotes()
         }
+        if(this.wrapWithBrackets)
+        {
+          this.wrapTxtWithBrackets()
+        }
         this.showCombinedList()
       } else if (this.includeFirst && this.includeSecond === false && this.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list1) {
-          this.combinedList.push(this.list1[key] + ' ' + this.list3[key] + '\n')
+          this.combinedList.push(this.list1[key] + ' ' + this.list3[key])
+        }
+        if (this.wrapWithQuotes) {
+          this.wrapTxtWithQuotes()
+        }
+        if(this.wrapWithBrackets)
+        {
+          this.wrapTxtWithBrackets()
         }
         this.showCombinedList()
       } else if (this.includeFirst === false && this.includeSecond && this.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list2) {
-          this.combinedList.push(this.list2[key] + ' ' + this.list3[key] + '\n')
+          this.combinedList.push(this.list2[key] + ' ' + this.list3[key])
+        }
+        if (this.wrapWithQuotes) {
+          this.wrapTxtWithQuotes()
+        }
+        if(this.wrapWithBrackets)
+        {
+          this.wrapTxtWithBrackets()
         }
         this.showCombinedList()
       } else if (this.includeFirst && this.includeSecond) {
         this.emptyCombinedList()
         for (const key in this.list1) {
-          this.combinedList.push(this.list1[key] + ' ' + this.list2[key] + '\n')
+          this.combinedList.push(this.list1[key] + ' ' + this.list2[key])
+        }
+        if (this.wrapWithQuotes) {
+          this.wrapTxtWithQuotes()
+        }
+        if(this.wrapWithBrackets)
+        {
+          this.wrapTxtWithBrackets()
         }
         this.showCombinedList()
       } else if (this.includeSecond && this.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list1) {
-          this.combinedList.push(this.list2[key] + ' ' + this.list3[key] + '\n')
+          this.combinedList.push(this.list2[key] + ' ' + this.list3[key])
+        }
+        if (this.wrapWithQuotes) {
+          this.wrapTxtWithQuotes()
+        }
+        if(this.wrapWithBrackets)
+        {
+          this.wrapTxtWithBrackets()
         }
         this.showCombinedList()
       }
+    },
+    clearOptions(){
+
     },
     emptyCombinedList() {
       // empties the combinedList
@@ -229,8 +266,7 @@ export default {
     showCombinedList() {
       // sets the value of resultarea to combinedList
       let newList = new Array()
-      for(const key in this.combinedList)
-      {
+      for (const key in this.combinedList) {
         newList.push(this.combinedList[key] + '\n')
       }
       this.combinedList = newList
@@ -241,7 +277,15 @@ export default {
       let newList = new Array();
       for (const key in this.combinedList) {
         const val = this.combinedList[key]
-        newList.push('"'+val+'"')
+        newList.push('"' + val + '"')
+      }
+      this.combinedList = newList
+    },
+    wrapTxtWithBrackets() {
+      let newList = new Array();
+      for (const key in this.combinedList) {
+        const val = this.combinedList[key]
+        newList.push('[' + val + ']')
       }
       this.combinedList = newList
     }
@@ -250,7 +294,7 @@ export default {
 </script>
 
 <style scoped>
-#clearbtn {
+.btn-warning {
   color: white;
 }
 </style>
