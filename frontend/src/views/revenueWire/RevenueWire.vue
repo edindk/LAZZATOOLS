@@ -163,6 +163,9 @@ export default {
   },
   computed: {},
   methods: {
+    test(){
+
+    },
     combineList() {
       this.$refs.resultarea.value = '';
       if (this.includeFirst && this.includeSecond && this.includeThird) {
