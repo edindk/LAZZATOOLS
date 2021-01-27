@@ -165,20 +165,36 @@ export default {
   },
   computed: {},
   methods: {
-    test(){
-
+    getValuesFromTextAreas() {
+      this.list1 = this.$refs.textarea1.value.split("\n");
+      this.list2 = this.$refs.textarea2.value.split("\n");
+      this.list3 = this.$refs.textarea3.value.split("\n");
     },
     combineList() {
+      this.getValuesFromTextAreas()
+
       this.$refs.resultarea.value = '';
+
       if (this.includeFirst && this.includeSecond && this.includeThird) {
-        this.includeAll()
-      } else if (this.includeFirst && this.includeThird) {
-        this.includeFirstAndThird()
-      } else if (this.includeFirst && this.includeSecond) {
-        this.includeFirstAndSecond()
-      } else if (this.includeSecond && this.includeThird) {
-        this.includeSecondAndThird()
+        this.emptyCombinedList()
+        for (const key in this.list1) {
+          this.combinedList.push(this.list1[key] + ' ' + this.list2[key] + ' ' + this.list3[key] + '\n')
+          this.showCombinedList()
+        }
+      } else if (this.includeFirst && this.includeSecond === false && this.includeThird) {
+        this.emptyCombinedList()
+        for (const key in this.list1) {
+          this.combinedList.push(this.list1[key] + ' ' + this.list2[key] + ' ' + this.list3[key] + '\n')
+        }
+      } else if (this.includeFirst === false && this.includeSecond && this.includeThird) {
+        this.emptyCombinedList()
+        for (const key in this.list2) {
+          this.combinedList.push(this.list2[key] + ' ' + this.list3[key] + '\n')
+        }
       }
+    },
+    emptyCombinedList() {
+      this.combinedList = []
     },
     includeSecondAndThird() {
       // get values from text areas and split the values by \n
