@@ -4,7 +4,7 @@ Vue.use(Vuex)
 
 const state = {
   sidebarShow: 'responsive',
-  sidebarMinimize: false
+  sidebarMinimize: false,
 }
 
 const mutations = {
@@ -18,7 +18,7 @@ const mutations = {
   },
   set (state, [variable, value]) {
     state[variable] = value
-  }
+  },
 }
 
 export default new Vuex.Store({

@@ -1,29 +1,16 @@
 <template>
-  <CSidebar 
+  <CSidebar id="sidebar"
     fixed 
     :minimize="minimize"
     :show="show"
     @update:show="(value) => $store.commit('set', ['sidebarShow', value])"
   >
-    <CSidebarBrand class="d-md-down-none" to="/">
-      <CIcon 
-        class="c-sidebar-brand-full" 
-        name="logo" 
-        size="custom-size" 
-        :height="35" 
-        viewBox="0 0 556 134"
-      />
-      <CIcon 
-        class="c-sidebar-brand-minimized" 
-        name="logo" 
-        size="custom-size" 
-        :height="35" 
-        viewBox="0 0 110 134"
-      />
+    <CSidebarBrand class="d-md-down-none" to="/" id="sidebarBrand">
+      <img src="../assets/logo/lazzaweb-logo-dark.svg" width="220px">
     </CSidebarBrand>
 
     <CRenderFunction flat :content-to-render="$options.nav"/>
-    <CSidebarMinimizer
+    <CSidebarMinimizer id="sidebarFooter"
       class="d-md-down-none"
       @click.native="$store.commit('set', ['sidebarMinimize', !minimize])"
     />
@@ -46,3 +33,11 @@ export default {
   }
 }
 </script>
+<style>
+#sidebarBrand, #sidebarFooter{
+  background-color: white;
+}
+#sidebarMinimizer{
+  background-color: black;
+}
+</style>
