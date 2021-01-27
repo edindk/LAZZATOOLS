@@ -166,6 +166,7 @@ export default {
   computed: {},
   methods: {
     getValuesFromTextAreas() {
+      // gets all values from textarea1, 2 and 3
       this.list1 = this.$refs.textarea1.value.split("\n");
       this.list2 = this.$refs.textarea2.value.split("\n");
       this.list3 = this.$refs.textarea3.value.split("\n");
@@ -173,8 +174,10 @@ export default {
     combineList() {
       this.getValuesFromTextAreas()
 
+      // empty the resultarea
       this.$refs.resultarea.value = '';
 
+      // checks which checkboxes are checked and populates the combinedList
       if (this.includeFirst && this.includeSecond && this.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list1) {
@@ -184,74 +187,33 @@ export default {
       } else if (this.includeFirst && this.includeSecond === false && this.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list1) {
-          this.combinedList.push(this.list1[key] + ' ' + this.list2[key] + ' ' + this.list3[key] + '\n')
+          this.combinedList.push(this.list1[key] + ' ' + this.list3[key] + '\n')
         }
+        this.showCombinedList()
       } else if (this.includeFirst === false && this.includeSecond && this.includeThird) {
         this.emptyCombinedList()
         for (const key in this.list2) {
           this.combinedList.push(this.list2[key] + ' ' + this.list3[key] + '\n')
         }
+        this.showCombinedList()
+      } else if (this.includeFirst && this.includeSecond) {
+        this.emptyCombinedList()
+        for (const key in this.list1) {
+          this.combinedList.push(this.list1[key] + ' ' + this.list2[key] + '\n')
+        }
+        this.showCombinedList()
+      } else if (this.includeSecond && this.includeThird)
+      {
+        this.emptyCombinedList()
+        for (const key in this.list1) {
+          this.combinedList.push(this.list2[key] + ' ' + this.list3[key] + '\n')
+        }
+        this.showCombinedList()
       }
     },
     emptyCombinedList() {
+      // empties the combinedList
       this.combinedList = []
-    },
-    includeSecondAndThird() {
-      // get values from text areas and split the values by \n
-      let list2 = this.$refs.textarea2.value.split("\n");
-      let list3 = this.$refs.textarea3.value.split("\n");
-
-      // empty combinedList
-      this.combinedList = []
-
-      // combine the values from list1 with list2 and 3. Push the new values into combinedList
-      for (const key in list2) {
-        this.combinedList.push(list2[key] + ' ' + list3[key] + '\n')
-      }
-      this.showCombinedList()
-    },
-    includeFirstAndSecond() {
-      // get values from text areas and split the values by \n
-      let list1 = this.$refs.textarea1.value.split("\n");
-      let list3 = this.$refs.textarea2.value.split("\n");
-
-      // empty combinedList
-      this.combinedList = []
-
-      // combine the values from list1 with list2 and 3. Push the new values into combinedList
-      for (const key in list1) {
-        this.combinedList.push(list1[key] + ' ' + list3[key] + '\n')
-      }
-      this.showCombinedList()
-    },
-    includeFirstAndThird() {
-      // get values from text areas and split the values by \n
-      let list1 = this.$refs.textarea1.value.split("\n");
-      let list3 = this.$refs.textarea3.value.split("\n");
-
-      // empty combinedList
-      this.combinedList = []
-
-      // combine the values from list1 with list2 and 3. Push the new values into combinedList
-      for (const key in list1) {
-        this.combinedList.push(list1[key] + ' ' + list3[key] + '\n')
-      }
-      this.showCombinedList()
-    },
-    includeAll() {
-      // get values from text areas and split the values by \n
-      let list1 = this.$refs.textarea1.value.split("\n");
-      let list2 = this.$refs.textarea2.value.split("\n");
-      let list3 = this.$refs.textarea3.value.split("\n");
-
-      // empty combinedList
-      this.combinedList = []
-
-      // combine the values from list1 with list2 and 3. Push the new values into combinedList
-      for (const key in list1) {
-        this.combinedList.push(list1[key] + ' ' + list2[key] + ' ' + list3[key] + '\n')
-      }
-      this.showCombinedList()
     },
     clearAll() {
       // clears everything
@@ -262,6 +224,7 @@ export default {
     }
     ,
     showCombinedList() {
+      // sets the value of resultarea to combinedList
       this.$refs.resultarea.value = this.combinedList.join("")
     }
   }
