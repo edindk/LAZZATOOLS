@@ -26,7 +26,7 @@
       <div class="col-4">
         <h5>Inkluder</h5>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.includeFirst">
+          <input class="form-check-input" type="checkbox" v-model="listOfBools.includeFirst">
           <label class="form-check-label">
             Inkluder første liste
           </label>
@@ -66,15 +66,17 @@
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithInput">
-          <label class="form-check-label">Wrap med: <input type="text" style="width: 50px" ref="wrapInput"> <input
-              type="text" style="width: 50px" ref="wrapInput2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithSymbol">
+          <label class="form-check-label">Wrap med symboler: <input type="text" style="width: 50px" ref="wrapSymbol"
+                                                                    placeholder="-"> <input
+              type="text" style="width: 50px" ref="wrapSymbol2" placeholder="+">
           </label>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="">
+        <div class="form-check mt-1">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithWords">
           <label class="form-check-label">
-            Wrap med:
+            Wrap med ord: <input type="text" style="width: 50px" ref="wrapWord" placeholder="køb"> <input
+              type="text" style="width: 50px" ref="wrapWord2" placeholder="nu">
           </label>
         </div>
       </div>
@@ -175,7 +177,10 @@ export default {
           wrapWithBrackets: false
         },
         {
-          wrapWithInput: false
+          wrapWithSymbol: false
+        },
+        {
+          wrapWithWords: false
         }]
     }
   },
@@ -257,6 +262,10 @@ export default {
       for (const key in this.listOfBools) {
         this.listOfBools[key] = false
       }
+      this.$refs.wrapSymbol.value = '';
+      this.$refs.wrapSymbol2.value = '';
+      this.$refs.wrapWord.value = '';
+      this.$refs.wrapWord2.value = '';
     },
     emptyCombinedList() {
       // empties the combinedList
@@ -297,23 +306,38 @@ export default {
     },
     wrapTxtWithInput() {
       let newList = new Array();
-      let wrapInput = this.$refs.wrapInput.value
-      let wrapInput2 = this.$refs.wrapInput2.value
+      let wrapSymbol = this.$refs.wrapSymbol.value
+      let wrapSymbol2 = this.$refs.wrapSymbol2.value
 
       for (const key in this.combinedList) {
         const val = this.combinedList[key]
-        newList.push(wrapInput + ' ' + val + ' ' + wrapInput2)
+        newList.push(wrapSymbol + val + wrapSymbol2)
+      }
+      this.combinedList = newList
+    },
+    wrapTxtWithWords(){
+      let newList = []
+      let wrapWord = this.$refs.wrapWord.value
+      let wrapWord2 = this.$refs.wrapWord2.value
+
+      for (const key in this.combinedList)
+      {
+        const val = this.combinedList[key]
+        newList.push(wrapWord + ' ' + val + ' ' + wrapWord2)
       }
       this.combinedList = newList
     },
     loopThroughCheckboxes() {
+      if(this.listOfBools.wrapWithWords){
+        this.wrapTxtWithWords()
+      }
       if (this.listOfBools.wrapWithQuotes) {
         this.wrapTxtWithQuotes()
       }
       if (this.listOfBools.wrapWithBrackets) {
         this.wrapTxtWithBrackets()
       }
-      if (this.listOfBools.wrapWithInput) {
+      if (this.listOfBools.wrapWithSymbol) {
         this.wrapTxtWithInput()
       }
       this.showCombinedList()
