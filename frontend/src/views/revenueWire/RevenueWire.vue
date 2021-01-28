@@ -126,7 +126,7 @@
       </div>
     </div>
 
-    <button type="button" class="btn btn-success" v-on:click="combineList()">Generer resultat</button>
+    <button type="button" class="btn btn-success" v-on:click="combine()">Generer resultat</button>
     <button type="button" class="btn btn-warning ml-2" v-on:click="clearOptions()">Nulstil valg</button>
 
     <!-- Text area showing the result -->
@@ -140,7 +140,7 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <button type="button" class="btn btn-success" v-on:click="test()">Gem i databasen</button>
+        <button type="button" class="btn btn-success" v-on:click="">Gem i databasen</button>
         <button type="button" class="btn btn-warning ml-2" id="clearbtn" v-on:click="clearAll()">Tøm listen</button>
       </div>
     </div>
@@ -160,19 +160,19 @@ export default {
       list2: [],
       list3: [],
       listOfBools: [{
-        wrapWithBrackets: false
+        includeFirst: true
       },
-        {
-          wrapWithQuotes: false
-        },
-        {
-          includeFirst: true
-        },
         {
           includeSecond: true
         },
         {
           includeThird: true
+        },
+        {
+          wrapWithQuotes: false
+        },
+        {
+          wrapWithBrackets: false
         },
         {
           wrapWithInput: false
@@ -187,77 +187,71 @@ export default {
       this.list2 = this.$refs.textarea2.value.split("\n");
       this.list3 = this.$refs.textarea3.value.split("\n");
     },
-    combineList() {
+    populateCombinedList(...args) {
+      var dict = {};
+      dict['includeAll'] = function (...args) {
+        console.log('includeAll')
+
+        let l1l2combined = []
+        let finalList = []
+
+        let val;
+        for (const key in args[2]) {
+          val = args[2][key]
+          for (const key in args[3]) {
+            l1l2combined.push(val + ' ' + args[3][key])
+          }
+        }
+        for (const key in l1l2combined) {
+          val = l1l2combined[key]
+          for (const key in args[4]) {
+            finalList.push(val + ' ' + args[4][key])
+          }
+        }
+        for (const key in finalList) {
+          args[1].push(finalList[key])
+        }
+      }
+      dict['includeTwo'] = function (...args) {
+        console.log('includeFirstAndThird')
+
+        let finalList = []
+        let val
+        for (const key in args[2]) {
+          val = args[2][key]
+          for (const key in args[3]) {
+            finalList.push(val + ' ' + args[3][key])
+          }
+        }
+
+        for (const key in finalList) {
+
+          args[1].push(finalList[key])
+        }
+      }
+      dict[args[0]](...args)
+
+    },
+    combine() {
+      this.emptyCombinedList()
+
       this.getValuesFromTextAreas()
 
       // empty the resultarea
       this.$refs.resultarea.value = '';
 
-      // checks which checkboxes are checked and populates the combinedList
+      // checks which checkboxes are checked and populate the combinedList
       if (this.listOfBools.includeFirst && this.listOfBools.includeSecond && this.listOfBools.includeThird) {
-        this.emptyCombinedList()
-        for (const key in this.list1) {
-          this.combinedList.push(this.list1[key] + ' ' + this.list2[key] + ' ' + this.list3[key])
-        }
-        if (this.listOfBools.wrapWithQuotes) {
-          this.wrapTxtWithQuotes()
-        }
-        if (this.listOfBools.wrapWithBrackets) {
-          this.wrapTxtWithBrackets()
-        }
-        if (this.listOfBools.wrapWithInput) {
-          this.wrapTxtWithInput()
-        }
-        this.showCombinedList()
-      } else if (this.listOfBools.includeFirst && this.listOfBools.includeSecond === false && this.listOfBools.includeThird) {
-        this.emptyCombinedList()
-        for (const key in this.list1) {
-          this.combinedList.push(this.list1[key] + ' ' + this.list3[key])
-        }
-        if (this.listOfBools.wrapWithQuotes) {
-          this.wrapTxtWithQuotes()
-        }
-        if (this.listOfBools.wrapWithBrackets) {
-          this.wrapTxtWithBrackets()
-        }
-        this.showCombinedList()
-      } else if (this.listOfBools.includeFirst === false && this.listOfBools.includeSecond && this.listOfBools.includeThird) {
-        this.emptyCombinedList()
-        for (const key in this.list2) {
-          this.combinedList.push(this.list2[key] + ' ' + this.list3[key])
-        }
-        if (this.listOfBools.wrapWithQuotes) {
-          this.wrapTxtWithQuotes()
-        }
-        if (this.listOfBools.wrapWithBrackets) {
-          this.wrapTxtWithBrackets()
-        }
-        this.showCombinedList()
-      } else if (this.listOfBools.includeFirst && this.listOfBools.includeSecond) {
-        this.emptyCombinedList()
-        for (const key in this.list1) {
-          this.combinedList.push(this.list1[key] + ' ' + this.list2[key])
-        }
-        if (this.listOfBools.wrapWithQuotes) {
-          this.wrapTxtWithQuotes()
-        }
-        if (this.listOfBools.wrapWithBrackets) {
-          this.wrapTxtWithBrackets()
-        }
-        this.showCombinedList()
+        this.populateCombinedList('includeAll', this.combinedList, this.list1, this.list2, this.list3)
+      } else if (this.listOfBools.includeFirst && this.listOfBools.includeThird) {
+        this.populateCombinedList('includeTwo', this.combinedList, this.list1, this.list3)
       } else if (this.listOfBools.includeSecond && this.listOfBools.includeThird) {
-        this.emptyCombinedList()
-        for (const key in this.list1) {
-          this.combinedList.push(this.list2[key] + ' ' + this.list3[key])
-        }
-        if (this.listOfBools.wrapWithQuotes) {
-          this.wrapTxtWithQuotes()
-        }
-        if (this.listOfBools.wrapWithBrackets) {
-          this.wrapTxtWithBrackets()
-        }
-        this.showCombinedList()
+        this.populateCombinedList('includeTwo', this.combinedList, this.list2, this.list3)
+      } else if (this.listOfBools.includeFirst && this.listOfBools.includeSecond) {
+        this.populateCombinedList('includeTwo', this.combinedList, this.list1, this.list2)
       }
+
+      this.loopThroughCheckboxes()
     },
     clearOptions() {
       for (const key in this.listOfBools) {
@@ -274,8 +268,7 @@ export default {
       let list1 = this.$refs.textarea1.value = '';
       let list2 = this.$refs.textarea2.value = '';
       let list3 = this.$refs.textarea3.value = '';
-    }
-    ,
+    },
     showCombinedList() {
       // sets the value of resultarea to combinedList
       let newList = new Array()
@@ -309,10 +302,23 @@ export default {
 
       for (const key in this.combinedList) {
         const val = this.combinedList[key]
-        newList.push(wrapInput + val + wrapInput2)
+        newList.push(wrapInput + ' ' + val + ' ' + wrapInput2)
       }
       this.combinedList = newList
+    },
+    loopThroughCheckboxes() {
+      if (this.listOfBools.wrapWithQuotes) {
+        this.wrapTxtWithQuotes()
+      }
+      if (this.listOfBools.wrapWithBrackets) {
+        this.wrapTxtWithBrackets()
+      }
+      if (this.listOfBools.wrapWithInput) {
+        this.wrapTxtWithInput()
+      }
+      this.showCombinedList()
     }
+
   }
 }
 </script>
