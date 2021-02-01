@@ -139,7 +139,7 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <button type="button" class="btn btn-success" v-on:click="test()">Gem i databasen</button>
+        <button type="button" class="btn btn-success">Gem i databasen</button>
         <button type="button" class="btn btn-warning ml-2" id="clearbtn" v-on:click="clearAll()">Tøm listen</button>
       </div>
     </div>
@@ -155,12 +155,10 @@ export default {
   data() {
     return {
       combinedList: [],
-      list1: [],
-      list2: [],
-      list3: [],
+      list: [],
       includeFirst: true,
       includeSecond: true,
-      includeThird: true,
+      includeThird: true
     }
   },
   computed: {},
@@ -173,35 +171,19 @@ export default {
         this.includeFirstAndThird()
       } else if (this.includeFirst && this.includeSecond) {
         this.includeFirstAndSecond()
-      } else if (this.includeSecond && this.includeThird) {
-        this.includeSecondAndThird()
       }
-    },
-    includeSecondAndThird() {
-      // get values from text areas and split the values by \n
-      let list2 = this.$refs.textarea2.value.split("\n");
-      let list3 = this.$refs.textarea3.value.split("\n");
-
-      // empty combinedList
-      this.combinedList = []
-
-      // combine the values from list1 with list2 and 3. Push the new values into combinedList
-      for (const key in list2) {
-        this.combinedList.push(list2[key] + ' ' + list3[key] + '\n')
-      }
-      this.showCombinedList()
     },
     includeFirstAndSecond() {
       // get values from text areas and split the values by \n
       let list1 = this.$refs.textarea1.value.split("\n");
-      let list3 = this.$refs.textarea2.value.split("\n");
+      let list2 = this.$refs.textarea2.value.split("\n");
 
       // empty combinedList
       this.combinedList = []
 
       // combine the values from list1 with list2 and 3. Push the new values into combinedList
       for (const key in list1) {
-        this.combinedList.push(list1[key] + ' ' + list3[key] + '\n')
+        this.combinedList.push(list1[key] + ' ' + list2[key] + '\n')
       }
       this.showCombinedList()
     },
