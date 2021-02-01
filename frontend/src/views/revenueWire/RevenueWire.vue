@@ -193,7 +193,7 @@ export default {
       let list3 = this.$refs.textarea3.value.split("\n");
 
       // empty combinedList
-      this.combinedList = []
+      //this.combinedList = []
 
       // combine the values from list1 with list2 and 3. Push the new values into combinedList
       for (const key in list1) {
