@@ -95,22 +95,25 @@
             Fjern ekstra spaces
           </label>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="">
+        <div class="form-check mt-1">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeSymb">
           <label class="form-check-label">
-            Fjern tegn: INPUT FELT
+            Fjern tegn: <input type="text" ref="removeSymb"
+                               placeholder="@#$/\%^&*">
           </label>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="">
+        <div class="form-check mt-1">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeWord">
           <label class="form-check-label">
-            Fjern ord: INPUT FELT
+            Fjern ord: <input type="text" ref="removeWord"
+                              placeholder="køb nu">
           </label>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="">
+        <div class="form-check mt-1">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeLine">
           <label class="form-check-label">
-            Fjern linjer der indeholder ordene: INPUT FELT
+            Fjern linjer der indeholder: <input type="text" ref="removeLine"
+                                                placeholder="køb nu">
           </label>
         </div>
         <div class="form-check">
@@ -187,6 +190,15 @@ export default {
         },
         {
           removeExtraSpa: false
+        },
+        {
+          removeSymb: false
+        },
+        {
+          removeWord: false
+        },
+        {
+          removeLine: false
         }]
     }
   },
@@ -268,6 +280,8 @@ export default {
       for (const key in this.listOfBools) {
         this.listOfBools[key] = false
       }
+      this.$refs.removeWord.value = '';
+      this.$refs.removeSymb.value = '';
       this.$refs.wrapSymbol.value = '';
       this.$refs.wrapSymbol2.value = '';
       this.$refs.wrapWord.value = '';
@@ -279,6 +293,7 @@ export default {
     },
     clearAll() {
       // clears everything
+      this.emptyCombinedList()
       this.$refs.resultarea.value = '';
       let list1 = this.$refs.textarea1.value = '';
       let list2 = this.$refs.textarea2.value = '';
@@ -346,7 +361,54 @@ export default {
       }
       this.combinedList = newList
     },
+    removeSymbols() {
+      const value = this.$refs.removeSymb.value
+      let symbolList = value.split('');
+
+      for (const combinedKey in this.combinedList) {
+        for (const symbolKey in symbolList) {
+          while (this.combinedList[combinedKey].includes(symbolList[symbolKey])) {
+            let newString = this.combinedList[combinedKey].replaceAll(symbolList[symbolKey], '')
+            this.combinedList[combinedKey] = newString
+          }
+        }
+      }
+    },
+    removeWord() {
+      const value = this.$refs.removeWord.value
+      let wordList = value.split(/\s+/);
+
+      for (const wordKey in wordList) {
+        for (const combinedKey in this.combinedList) {
+          while (this.combinedList[combinedKey].includes(wordList[wordKey])) {
+            let newString = this.combinedList[combinedKey].replaceAll(wordList[wordKey], '')
+            this.combinedList[combinedKey] = newString
+          }
+        }
+      }
+    },
+    removeLine() {
+      const value = this.$refs.removeLine.value
+      let wordList = value.split(/\s+/);
+
+      for (const combinedKey in this.combinedList) {
+      for (const wordKey in wordList) {
+          if (this.combinedList[combinedKey].includes(wordList[wordKey])) {
+            this.combinedList.splice(this.combinedList[combinedKey])
+          }
+        }
+      }
+    },
     loopThroughCheckboxes() {
+      if (this.listOfBools.removeLine) {
+        this.removeLine()
+      }
+      if (this.listOfBools.removeWord) {
+        this.removeWord()
+      }
+      if (this.listOfBools.removeSymb) {
+        this.removeSymbols()
+      }
       if (this.listOfBools.wrapWithWords) {
         this.wrapTxtWithWords()
       }
