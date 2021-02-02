@@ -116,10 +116,10 @@
                                                 placeholder="køb nu">
           </label>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="">
+        <div class="form-check mt-1">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.numberOfWords">
           <label class="form-check-label">
-            Behold kun linjer der indeholder [DROPDOWN NUMBERS] ord
+            Behold kun linjer der indeholder: <input type="number" ref="numberOfWords" style="width: 50px">
           </label>
         </div>
         <div class="form-check">
@@ -128,6 +128,15 @@
             Maks antal ord pr. linje [DROPDOWN NUMBERS]
           </label>
         </div>
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+          Dropdown button
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Item</a>
+          <a class="dropdown-item" href="#">Another Item</a>
+          <a class="dropdown-item" href="#">One more item</a>
+        </div>
+
       </div>
     </div>
 
@@ -199,6 +208,12 @@ export default {
         },
         {
           removeLine: false
+        },
+        {
+          numberOfWords: false
+        },
+        {
+          allLowerCase: false
         }]
     }
   },
@@ -390,16 +405,38 @@ export default {
     removeLine() {
       const value = this.$refs.removeLine.value
       let wordList = value.split(/\s+/);
+      let arr = new Array()
 
-      for (const combinedKey in this.combinedList) {
       for (const wordKey in wordList) {
-          if (this.combinedList[combinedKey].includes(wordList[wordKey])) {
-            this.combinedList.splice(this.combinedList[combinedKey])
+        for (const combinedKey in this.combinedList) {
+          while (this.combinedList[combinedKey].includes(wordList[wordKey])) {
+            let newString = this.combinedList[combinedKey] = ''
+            this.combinedList[combinedKey] = newString
+            arr = this.combinedList.filter(item => item)
           }
         }
       }
+      this.combinedList = arr
+    },
+    numberOfWords() {
+      const value = this.$refs.numberOfWords.value
+      let arr = new Array()
+
+      for (const combinedKey in this.combinedList) {
+        if (this.combinedList[combinedKey].length == value) {
+          arr.push(this.combinedList[combinedKey])
+        } else {
+          let newString = this.combinedList[combinedKey] = ''
+          this.combinedList[combinedKey] = newString
+          arr = this.combinedList.filter(item => item)
+        }
+      }
+      this.combinedList = arr
     },
     loopThroughCheckboxes() {
+      if (this.listOfBools.numberOfWords) {
+        this.numberOfWords()
+      }
       if (this.listOfBools.removeLine) {
         this.removeLine()
       }
