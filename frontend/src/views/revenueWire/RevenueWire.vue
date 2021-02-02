@@ -116,10 +116,11 @@
                                                 placeholder="køb nu">
           </label>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="">
+        <div class="form-check mt-1">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.numberOfWords">
           <label class="form-check-label">
-            Behold kun linjer der indeholder [DROPDOWN NUMBERS] ord
+            Behold kun linjer der indeholder: <input type="number" ref="numberOfWords" style="width: 50px"
+                                                     placeholder="14">
           </label>
         </div>
         <div class="form-check">
@@ -128,6 +129,18 @@
             Maks antal ord pr. linje [DROPDOWN NUMBERS]
           </label>
         </div>
+
+        <div class="form-check mt-2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.format">
+          <label class="form-check-label">
+            Ændring af formatet:
+          </label>
+          <select class="form-select ml-1" v-model="selected">
+            <option v-for="format in listOfFormats" v-bind:value="{id: format.id, text: format.name}">{{ format.name }}
+            </option>
+          </select>
+        </div>
+
       </div>
     </div>
 
@@ -164,6 +177,12 @@ export default {
       list1: [],
       list2: [],
       list3: [],
+      selected: '',
+      listOfFormats: [
+        {id: 1, name: 'initial caps'},
+        {id: 2, name: 'all lowercase'},
+        {id: 3, name: 'all uppercase'},
+      ],
       listOfBools: [{
         includeFirst: true
       },
@@ -199,6 +218,12 @@ export default {
         },
         {
           removeLine: false
+        },
+        {
+          numberOfWords: false
+        },
+        {
+          format: false
         }]
     }
   },
@@ -390,16 +415,73 @@ export default {
     removeLine() {
       const value = this.$refs.removeLine.value
       let wordList = value.split(/\s+/);
+      let arr = new Array()
 
-      for (const combinedKey in this.combinedList) {
       for (const wordKey in wordList) {
-          if (this.combinedList[combinedKey].includes(wordList[wordKey])) {
-            this.combinedList.splice(this.combinedList[combinedKey])
+        for (const combinedKey in this.combinedList) {
+          while (this.combinedList[combinedKey].includes(wordList[wordKey])) {
+            let newString = this.combinedList[combinedKey] = ''
+            this.combinedList[combinedKey] = newString
+            arr = this.combinedList.filter(item => item)
           }
         }
       }
+      this.combinedList = arr
+    },
+    numberOfWords() {
+      const value = this.$refs.numberOfWords.value
+      let arr = new Array()
+
+      for (const combinedKey in this.combinedList) {
+        if (this.combinedList[combinedKey].length == value) {
+          arr.push(this.combinedList[combinedKey])
+        } else {
+          let newString = this.combinedList[combinedKey] = ''
+          this.combinedList[combinedKey] = newString
+          arr = this.combinedList.filter(item => item)
+        }
+      }
+      this.combinedList = arr
+    },
+    allLowercase() {
+      for (const combinedKey in this.combinedList) {
+        let newString = this.combinedList[combinedKey].toLowerCase()
+        this.combinedList[combinedKey] = newString
+      }
+
+    },
+    initialCaps() {
+      for (const combinedKey in this.combinedList) {
+        let string = this.combinedList[combinedKey].toString()
+        let newString = string.charAt(0).toUpperCase() + string.substr(1).toLowerCase()
+        this.combinedList[combinedKey] = newString
+      }
+    },
+    allUppercase() {
+      for (const combinedKey in this.combinedList) {
+        let string = this.combinedList[combinedKey].toString()
+        let newString = string.toUpperCase()
+        this.combinedList[combinedKey] = newString
+      }
     },
     loopThroughCheckboxes() {
+      if (this.listOfBools.format) {
+        switch (this.selected.text) {
+          case 'initial caps':
+            this.initialCaps()
+            break;
+          case 'all lowercase':
+            this.allLowercase()
+            break;
+          case 'all uppercase':
+            this.allUppercase()
+            break;
+        }
+      }
+
+      if (this.listOfBools.numberOfWords) {
+        this.numberOfWords()
+      }
       if (this.listOfBools.removeLine) {
         this.removeLine()
       }
