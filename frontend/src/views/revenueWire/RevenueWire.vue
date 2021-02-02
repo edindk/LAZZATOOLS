@@ -119,7 +119,8 @@
         <div class="form-check mt-1">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.numberOfWords">
           <label class="form-check-label">
-            Behold kun linjer der indeholder: <input type="number" ref="numberOfWords" style="width: 50px">
+            Behold kun linjer der indeholder: <input type="number" ref="numberOfWords" style="width: 50px"
+                                                     placeholder="14">
           </label>
         </div>
         <div class="form-check">
@@ -128,13 +129,16 @@
             Maks antal ord pr. linje [DROPDOWN NUMBERS]
           </label>
         </div>
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-          Dropdown button
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">Item</a>
-          <a class="dropdown-item" href="#">Another Item</a>
-          <a class="dropdown-item" href="#">One more item</a>
+
+        <div class="form-check mt-2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.format">
+          <label class="form-check-label">
+            Ændring af formatet:
+          </label>
+          <select class="form-select ml-1" v-model="selected">
+            <option v-for="format in listOfFormats" v-bind:value="{id: format.id, text: format.name}">{{ format.name }}
+            </option>
+          </select>
         </div>
 
       </div>
@@ -173,6 +177,12 @@ export default {
       list1: [],
       list2: [],
       list3: [],
+      selected: '',
+      listOfFormats: [
+        {id: 1, name: 'initial caps'},
+        {id: 2, name: 'all lowercase'},
+        {id: 3, name: 'all uppercase'},
+      ],
       listOfBools: [{
         includeFirst: true
       },
@@ -213,7 +223,7 @@ export default {
           numberOfWords: false
         },
         {
-          allLowerCase: false
+          format: false
         }]
     }
   },
@@ -433,7 +443,42 @@ export default {
       }
       this.combinedList = arr
     },
+    allLowercase() {
+      for (const combinedKey in this.combinedList) {
+        let newString = this.combinedList[combinedKey].toLowerCase()
+        this.combinedList[combinedKey] = newString
+      }
+
+    },
+    initialCaps() {
+      for (const combinedKey in this.combinedList) {
+        let string = this.combinedList[combinedKey].toString()
+        let newString = string.charAt(0).toUpperCase() + string.substr(1).toLowerCase()
+        this.combinedList[combinedKey] = newString
+      }
+    },
+    allUppercase() {
+      for (const combinedKey in this.combinedList) {
+        let string = this.combinedList[combinedKey].toString()
+        let newString = string.toUpperCase()
+        this.combinedList[combinedKey] = newString
+      }
+    },
     loopThroughCheckboxes() {
+      if (this.listOfBools.format) {
+        switch (this.selected.text) {
+          case 'initial caps':
+            this.initialCaps()
+            break;
+          case 'all lowercase':
+            this.allLowercase()
+            break;
+          case 'all uppercase':
+            this.allUppercase()
+            break;
+        }
+      }
+
       if (this.listOfBools.numberOfWords) {
         this.numberOfWords()
       }
