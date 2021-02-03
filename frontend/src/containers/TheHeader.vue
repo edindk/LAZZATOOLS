@@ -11,7 +11,7 @@
       @click="$store.commit('toggleSidebarDesktop')"
     />
     <CHeaderBrand class="mx-auto d-lg-none" to="/">
-      <CIcon name="logo" height="48" alt="Logo"/>
+      <img src="../assets/logo/lazzaweb-logo-dark.svg" width="220px">
     </CHeaderBrand>
     <CHeaderNav class="d-md-down-none mr-auto">
       <CHeaderNavItem class="px-3">

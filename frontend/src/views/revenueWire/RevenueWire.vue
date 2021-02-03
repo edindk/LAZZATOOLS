@@ -25,22 +25,11 @@
     <div class="row">
       <div class="col-4">
         <h5>Inkluder</h5>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" v-model="listOfBools.includeFirst">
+        <div class="form-check" v-for="include in listOfIncludes"
+             v-bind:value="{bool: include.bool, text: include.name}">
+          <input class="form-check-input" type="checkbox" v-model="include.bool">
           <label class="form-check-label">
-            Inkluder første liste
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.includeSecond">
-          <label class="form-check-label">
-            Inkluder anden liste
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.includeThird">
-          <label class="form-check-label">
-            Inkluder tredje liste
+            {{ include.name }}
           </label>
         </div>
       </div>
@@ -48,7 +37,7 @@
       <div class="col-4">
         <h5>Wrap</h5>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.unwrapped">
           <label class="form-check-label">
             Tilføj unwrapped
           </label>
@@ -119,14 +108,8 @@
         <div class="form-check mt-1">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.numberOfWords">
           <label class="form-check-label">
-            Behold kun linjer der indeholder: <input type="number" ref="numberOfWords" style="width: 50px"
-                                                     placeholder="14">
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="">
-          <label class="form-check-label">
-            Maks antal ord pr. linje [DROPDOWN NUMBERS]
+            Behold kun linjer der indeholder maks: <input type="number" ref="numberOfWords" style="width: 50px"
+                                                          placeholder="14">
           </label>
         </div>
 
@@ -157,7 +140,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-12">
+      <div class="col-12 mb-4">
         <button type="button" class="btn btn-success" v-on:click="">Gem i databasen</button>
         <button type="button" class="btn btn-warning ml-2" id="clearbtn" v-on:click="clearAll()">Tøm listen</button>
       </div>
@@ -180,8 +163,14 @@ export default {
       selected: '',
       listOfFormats: [
         {id: 1, name: 'initial caps'},
+        {id: 1, name: 'all initial caps'},
         {id: 2, name: 'all lowercase'},
         {id: 3, name: 'all uppercase'},
+      ],
+      listOfIncludes: [
+        {bool: true, name: 'Inkluder første liste'},
+        {bool: true, name: 'Inkluder anden liste'},
+        {bool: true, name: 'Inkluder tredje liste'}
       ],
       listOfBools: [{
         includeFirst: true
@@ -191,6 +180,9 @@ export default {
         },
         {
           includeThird: true
+        },
+        {
+          unwrapped: false
         },
         {
           wrapWithQuotes: false
@@ -291,15 +283,14 @@ export default {
 
       // empty the resultarea
       this.$refs.resultarea.value = '';
-
       // checks which checkboxes are checked and populates the combinedList
-      if (this.listOfBools.includeFirst && this.listOfBools.includeSecond && this.listOfBools.includeThird) {
+      if (this.listOfIncludes[0].bool && this.listOfIncludes[1].bool && this.listOfIncludes[2].bool) {
         this.populateCombinedList('includeAll', this.combinedList, this.list1, this.list2, this.list3)
-      } else if (this.listOfBools.includeFirst && this.listOfBools.includeThird) {
+      } else if (this.listOfIncludes[0].bool && this.listOfIncludes[2].bool) {
         this.populateCombinedList('includeTwo', this.combinedList, this.list1, this.list3)
-      } else if (this.listOfBools.includeSecond && this.listOfBools.includeThird) {
+      } else if (this.listOfIncludes[1].bool && this.listOfIncludes[2].bool) {
         this.populateCombinedList('includeTwo', this.combinedList, this.list2, this.list3)
-      } else if (this.listOfBools.includeFirst && this.listOfBools.includeSecond) {
+      } else if (this.listOfIncludes[0].bool && this.listOfIncludes[1].bool) {
         this.populateCombinedList('includeTwo', this.combinedList, this.list1, this.list2)
       }
 
@@ -343,6 +334,12 @@ export default {
       this.$refs.resultarea.value = this.combinedList.join("")
     }
     ,
+    unwrap() {
+      for (const combinedKey in this.combinedList) {
+        let newValue = this.combinedList[combinedKey].replace(/[^æøå\w ]+/g, '')
+        this.combinedList.push(newValue)
+      }
+    },
     wrapTxtWithQuotes() {
       let arr = []
       for (const key in this.combinedList) {
@@ -371,8 +368,7 @@ export default {
         arr.push(wrapSymbol + val + wrapSymbol2)
       }
       this.combinedList = arr
-    }
-    ,
+    },
     wrapTxtWithWords() {
       let arr = []
       const wrapWord = this.$refs.wrapWord.value
@@ -383,13 +379,11 @@ export default {
         arr.push(wrapWord + ' ' + value + ' ' + wrapWord2)
       }
       this.combinedList = arr
-    }
-    ,
+    },
     removeDuplicates() {
       let arr = [...new Set(this.combinedList)];
       this.combinedList = arr
-    }
-    ,
+    },
     removeExtraSpacing() {
       let arr = new Array()
       for (const key in this.combinedList) {
@@ -398,8 +392,7 @@ export default {
         arr.push(newValue)
       }
       this.combinedList = arr
-    }
-    ,
+    },
     removeSymbols() {
       const valueFromInput = this.$refs.removeSymb.value
       let symbolList = valueFromInput.split('');
@@ -412,8 +405,7 @@ export default {
           }
         }
       }
-    }
-    ,
+    },
     removeWord() {
       const valueFromInput = this.$refs.removeWord.value
       let wordList = valueFromInput.split(/\s+/);
@@ -426,8 +418,7 @@ export default {
           }
         }
       }
-    }
-    ,
+    },
     removeLine() {
       const valueFromInput = this.$refs.removeLine.value
       let wordList = valueFromInput.split(/\s+/);
@@ -442,49 +433,55 @@ export default {
         }
       }
       this.combinedList = arr
-    }
-    ,
+    },
     numberOfWords() {
       const valueFromInput = this.$refs.numberOfWords.value
       let arr = []
 
       for (const combinedKey in this.combinedList) {
-        if (this.combinedList[combinedKey].length != valueFromInput) {
+        if (this.combinedList[combinedKey].length > valueFromInput) {
           this.combinedList[combinedKey] = ''
         } else {
-          arr = this.combinedList
+          arr.push(this.combinedList[combinedKey])
         }
       }
-      arr = this.combinedList.filter(item => item)
+      arr = arr.filter(item => item)
       this.combinedList = arr
-    }
-    ,
+    },
     allLowercase() {
       for (const combinedKey in this.combinedList) {
         let newValue = this.combinedList[combinedKey].toLowerCase()
         this.combinedList[combinedKey] = newValue
       }
-    }
-    ,
+    },
     initialCaps() {
       for (const combinedKey in this.combinedList) {
         let value = this.combinedList[combinedKey].toString()
         let newValue = value.charAt(0).toUpperCase() + value.substr(1).toLowerCase()
         this.combinedList[combinedKey] = newValue
       }
-    }
-    ,
+    },
+    initialCapsAll() {
+      for (const combinedKey in this.combinedList) {
+        let newValue = this.combinedList[combinedKey].replace(/\w\S*/g, function (txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+        })
+        this.combinedList[combinedKey] = newValue
+      }
+    },
     allUppercase() {
       for (const combinedKey in this.combinedList) {
         let newValue = this.combinedList[combinedKey].toString().toUpperCase()
         this.combinedList[combinedKey] = newValue
       }
-    }
-    ,
+    },
     selectedFormat() {
       switch (this.selected.text) {
         case 'initial caps':
           this.initialCaps()
+          break;
+        case 'all initial caps':
+          this.initialCapsAll()
           break;
         case 'all lowercase':
           this.allLowercase()
@@ -492,9 +489,9 @@ export default {
         case 'all uppercase':
           this.allUppercase()
           break;
+
       }
-    }
-    ,
+    },
     checkThroughCheckboxes() {
       this.listOfBools.format ? this.selectedFormat() : null
       this.listOfBools.numberOfWords ? this.numberOfWords() : null
@@ -507,9 +504,10 @@ export default {
       this.listOfBools.wrapWithQuotes ? this.wrapTxtWithQuotes() : null
       this.listOfBools.wrapWithBrackets ? this.wrapTxtWithBrackets() : null
       this.listOfBools.wrapWithSymbol ? this.wrapTxtWithInput() : null
+      this.listOfBools.unwrapped ? this.unwrap() : null
 
       this.showCombinedList()
-    }
+    },
   }
 }
 </script>
