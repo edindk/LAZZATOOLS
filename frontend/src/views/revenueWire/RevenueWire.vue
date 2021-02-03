@@ -226,15 +226,18 @@ export default {
           format: false
         }]
     }
-  },
-  computed: {},
+  }
+  ,
+  computed: {}
+  ,
   methods: {
     getValuesFromTextAreas() {
       // gets all values from textarea1, 2 and 3
       this.list1 = this.$refs.textarea1.value.split("\n");
       this.list2 = this.$refs.textarea2.value.split("\n");
       this.list3 = this.$refs.textarea3.value.split("\n");
-    },
+    }
+    ,
     populateCombinedList(...args) {
       var dict = {};
       dict['includeAll'] = function (...args) {
@@ -279,7 +282,8 @@ export default {
       }
       dict[args[0]](...args)
 
-    },
+    }
+    ,
     combine() {
       this.emptyCombinedList()
 
@@ -288,7 +292,7 @@ export default {
       // empty the resultarea
       this.$refs.resultarea.value = '';
 
-      // checks which checkboxes are checked and populate the combinedList
+      // checks which checkboxes are checked and populates the combinedList
       if (this.listOfBools.includeFirst && this.listOfBools.includeSecond && this.listOfBools.includeThird) {
         this.populateCombinedList('includeAll', this.combinedList, this.list1, this.list2, this.list3)
       } else if (this.listOfBools.includeFirst && this.listOfBools.includeThird) {
@@ -299,8 +303,9 @@ export default {
         this.populateCombinedList('includeTwo', this.combinedList, this.list1, this.list2)
       }
 
-      this.loopThroughCheckboxes()
-    },
+      this.checkThroughCheckboxes()
+    }
+    ,
     clearOptions() {
       for (const key in this.listOfBools) {
         this.listOfBools[key] = false
@@ -311,207 +316,200 @@ export default {
       this.$refs.wrapSymbol2.value = '';
       this.$refs.wrapWord.value = '';
       this.$refs.wrapWord2.value = '';
-    },
+    }
+    ,
     emptyCombinedList() {
       // empties the combinedList
       this.combinedList = []
-    },
+    }
+    ,
     clearAll() {
       // clears everything
       this.emptyCombinedList()
       this.$refs.resultarea.value = '';
-      let list1 = this.$refs.textarea1.value = '';
-      let list2 = this.$refs.textarea2.value = '';
-      let list3 = this.$refs.textarea3.value = '';
-    },
+      this.$refs.textarea1.value = '';
+      this.$refs.textarea2.value = '';
+      this.$refs.textarea3.value = '';
+    }
+    ,
     showCombinedList() {
       // sets the value of resultarea to combinedList
-      let newList = new Array()
+      let arr = []
       for (const key in this.combinedList) {
-        newList.push(this.combinedList[key] + '\n')
+        arr.push(this.combinedList[key] + '\n')
       }
-      this.combinedList = newList
+      this.combinedList = arr
 
       this.$refs.resultarea.value = this.combinedList.join("")
-    },
+    }
+    ,
     wrapTxtWithQuotes() {
-      let newList = new Array();
+      let arr = []
       for (const key in this.combinedList) {
-        const val = this.combinedList[key]
-        newList.push('"' + val + '"')
+        const value = this.combinedList[key]
+        arr.push('"' + value + '"')
       }
-      this.combinedList = newList
-    },
+      this.combinedList = arr
+    }
+    ,
     wrapTxtWithBrackets() {
-      let newList = new Array();
+      let arr = []
       for (const key in this.combinedList) {
-        const val = this.combinedList[key]
-        newList.push('[' + val + ']')
+        const value = this.combinedList[key]
+        arr.push('[' + value + ']')
       }
-      this.combinedList = newList
-    },
+      this.combinedList = arr
+    }
+    ,
     wrapTxtWithInput() {
-      let newList = new Array();
-      let wrapSymbol = this.$refs.wrapSymbol.value
-      let wrapSymbol2 = this.$refs.wrapSymbol2.value
+      const wrapSymbol = this.$refs.wrapSymbol.value
+      const wrapSymbol2 = this.$refs.wrapSymbol2.value
+      let arr = []
 
       for (const key in this.combinedList) {
         const val = this.combinedList[key]
-        newList.push(wrapSymbol + val + wrapSymbol2)
+        arr.push(wrapSymbol + val + wrapSymbol2)
       }
-      this.combinedList = newList
-    },
+      this.combinedList = arr
+    }
+    ,
     wrapTxtWithWords() {
-      let newList = []
-      let wrapWord = this.$refs.wrapWord.value
-      let wrapWord2 = this.$refs.wrapWord2.value
+      let arr = []
+      const wrapWord = this.$refs.wrapWord.value
+      const wrapWord2 = this.$refs.wrapWord2.value
 
       for (const key in this.combinedList) {
-        const val = this.combinedList[key]
-        newList.push(wrapWord + ' ' + val + ' ' + wrapWord2)
+        const value = this.combinedList[key]
+        arr.push(wrapWord + ' ' + value + ' ' + wrapWord2)
       }
-      this.combinedList = newList
-    },
+      this.combinedList = arr
+    }
+    ,
     removeDuplicates() {
-      let unique = [...new Set(this.combinedList)];
-      this.combinedList = unique
-    },
-    removeExtraSpaces() {
-      let newList = []
+      let arr = [...new Set(this.combinedList)];
+      this.combinedList = arr
+    }
+    ,
+    removeExtraSpacing() {
+      let arr = new Array()
       for (const key in this.combinedList) {
-        let val = this.combinedList[key]
-        val.replace(/\s+/g, ' ').trim()
-        let newString = val.replace(/\s+/g, ' ').trim()
-        newList.push(newString)
+        let value = this.combinedList[key]
+        let newValue = value.replace(/\s+/g, ' ').trim()
+        arr.push(newValue)
       }
-      this.combinedList = newList
-    },
+      this.combinedList = arr
+    }
+    ,
     removeSymbols() {
-      const value = this.$refs.removeSymb.value
-      let symbolList = value.split('');
+      const valueFromInput = this.$refs.removeSymb.value
+      let symbolList = valueFromInput.split('');
 
       for (const combinedKey in this.combinedList) {
         for (const symbolKey in symbolList) {
           while (this.combinedList[combinedKey].includes(symbolList[symbolKey])) {
-            let newString = this.combinedList[combinedKey].replaceAll(symbolList[symbolKey], '')
-            this.combinedList[combinedKey] = newString
+            let newValue = this.combinedList[combinedKey].replaceAll(symbolList[symbolKey], '')
+            this.combinedList[combinedKey] = newValue
           }
         }
       }
-    },
+    }
+    ,
     removeWord() {
-      const value = this.$refs.removeWord.value
-      let wordList = value.split(/\s+/);
+      const valueFromInput = this.$refs.removeWord.value
+      let wordList = valueFromInput.split(/\s+/);
 
       for (const wordKey in wordList) {
         for (const combinedKey in this.combinedList) {
           while (this.combinedList[combinedKey].includes(wordList[wordKey])) {
-            let newString = this.combinedList[combinedKey].replaceAll(wordList[wordKey], '')
-            this.combinedList[combinedKey] = newString
+            let newValue = this.combinedList[combinedKey].replaceAll(wordList[wordKey], '')
+            this.combinedList[combinedKey] = newValue
           }
         }
       }
-    },
+    }
+    ,
     removeLine() {
-      const value = this.$refs.removeLine.value
-      let wordList = value.split(/\s+/);
-      let arr = new Array()
+      const valueFromInput = this.$refs.removeLine.value
+      let wordList = valueFromInput.split(/\s+/);
+      let arr = []
 
       for (const wordKey in wordList) {
         for (const combinedKey in this.combinedList) {
           while (this.combinedList[combinedKey].includes(wordList[wordKey])) {
-            let newString = this.combinedList[combinedKey] = ''
-            this.combinedList[combinedKey] = newString
+            this.combinedList[combinedKey] = ''
             arr = this.combinedList.filter(item => item)
           }
         }
       }
       this.combinedList = arr
-    },
+    }
+    ,
     numberOfWords() {
-      const value = this.$refs.numberOfWords.value
-      let arr = new Array()
+      const valueFromInput = this.$refs.numberOfWords.value
+      let arr = []
 
       for (const combinedKey in this.combinedList) {
-        if (this.combinedList[combinedKey].length == value) {
-          arr.push(this.combinedList[combinedKey])
+        if (this.combinedList[combinedKey].length != valueFromInput) {
+          this.combinedList[combinedKey] = ''
         } else {
-          let newString = this.combinedList[combinedKey] = ''
-          this.combinedList[combinedKey] = newString
-          arr = this.combinedList.filter(item => item)
+          arr = this.combinedList
         }
       }
+      arr = this.combinedList.filter(item => item)
       this.combinedList = arr
-    },
+    }
+    ,
     allLowercase() {
       for (const combinedKey in this.combinedList) {
-        let newString = this.combinedList[combinedKey].toLowerCase()
-        this.combinedList[combinedKey] = newString
+        let newValue = this.combinedList[combinedKey].toLowerCase()
+        this.combinedList[combinedKey] = newValue
       }
-
-    },
+    }
+    ,
     initialCaps() {
       for (const combinedKey in this.combinedList) {
-        let string = this.combinedList[combinedKey].toString()
-        let newString = string.charAt(0).toUpperCase() + string.substr(1).toLowerCase()
-        this.combinedList[combinedKey] = newString
+        let value = this.combinedList[combinedKey].toString()
+        let newValue = value.charAt(0).toUpperCase() + value.substr(1).toLowerCase()
+        this.combinedList[combinedKey] = newValue
       }
-    },
+    }
+    ,
     allUppercase() {
       for (const combinedKey in this.combinedList) {
-        let string = this.combinedList[combinedKey].toString()
-        let newString = string.toUpperCase()
-        this.combinedList[combinedKey] = newString
+        let newValue = this.combinedList[combinedKey].toString().toUpperCase()
+        this.combinedList[combinedKey] = newValue
       }
-    },
-    loopThroughCheckboxes() {
-      if (this.listOfBools.format) {
-        switch (this.selected.text) {
-          case 'initial caps':
-            this.initialCaps()
-            break;
-          case 'all lowercase':
-            this.allLowercase()
-            break;
-          case 'all uppercase':
-            this.allUppercase()
-            break;
-        }
+    }
+    ,
+    selectedFormat() {
+      switch (this.selected.text) {
+        case 'initial caps':
+          this.initialCaps()
+          break;
+        case 'all lowercase':
+          this.allLowercase()
+          break;
+        case 'all uppercase':
+          this.allUppercase()
+          break;
       }
+    }
+    ,
+    checkThroughCheckboxes() {
+      this.listOfBools.format ? this.selectedFormat() : null
+      this.listOfBools.numberOfWords ? this.numberOfWords() : null
+      this.listOfBools.removeLine ? this.removeLine() : null
+      this.listOfBools.removeWord ? this.removeWord() : null
+      this.listOfBools.removeSymb ? this.removeSymbols() : null
+      this.listOfBools.wrapWithWords ? this.wrapTxtWithWords() : null
+      this.listOfBools.removeExtraSpa ? this.removeExtraSpacing() : null
+      this.listOfBools.removeDupli ? this.removeDuplicates() : null
+      this.listOfBools.wrapWithQuotes ? this.wrapTxtWithQuotes() : null
+      this.listOfBools.wrapWithBrackets ? this.wrapTxtWithBrackets() : null
+      this.listOfBools.wrapWithSymbol ? this.wrapTxtWithInput() : null
 
-      if (this.listOfBools.numberOfWords) {
-        this.numberOfWords()
-      }
-      if (this.listOfBools.removeLine) {
-        this.removeLine()
-      }
-      if (this.listOfBools.removeWord) {
-        this.removeWord()
-      }
-      if (this.listOfBools.removeSymb) {
-        this.removeSymbols()
-      }
-      if (this.listOfBools.wrapWithWords) {
-        this.wrapTxtWithWords()
-      }
-      if (this.listOfBools.removeExtraSpa) {
-        this.removeExtraSpaces()
-      }
-      if (this.listOfBools.removeDupli) {
-        this.removeDuplicates()
-      }
-      if (this.listOfBools.wrapWithQuotes) {
-        this.wrapTxtWithQuotes()
-      }
-      if (this.listOfBools.wrapWithBrackets) {
-        this.wrapTxtWithBrackets()
-      }
-      if (this.listOfBools.wrapWithSymbol) {
-        this.wrapTxtWithInput()
-      }
       this.showCombinedList()
     }
-
   }
 }
 </script>
