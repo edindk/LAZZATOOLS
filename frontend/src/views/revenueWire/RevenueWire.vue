@@ -39,7 +39,7 @@
         <div class="form-check">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.unwrapped">
           <label class="form-check-label">
-            Tilføj unwrapped
+            Unwrap
           </label>
         </div>
         <div class="form-check">
@@ -233,7 +233,6 @@ export default {
     populateCombinedList(...args) {
       var dict = {};
       dict['includeAll'] = function (...args) {
-        console.log('includeAll')
 
         let l1l2combined = []
         let finalList = []
@@ -256,7 +255,6 @@ export default {
         }
       }
       dict['includeTwo'] = function (...args) {
-        console.log('includeFirstAndThird')
 
         let finalList = []
         let val
@@ -341,21 +339,36 @@ export default {
       }
     },
     wrapTxtWithQuotes() {
-      let arr = []
-      for (const key in this.combinedList) {
-        const value = this.combinedList[key]
-        arr.push('"' + value + '"')
+
+      for (const combinedKey in this.combinedList) {
+        let value = this.combinedList[combinedKey]
+        this.combinedList.push('"' + value + '"')
       }
-      this.combinedList = arr
+
+      // let arr = []
+      // for (const key in this.combinedList) {
+      //   const value = this.combinedList[key]
+      //   arr.push('"' + value + '"')
+      // }
+      // this.combinedList = arr
     }
     ,
     wrapTxtWithBrackets() {
-      let arr = []
-      for (const key in this.combinedList) {
-        const value = this.combinedList[key]
-        arr.push('[' + value + ']')
+      for (const combinedKey in this.combinedList) {
+        if (!this.combinedList[combinedKey].includes('"', '"')) {
+          let value = this.combinedList[combinedKey]
+          this.combinedList.push('[' + value + ']')
+        } else {
+
+        }
       }
-      this.combinedList = arr
+
+      // let arr = []
+      // for (const key in this.combinedList) {
+      //   const value = this.combinedList[key]
+      //   arr.push('[' + value + ']')
+      // }
+      // this.combinedList = arr
     }
     ,
     wrapTxtWithInput() {
@@ -422,12 +435,14 @@ export default {
     removeLine() {
       const valueFromInput = this.$refs.removeLine.value
       let wordList = valueFromInput.split(/\s+/);
-      let arr = []
+      let arr = this.combinedList
 
       for (const wordKey in wordList) {
         for (const combinedKey in this.combinedList) {
           while (this.combinedList[combinedKey].includes(wordList[wordKey])) {
-            this.combinedList[combinedKey] = ''
+            arr.push(this.combinedList[combinedKey] = '')
+            // console.log('inside of if')
+            // this.combinedList[combinedKey] = ''
             arr = this.combinedList.filter(item => item)
           }
         }
@@ -493,6 +508,7 @@ export default {
       }
     },
     checkThroughCheckboxes() {
+      this.listOfBools.unwrapped ? this.unwrap() : null
       this.listOfBools.format ? this.selectedFormat() : null
       this.listOfBools.numberOfWords ? this.numberOfWords() : null
       this.listOfBools.removeLine ? this.removeLine() : null
@@ -504,7 +520,6 @@ export default {
       this.listOfBools.wrapWithQuotes ? this.wrapTxtWithQuotes() : null
       this.listOfBools.wrapWithBrackets ? this.wrapTxtWithBrackets() : null
       this.listOfBools.wrapWithSymbol ? this.wrapTxtWithInput() : null
-      this.listOfBools.unwrapped ? this.unwrap() : null
 
       this.showCombinedList()
     },
