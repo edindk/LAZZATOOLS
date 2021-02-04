@@ -14,6 +14,6 @@ export default {
 </script>
 <style>
 .c-footer{
-  background-color: #EBEDEF;
+  background-color: #F8F9FC;
 }
 </style>

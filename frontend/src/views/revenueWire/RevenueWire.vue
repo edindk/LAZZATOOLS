@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h4>Combine, scrub og wrap</h4>
+    <h4 id="title">Combine, scrub og wrap</h4>
 
     <!-- Text areas for inputting words -->
     <div class="row">
@@ -36,99 +36,110 @@
 
       <div class="col-4">
         <h5>Wrap</h5>
-        <div class="form-check">
+        <div class="input-group">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.unwrapped">
           <label class="form-check-label">
             Unwrap
           </label>
         </div>
-        <div class="form-check">
+        <div class="input-group">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithQuotes">
           <label class="form-check-label">
             Wrap med quotes: " "
           </label>
         </div>
-        <div class="form-check">
+        <div class="input-group">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithBrackets">
           <label class="form-check-label">
-            Wrap med brackets: []
+            Wrap med brackets: [ ]
           </label>
         </div>
-        <div class="form-check">
+
+        <div class="input-group mb-2 mt-2">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithSymbol">
-          <label class="form-check-label">Wrap med symboler: <input type="text" style="width: 50px" ref="wrapSymbol"
-                                                                    placeholder="-"> <input
-              type="text" style="width: 50px" ref="wrapSymbol2" placeholder="+">
-          </label>
+          <label class="form-check-label">Wrap med symboler:</label>
+          <div class="input-group col-sm-5">
+            <input class="form-control form-control-sm" type="text" ref="wrapSymbol" placeholder="-">
+            <input class="form-control form-control-sm" type="text" ref="wrapSymbol2" placeholder="+">
+          </div>
         </div>
-        <div class="form-check mt-1">
+
+        <div class="input-group">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithWords">
-          <label class="form-check-label">
-            Wrap med ord: <input type="text" style="width: 50px" ref="wrapWord" placeholder="køb"> <input
-              type="text" style="width: 50px" ref="wrapWord2" placeholder="nu">
-          </label>
+          <label class="form-check-label">Wrap med ord:</label>
+          <div class="input-group col-sm-5">
+            <input class="form-control form-control-sm" type="text" ref="wrapWord" placeholder="køb">
+            <input class="form-control form-control-sm" type="text" ref="wrapWord2" placeholder="nu">
+          </div>
+        </div>
+        <div class="input-group mt-2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.replaceSymbol">
+          <label class="form-check-label">Erstat med:</label>
+          <div class="input-group col-sm-5">
+            <input class="form-control form-control-sm" type="text" ref="replaceSymb" placeholder="køb">
+            <input class="form-control form-control-sm" type="text" ref="replaceSymb2" placeholder="nu">
+          </div>
         </div>
       </div>
 
       <div class="col-4">
         <h5>Scrub</h5>
-        <div class="form-check">
+        <div class="input-group">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeDupli">
           <label class="form-check-label">
             Fjern duplikater
           </label>
         </div>
-        <div class="form-check">
+        <div class="input-group">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeExtraSpa">
           <label class="form-check-label">
             Fjern ekstra spaces
           </label>
         </div>
-        <div class="form-check mt-1">
+        <div class="input-group mt-2">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeSymb">
-          <label class="form-check-label">
-            Fjern tegn: <input type="text" ref="removeSymb"
-                               placeholder="@#$/\%^&*">
-          </label>
+          <label class="form-check-label">Fjern tegn:</label>
+          <div class="input-group col-sm-5">
+            <input class="form-control form-control-sm" type="text" ref="removeSymb" placeholder="@#$/\%^&*">
+          </div>
         </div>
-        <div class="form-check mt-1">
+        <div class="input-group mt-2">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeWord">
-          <label class="form-check-label">
-            Fjern ord: <input type="text" ref="removeWord"
-                              placeholder="køb nu">
-          </label>
-        </div>
-        <div class="form-check mt-1">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeLine">
-          <label class="form-check-label">
-            Fjern linjer der indeholder: <input type="text" ref="removeLine"
-                                                placeholder="køb nu">
-          </label>
-        </div>
-        <div class="form-check mt-1">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.numberOfWords">
-          <label class="form-check-label">
-            Behold kun linjer der indeholder maks: <input type="number" ref="numberOfWords" style="width: 50px"
-                                                          placeholder="14">
-          </label>
+          <label class="form-check-label">Fjern ord:</label>
+          <div class="input-group col-sm-5">
+            <input class="form-control form-control-sm" type="text" ref="removeWord" placeholder="køb">
+          </div>
         </div>
 
-        <div class="form-check mt-2">
+        <div class="input-group mt-2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeLine">
+          <label class="form-check-label">Fjern linjer der indeholder:</label>
+          <div class="input-group col-sm-5">
+            <input class="form-control form-control-sm" type="text" ref="removeLine" placeholder="køb">
+          </div>
+        </div>
+
+        <div class="input-group mt-2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.numberOfWords">
+          <label class="form-check-label">Maks antal tegn:</label>
+          <div class="input-group col-sm-5">
+            <input class="form-control form-control-sm" type="number" ref="numberOfWords" placeholder="14">
+          </div>
+        </div>
+
+        <div class="input-group mt-2">
           <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.format">
-          <label class="form-check-label">
-            Ændring af formatet:
-          </label>
-          <select class="form-select ml-1" v-model="selected">
+          <label class="form-check-label">Ændring af formatet:</label>
+          <div class="col-sm-5">
+          <select class="form-control form-control-sm form-select" v-model="selected">
             <option v-for="format in listOfFormats" v-bind:value="{id: format.id, text: format.name}">{{ format.name }}
             </option>
           </select>
+          </div>
         </div>
 
       </div>
     </div>
-
-    <button type="button" class="btn btn-success" v-on:click="combine()">Generer resultat</button>
-    <button type="button" class="btn btn-warning ml-2" v-on:click="clearOptions()">Nulstil valg</button>
 
     <!-- Text area showing the result -->
     <div class="row">
@@ -141,8 +152,10 @@
     </div>
     <div class="row">
       <div class="col-12 mb-4">
-        <button type="button" class="btn btn-success" v-on:click="">Gem i databasen</button>
-        <button type="button" class="btn btn-warning ml-2" id="clearbtn" v-on:click="clearAll()">Tøm listen</button>
+        <button type="button" class="btn" id="generatebtn" v-on:click="combine()">Generer resultat</button>
+        <button type="button" class="btn ml-1" id="resetbtn" v-on:click="clear()">Nulstil</button>
+<!--        <button type="button" class="btn btn-success" v-on:click="">Gem i databasen</button>-->
+<!--        <button type="button" class="btn btn-warning" id="clearbtn" v-on:click="clearAll()">Tøm listen</button>-->
       </div>
     </div>
   </div>
@@ -216,6 +229,9 @@ export default {
         },
         {
           format: false
+        },
+        {
+          replaceSymbol: false
         }]
     }
   }
@@ -295,7 +311,7 @@ export default {
       this.checkThroughCheckboxes()
     }
     ,
-    clearOptions() {
+    clear() {
       for (const key in this.listOfBools) {
         this.listOfBools[key] = false
       }
@@ -305,6 +321,27 @@ export default {
       this.$refs.wrapSymbol2.value = '';
       this.$refs.wrapWord.value = '';
       this.$refs.wrapWord2.value = '';
+      this.$refs.resultarea.value = '';
+      this.$refs.textarea1.value = '';
+      this.$refs.textarea2.value = '';
+      this.$refs.textarea3.value = '';
+      this.$refs.wrapSymbol.value = '';
+      this.$refs.wrapSymbol2.value = '';
+      this.$refs.wrapWord.value = '';
+      this.$refs.wrapWord2.value = '';
+      this.$refs.replaceSymb.value = '';
+      this.$refs.replaceSymb2.value = '';
+      this.$refs.removeSymb.value = '';
+      this.$refs.removeWord.value = '';
+      this.$refs.removeLine.value = '';
+      this.$refs.numberOfWords.value = '';
+      this.emptyCombinedList()
+
+
+      const valueFromInput = this.$refs.replaceSymb.value
+      const valueFromInput2 = this.$refs.replaceSymb2.value
+      console.log(valueFromInput + valueFromInput2)
+
     }
     ,
     emptyCombinedList() {
@@ -392,6 +429,17 @@ export default {
         arr.push(wrapWord + ' ' + value + ' ' + wrapWord2)
       }
       this.combinedList = arr
+    },
+    replaceSymbol() {
+      const valueFromInput = this.$refs.replaceSymb.value
+      const valueFromInput2 = this.$refs.replaceSymb2.value
+
+      for (const combinedKey in this.combinedList) {
+        while (this.combinedList[combinedKey].includes(valueFromInput)) {
+          let newValue = this.combinedList[combinedKey].replaceAll(valueFromInput, valueFromInput2)
+          this.combinedList[combinedKey] = newValue
+        }
+      }
     },
     removeDuplicates() {
       let arr = [...new Set(this.combinedList)];
@@ -520,6 +568,7 @@ export default {
       this.listOfBools.wrapWithQuotes ? this.wrapTxtWithQuotes() : null
       this.listOfBools.wrapWithBrackets ? this.wrapTxtWithBrackets() : null
       this.listOfBools.wrapWithSymbol ? this.wrapTxtWithInput() : null
+      this.listOfBools.replaceSymbol ? this.replaceSymbol() : null
 
       this.showCombinedList()
     },
@@ -528,7 +577,38 @@ export default {
 </script>
 
 <style scoped>
-.btn-warning {
+
+#resetbtn {
+  background-color: #033760;
+}
+#generatebtn{
+  background-color: #29BB9C;
+  outline: #29BB9C !important;
+  box-shadow: #29BB9C !important;
+}
+.btn, .btn:focus,.btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+  font-family: "Sofia Pro Regular";
   color: white;
+}
+h4, h5 {
+  font-family: "Sofia Pro Bold";
+}
+
+label {
+  font-family: "Sofia Pro Light";
+}
+
+.form-control:focus {
+  outline: none !important;
+  border: 1px solid #0FB5C8;
+  box-shadow: 0 0 10px #0FB5C8;
+}
+
+.form-control:focus {
+  outline: none !important;
+  border: 1px solid #0FB5C8;
+  box-shadow: 0 0 15px #0FB5C8;
 }
 </style>

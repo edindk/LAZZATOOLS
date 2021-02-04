@@ -1,1 +1,20 @@
 // Here you can add other styles
+.c-main {
+  background-color: #F8F9FC !important;
+}
+
+.c-sidebar .c-sidebar-minimizer:hover::before {
+  background-image: url("../public/cropped-lazzaweb-favicon-32x32.png");
+  background-size: 30px 30px;
+}
+
+.c-sidebar .c-sidebar-minimizer::before {
+  background-image: url("../public/cropped-lazzaweb-favicon-32x32.png");
+  background-size: 30px 30px;
+}
+
+@media (min-width: 992px) {
+  .c-sidebar-minimized .c-sidebar-minimizer::before {
+    transform: rotate(-360deg) !important;
+  }
+}
