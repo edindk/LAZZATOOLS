@@ -25,7 +25,7 @@
     <div class="row">
       <div class="col-4">
         <h5>Inkluder</h5>
-        <div class="form-check" v-for="include in listOfIncludes"
+        <div class="input-group mb-2 mt-2" v-for="include in listOfIncludes"
              v-bind:value="{bool: include.bool, text: include.name}">
           <input class="form-check-input" type="checkbox" v-model="include.bool">
           <label class="form-check-label">
@@ -36,27 +36,16 @@
 
       <div class="col-4">
         <h5>Wrap</h5>
-        <div class="input-group">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.unwrapped">
+        <div class="input-group mb-2 mt-2" v-for="wrap in listOfWrapOptions"
+             v-bind:value="{bool: wrap.bool, text: wrap.name}">
+          <input class="form-check-input" type="checkbox" value="" v-model="wrap.bool">
           <label class="form-check-label">
-            Unwrap
-          </label>
-        </div>
-        <div class="input-group">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithQuotes">
-          <label class="form-check-label">
-            Wrap med quotes: " "
-          </label>
-        </div>
-        <div class="input-group">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithBrackets">
-          <label class="form-check-label">
-            Wrap med brackets: [ ]
+            {{ wrap.name }}
           </label>
         </div>
 
         <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithSymbol">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.wrapWithSymbol">
           <label class="form-check-label">Wrap med symboler:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="text" ref="wrapSymbol" placeholder="-">
@@ -64,16 +53,17 @@
           </div>
         </div>
 
-        <div class="input-group">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.wrapWithWords">
+
+        <div class="input-group mb-2 mt-2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.wrapWithWords">
           <label class="form-check-label">Wrap med ord:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="text" ref="wrapWord" placeholder="køb">
             <input class="form-control form-control-sm" type="text" ref="wrapWord2" placeholder="nu">
           </div>
         </div>
-        <div class="input-group mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.replaceSymbol">
+        <div class="input-group mb-2 mt-2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.replaceSymbol">
           <label class="form-check-label">Erstat med:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="text" ref="replaceSymb" placeholder="køb">
@@ -84,57 +74,54 @@
 
       <div class="col-4">
         <h5>Scrub</h5>
-        <div class="input-group">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeDupli">
+        <div class="input-group mb-2 mt-2" v-for="scrub in listOfScrubOptions"
+             v-bind:value="{bool:scrub.bool, text: scrub.name}">
+          <input class="form-check-input" type="checkbox" value="" v-model="scrub.bool">
           <label class="form-check-label">
-            Fjern duplikater
+            {{ scrub.name }}
           </label>
         </div>
-        <div class="input-group">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeExtraSpa">
-          <label class="form-check-label">
-            Fjern ekstra spaces
-          </label>
-        </div>
-        <div class="input-group mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeSymb">
+        <div class="input-group mb-2 mt-2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.removeSymb">
           <label class="form-check-label">Fjern tegn:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="text" ref="removeSymb" placeholder="@#$/\%^&*">
           </div>
         </div>
-        <div class="input-group mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeWord">
+        <div class="input-group mb-2 mt-2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.removeWord">
           <label class="form-check-label">Fjern ord:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="text" ref="removeWord" placeholder="køb">
           </div>
         </div>
 
-        <div class="input-group mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.removeLine">
+        <div class="input-group mb-2 mt-2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.removeLine">
           <label class="form-check-label">Fjern linjer der indeholder:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="text" ref="removeLine" placeholder="køb">
           </div>
         </div>
 
-        <div class="input-group mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.numberOfWords">
+        <div class="input-group mb-2 mt-2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.numberOfWords">
           <label class="form-check-label">Maks antal tegn:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="number" ref="numberOfWords" placeholder="14">
           </div>
         </div>
 
-        <div class="input-group mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfBools.format">
+        <div class="input-group mb-2 mt-2">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.format">
           <label class="form-check-label">Ændring af formatet:</label>
           <div class="col-sm-5">
-          <select class="form-control form-control-sm form-select" v-model="selected">
-            <option v-for="format in listOfFormats" v-bind:value="{id: format.id, text: format.name}">{{ format.name }}
-            </option>
-          </select>
+            <select class="form-control form-control-sm form-select" v-model="selected">
+              <option v-for="format in listOfFormats" v-bind:value="{id: format.id, text: format.name}">{{
+                  format.name
+                }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -154,8 +141,6 @@
       <div class="col-12 mb-4">
         <button type="button" class="btn" id="generatebtn" v-on:click="combine()">Generer resultat</button>
         <button type="button" class="btn ml-1" id="resetbtn" v-on:click="clear()">Nulstil</button>
-<!--        <button type="button" class="btn btn-success" v-on:click="">Gem i databasen</button>-->
-<!--        <button type="button" class="btn btn-warning" id="clearbtn" v-on:click="clearAll()">Tøm listen</button>-->
       </div>
     </div>
   </div>
@@ -185,67 +170,38 @@ export default {
         {bool: true, name: 'Inkluder anden liste'},
         {bool: true, name: 'Inkluder tredje liste'}
       ],
-      listOfBools: [{
-        includeFirst: true
-      },
-        {
-          includeSecond: true
-        },
-        {
-          includeThird: true
-        },
-        {
-          unwrapped: false
-        },
-        {
-          wrapWithQuotes: false
-        },
-        {
-          wrapWithBrackets: false
-        },
-        {
-          wrapWithSymbol: false
-        },
-        {
-          wrapWithWords: false
-        },
-        {
-          removeDupli: false
-        },
-        {
-          removeExtraSpa: false
-        },
-        {
-          removeSymb: false
-        },
-        {
-          removeWord: false
-        },
-        {
-          removeLine: false
-        },
-        {
-          numberOfWords: false
-        },
-        {
-          format: false
-        },
-        {
-          replaceSymbol: false
-        }]
+      listOfWrapOptions: [
+        {bool: false, name: 'Unwrap'},
+        {bool: false, name: 'Wrap med quotes " "'},
+        {bool: false, name: 'Wrap med brackets [ ]'}
+      ],
+      listOfScrubOptions: [
+        {bool: false, name: 'Fjern duplikater'},
+        {bool: false, name: 'Fjern ekstra spaces'}
+      ],
+      listOfOtherOptios: [
+        {includeFirst: true},
+        {includeSecond: true},
+        {includeThird: true},
+        {wrapWithSymbol: false},
+        {wrapWithWords: false},
+        {removeSymb: false},
+        {removeWord: false},
+        {removeLine: false},
+        {numberOfWords: false},
+        {format: false},
+        {replaceSymbol: false}]
     }
   }
   ,
-  computed: {}
-  ,
   methods: {
+    // Henter alt tekst fra textarea1, 2 og 3
     getValuesFromTextAreas() {
-      // gets all values from textarea1, 2 and 3
       this.list1 = this.$refs.textarea1.value.split("\n");
       this.list2 = this.$refs.textarea2.value.split("\n");
       this.list3 = this.$refs.textarea3.value.split("\n");
-    }
-    ,
+    },
+    // Indsætter kombinerede sætninger i combinedList
     populateCombinedList(...args) {
       var dict = {};
       dict['includeAll'] = function (...args) {
@@ -288,16 +244,18 @@ export default {
       }
       dict[args[0]](...args)
 
-    }
-    ,
+    },
     combine() {
+      // Tømmer combinedList
       this.emptyCombinedList()
 
+      // Henter tekst fra textAreas
       this.getValuesFromTextAreas()
 
-      // empty the resultarea
+      // Tømmer resultarea
       this.$refs.resultarea.value = '';
-      // checks which checkboxes are checked and populates the combinedList
+
+      // Tjekker hvilke række der skal medtages i resultarea
       if (this.listOfIncludes[0].bool && this.listOfIncludes[1].bool && this.listOfIncludes[2].bool) {
         this.populateCombinedList('includeAll', this.combinedList, this.list1, this.list2, this.list3)
       } else if (this.listOfIncludes[0].bool && this.listOfIncludes[2].bool) {
@@ -308,13 +266,23 @@ export default {
         this.populateCombinedList('includeTwo', this.combinedList, this.list1, this.list2)
       }
 
+      // Kalder checkThroughCheckboxes
       this.checkThroughCheckboxes()
-    }
-    ,
+    },
+    // Sætter alle bools til false og tømmer inputfelter samt textareas
     clear() {
-      for (const key in this.listOfBools) {
-        this.listOfBools[key] = false
+      // Sætter alle bools i listOfOtherOptions til false
+      for (const key in this.listOfOtherOptios) {
+        this.listOfOtherOptios[key] = false
       }
+
+      // Sætter alle bools i listOfIncludes til false
+      for(const key in this.listOfIncludes)
+      {
+       this.listOfIncludes[key].bool = false
+      }
+
+      // Sætter inputfelter og textareas til at være tomme
       this.$refs.removeWord.value = '';
       this.$refs.removeSymb.value = '';
       this.$refs.wrapSymbol.value = '';
@@ -335,31 +303,16 @@ export default {
       this.$refs.removeWord.value = '';
       this.$refs.removeLine.value = '';
       this.$refs.numberOfWords.value = '';
+
+      // Kalder emptyCombinedList metoden
       this.emptyCombinedList()
-
-
-      const valueFromInput = this.$refs.replaceSymb.value
-      const valueFromInput2 = this.$refs.replaceSymb2.value
-      console.log(valueFromInput + valueFromInput2)
-
-    }
-    ,
+    },
+    // Sætter combinedList til at være tom
     emptyCombinedList() {
-      // empties the combinedList
       this.combinedList = []
-    }
-    ,
-    clearAll() {
-      // clears everything
-      this.emptyCombinedList()
-      this.$refs.resultarea.value = '';
-      this.$refs.textarea1.value = '';
-      this.$refs.textarea2.value = '';
-      this.$refs.textarea3.value = '';
-    }
-    ,
+    },
+    // Sætter resultarea til combinedList
     showCombinedList() {
-      // sets the value of resultarea to combinedList
       let arr = []
       for (const key in this.combinedList) {
         arr.push(this.combinedList[key] + '\n')
@@ -367,156 +320,190 @@ export default {
       this.combinedList = arr
 
       this.$refs.resultarea.value = this.combinedList.join("")
-    }
-    ,
+    },
+    // Unwrapper teksten så combinedList både indeholder wrapped og unwrapped versioner af teksten
     unwrap() {
       for (const combinedKey in this.combinedList) {
         let newValue = this.combinedList[combinedKey].replace(/[^æøå\w ]+/g, '')
         this.combinedList.push(newValue)
       }
     },
+    // Wrapper teksten med quotes
     wrapTxtWithQuotes() {
-
       for (const combinedKey in this.combinedList) {
         let value = this.combinedList[combinedKey]
         this.combinedList.push('"' + value + '"')
       }
-
-      // let arr = []
-      // for (const key in this.combinedList) {
-      //   const value = this.combinedList[key]
-      //   arr.push('"' + value + '"')
-      // }
-      // this.combinedList = arr
-    }
-    ,
+    },
+    // Wrapper teksten med brackets
     wrapTxtWithBrackets() {
       for (const combinedKey in this.combinedList) {
         if (!this.combinedList[combinedKey].includes('"', '"')) {
           let value = this.combinedList[combinedKey]
           this.combinedList.push('[' + value + ']')
         } else {
-
+          // Do nothing
         }
       }
-
-      // let arr = []
-      // for (const key in this.combinedList) {
-      //   const value = this.combinedList[key]
-      //   arr.push('[' + value + ']')
-      // }
-      // this.combinedList = arr
-    }
-    ,
-    wrapTxtWithInput() {
+    },
+    // Wrapper teksten med symboler fra inputfelter
+    wrapTxtWithSymb() {
+      // Henter symboler fra inputfelterne
       const wrapSymbol = this.$refs.wrapSymbol.value
       const wrapSymbol2 = this.$refs.wrapSymbol2.value
       let arr = []
 
+      // Looper igennem combinedList
       for (const key in this.combinedList) {
         const val = this.combinedList[key]
+        // Tilføjer symbol i starten og for enden af symbolet og indsætter i midlertidlig list
         arr.push(wrapSymbol + val + wrapSymbol2)
       }
+      // combinedList sættes til arr
       this.combinedList = arr
     },
+    // Wrapper teksten med ord fra inputfelter
     wrapTxtWithWords() {
       let arr = []
+      // Henter ordene fra inputfelterne
       const wrapWord = this.$refs.wrapWord.value
       const wrapWord2 = this.$refs.wrapWord2.value
 
+      // Looper igennem combinedList
       for (const key in this.combinedList) {
         const value = this.combinedList[key]
+        // Indsætter det nye element i midlertidlig liste
         arr.push(wrapWord + ' ' + value + ' ' + wrapWord2)
       }
+      // combinedList sættes til arr
       this.combinedList = arr
     },
+    // Erstater et symbol med et andet symbol
     replaceSymbol() {
+      // Henter symboler ud fra to inputfelter
       const valueFromInput = this.$refs.replaceSymb.value
       const valueFromInput2 = this.$refs.replaceSymb2.value
 
+      // Looper igennem combinedList
       for (const combinedKey in this.combinedList) {
+        // Så længe et element indeholder symbolet loopes der
         while (this.combinedList[combinedKey].includes(valueFromInput)) {
+          // Erstater symbolet med et andet symbol
           let newValue = this.combinedList[combinedKey].replaceAll(valueFromInput, valueFromInput2)
+          // Det nye element indsættes i combinedList
           this.combinedList[combinedKey] = newValue
         }
       }
     },
+    // Fjerner duplikater i combinedList
     removeDuplicates() {
       let arr = [...new Set(this.combinedList)];
       this.combinedList = arr
     },
+    // Fjerner ekstra spacing
     removeExtraSpacing() {
-      let arr = new Array()
-      for (const key in this.combinedList) {
-        let value = this.combinedList[key]
+      let arr = []
+      for (const combinedKey in this.combinedList) {
+        let value = this.combinedList[combinedKey]
         let newValue = value.replace(/\s+/g, ' ').trim()
         arr.push(newValue)
       }
       this.combinedList = arr
     },
+    // Fjerner symboler
     removeSymbols() {
+      // Henter symbolerne fra inputfelt
       const valueFromInput = this.$refs.removeSymb.value
+      // For hvert symbol indsættes symbolet som element i symbolList
       let symbolList = valueFromInput.split('');
 
+      // For hvert element i combinedList loopes der
       for (const combinedKey in this.combinedList) {
+        // For hvert symbol i symbolList loopes der
         for (const symbolKey in symbolList) {
+          // Så længe et element indeholder symbolet loopes der
           while (this.combinedList[combinedKey].includes(symbolList[symbolKey])) {
+            // Erstat symbolet med en tom værdi og indsæt i combiendList
             let newValue = this.combinedList[combinedKey].replaceAll(symbolList[symbolKey], '')
             this.combinedList[combinedKey] = newValue
           }
         }
       }
     },
+    // Fjerner et ord fra elementet
     removeWord() {
+      // Henter ordene fra inputfelt
       const valueFromInput = this.$refs.removeWord.value
+      // For hvert ord indsættes ordet i wordList
       let wordList = valueFromInput.split(/\s+/);
 
+      // For hvert ord der er i wordList loopes der
       for (const wordKey in wordList) {
+        // For hvert element i combiendList loopes der
         for (const combinedKey in this.combinedList) {
+          // Så længe elementet indeholder ordet loopes der
           while (this.combinedList[combinedKey].includes(wordList[wordKey])) {
+            // Erstater ordet med en tom værdi. Det nye element sættes ind i combinedList
             let newValue = this.combinedList[combinedKey].replaceAll(wordList[wordKey], '')
             this.combinedList[combinedKey] = newValue
           }
         }
       }
     },
+    // Fjerner element fra combinedList, hvis elementet indeholder et specifikt ord
     removeLine() {
+      // Henter ord fra inputfelt
       const valueFromInput = this.$refs.removeLine.value
+      // For hvert ord indsættes ordet i wordList
       let wordList = valueFromInput.split(/\s+/);
+      // Midlertidlig liste sættes til combinedList
       let arr = this.combinedList
 
+      // For hvert ord der er i wordList loopes der
       for (const wordKey in wordList) {
+        // For hvert element i combinedList loopes der
         for (const combinedKey in this.combinedList) {
+          // Så længe et givent element indeholder ordet fra wordList loopes der
           while (this.combinedList[combinedKey].includes(wordList[wordKey])) {
+            // Elementet fra combinedList sættes til at være tom
             arr.push(this.combinedList[combinedKey] = '')
-            // console.log('inside of if')
-            // this.combinedList[combinedKey] = ''
+            // Filtrer den midlertidlige liste og fjerne tomme elementer
             arr = this.combinedList.filter(item => item)
           }
         }
       }
+      // combinedList sættes til at være arr
       this.combinedList = arr
     },
+    // Tjekker op på at antallet af tegn ikke overstiger x antal tegn
     numberOfWords() {
+      // Henter værdi fra input
       const valueFromInput = this.$refs.numberOfWords.value
       let arr = []
 
+      // Looper igennem combinedList
       for (const combinedKey in this.combinedList) {
+        // Hvis længden er større end værdi fra input, sættes elementet til tom
         if (this.combinedList[combinedKey].length > valueFromInput) {
           this.combinedList[combinedKey] = ''
+          // Ellers indsættes elementet i den midlertidlige liste
         } else {
           arr.push(this.combinedList[combinedKey])
         }
       }
+      // Filtrer listen for at fjerne tomme elementer
       arr = arr.filter(item => item)
+      // combinedList sættes til at være arr
       this.combinedList = arr
     },
+    // Hvert element i combinedList sættes til lowerCase
     allLowercase() {
       for (const combinedKey in this.combinedList) {
         let newValue = this.combinedList[combinedKey].toLowerCase()
         this.combinedList[combinedKey] = newValue
       }
     },
+    // Hvert element i combiendList sættes til initialCaps
     initialCaps() {
       for (const combinedKey in this.combinedList) {
         let value = this.combinedList[combinedKey].toString()
@@ -524,6 +511,7 @@ export default {
         this.combinedList[combinedKey] = newValue
       }
     },
+    // Hvert element i combiendList sættes til initialCapsAll
     initialCapsAll() {
       for (const combinedKey in this.combinedList) {
         let newValue = this.combinedList[combinedKey].replace(/\w\S*/g, function (txt) {
@@ -532,12 +520,14 @@ export default {
         this.combinedList[combinedKey] = newValue
       }
     },
+    // Hvert element i combinedList sættes til UpperCase
     allUppercase() {
       for (const combinedKey in this.combinedList) {
         let newValue = this.combinedList[combinedKey].toString().toUpperCase()
         this.combinedList[combinedKey] = newValue
       }
     },
+    // Tjekker op på hvilket format der er valgt og eksekver tilhørende metode
     selectedFormat() {
       switch (this.selected.text) {
         case 'initial caps':
@@ -555,20 +545,24 @@ export default {
 
       }
     },
+    // Hvis boolean er true så eksekver metode, ellers så gør intet
     checkThroughCheckboxes() {
-      this.listOfBools.unwrapped ? this.unwrap() : null
-      this.listOfBools.format ? this.selectedFormat() : null
-      this.listOfBools.numberOfWords ? this.numberOfWords() : null
-      this.listOfBools.removeLine ? this.removeLine() : null
-      this.listOfBools.removeWord ? this.removeWord() : null
-      this.listOfBools.removeSymb ? this.removeSymbols() : null
-      this.listOfBools.wrapWithWords ? this.wrapTxtWithWords() : null
-      this.listOfBools.removeExtraSpa ? this.removeExtraSpacing() : null
-      this.listOfBools.removeDupli ? this.removeDuplicates() : null
-      this.listOfBools.wrapWithQuotes ? this.wrapTxtWithQuotes() : null
-      this.listOfBools.wrapWithBrackets ? this.wrapTxtWithBrackets() : null
-      this.listOfBools.wrapWithSymbol ? this.wrapTxtWithInput() : null
-      this.listOfBools.replaceSymbol ? this.replaceSymbol() : null
+      // Tjekker op på hvilke checkboxe der er true i Wrap delen
+      this.listOfWrapOptions[0].bool ? this.unwrap() : null
+      this.listOfWrapOptions[1].bool ? this.wrapTxtWithQuotes() : null
+      this.listOfWrapOptions[2].bool ? this.wrapTxtWithBrackets() : null
+      this.listOfOtherOptios.wrapWithSymbol ? this.wrapTxtWithSymb() : null
+      this.listOfOtherOptios.wrapWithWords ? this.wrapTxtWithWords() : null
+      this.listOfOtherOptios.replaceSymbol ? this.replaceSymbol() : null
+
+      // Tjekker op på hvilke checkboxe der er true i Scrub delen
+      this.listOfScrubOptions[0].bool ? this.removeDuplicates() : null
+      this.listOfScrubOptions[1].bool ? this.removeExtraSpacing() : null
+      this.listOfOtherOptios.removeSymb ? this.removeSymbols() : null
+      this.listOfOtherOptios.removeWord ? this.removeWord() : null
+      this.listOfOtherOptios.removeLine ? this.removeLine() : null
+      this.listOfOtherOptios.numberOfWords ? this.numberOfWords() : null
+      this.listOfOtherOptios.format ? this.selectedFormat() : null
 
       this.showCombinedList()
     },
@@ -581,34 +575,40 @@ export default {
 #resetbtn {
   background-color: #033760;
 }
-#generatebtn{
+
+#generatebtn {
   background-color: #29BB9C;
-  outline: #29BB9C !important;
-  box-shadow: #29BB9C !important;
 }
-.btn, .btn:focus,.btn:active {
+
+.btn:hover {
+  color: lightgray;
+}
+
+.btn, .btn:focus, .btn:active {
   outline: none !important;
   box-shadow: none !important;
   font-family: "Sofia Pro Regular";
   color: white;
 }
+
+.input-group {
+  margin-left: 20px
+}
+
 h4, h5 {
   font-family: "Sofia Pro Bold";
 }
 
-label {
+.form-check-label {
+  margin-left: 3px;
+  width: 150px;
+  display: inline-block;
   font-family: "Sofia Pro Light";
 }
 
 .form-control:focus {
   outline: none !important;
   border: 1px solid #0FB5C8;
-  box-shadow: 0 0 10px #0FB5C8;
-}
-
-.form-control:focus {
-  outline: none !important;
-  border: 1px solid #0FB5C8;
-  box-shadow: 0 0 15px #0FB5C8;
+  box-shadow: 0 0 5px #0FB5C8;
 }
 </style>

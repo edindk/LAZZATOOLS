@@ -18,3 +18,13 @@
     transform: rotate(-360deg) !important;
   }
 }
+
+.c-sidebar-nav {
+  background-color: #0B6A90 !important;
+}
+
+@media (hover: hover), not all {
+  .c-sidebar .c-sidebar-nav-link:hover, .c-sidebar .c-sidebar-nav-dropdown-toggle:hover {
+    background: #0E8EAC;
+  }
+}
