@@ -45,7 +45,7 @@
         </div>
 
         <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.wrapWithSymbol">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.wrapWithSymbol">
           <label class="form-check-label">Wrap med symboler:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="text" ref="wrapSymbol" placeholder="-">
@@ -55,7 +55,7 @@
 
 
         <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.wrapWithWords">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.wrapWithWords">
           <label class="form-check-label">Wrap med ord:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="text" ref="wrapWord" placeholder="køb">
@@ -63,7 +63,7 @@
           </div>
         </div>
         <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.replaceSymbol">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.replaceSymbol">
           <label class="form-check-label">Erstat med:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="text" ref="replaceSymb" placeholder="køb">
@@ -82,14 +82,14 @@
           </label>
         </div>
         <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.removeSymb">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.removeSymb">
           <label class="form-check-label">Fjern tegn:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="text" ref="removeSymb" placeholder="@#$/\%^&*">
           </div>
         </div>
         <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.removeWord">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.removeWord">
           <label class="form-check-label">Fjern ord:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="text" ref="removeWord" placeholder="køb">
@@ -97,7 +97,7 @@
         </div>
 
         <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.removeLine">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.removeLine">
           <label class="form-check-label">Fjern linjer der indeholder:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="text" ref="removeLine" placeholder="køb">
@@ -105,21 +105,20 @@
         </div>
 
         <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.numberOfWords">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.numberOfWords">
           <label class="form-check-label">Maks antal tegn:</label>
           <div class="input-group col-sm-5">
             <input class="form-control form-control-sm" type="number" ref="numberOfWords" placeholder="14">
           </div>
         </div>
 
-        <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptios.format">
+        <div class="input-group mb-2 mt-2 mb-4">
+          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.format">
           <label class="form-check-label">Ændring af formatet:</label>
           <div class="col-sm-5">
             <select class="form-control form-control-sm form-select" v-model="selected">
-              <option v-for="format in listOfFormats" v-bind:value="{id: format.id, text: format.name}">{{
-                  format.name
-                }}
+              <option v-for="format in listOfFormats" v-bind:value="{id: format.id, text: format.name}">
+                {{ format.name }}
               </option>
             </select>
           </div>
@@ -132,6 +131,15 @@
     <div class="row">
       <div class="col-12 mt-3">
         <h4>Resultat</h4>
+        <div class="col-sm-5" id="sort" style="width: 200px">
+          <label>Sorter</label>
+          <select class="form-control form-control-sm form-select ml-2 mb-1" v-model="selectedSort"
+                  v-on:change="checkSelectedSort">
+            <option v-for="sort in listOfSorts" v-bind:value="{id: sort.id, text: sort.name}">
+              {{ sort.name }}
+            </option>
+          </select>
+        </div>
         <div class="form-group">
           <textarea class="form-control" rows="10" ref="resultarea"></textarea>
         </div>
@@ -165,13 +173,18 @@ export default {
         {id: 2, name: 'all lowercase'},
         {id: 3, name: 'all uppercase'},
       ],
+      selectedSort: '',
+      listOfSorts: [
+        {id: 1, name: 'alfabetisk'},
+        {id: 2, name: 'antal anslag'},
+      ],
       listOfIncludes: [
         {bool: true, name: 'Inkluder første liste'},
         {bool: true, name: 'Inkluder anden liste'},
         {bool: true, name: 'Inkluder tredje liste'}
       ],
       listOfWrapOptions: [
-        {bool: false, name: 'Unwrap'},
+        // {bool: false, name: 'Unwrap'},
         {bool: false, name: 'Wrap med quotes " "'},
         {bool: false, name: 'Wrap med brackets [ ]'}
       ],
@@ -179,7 +192,7 @@ export default {
         {bool: false, name: 'Fjern duplikater'},
         {bool: false, name: 'Fjern ekstra spaces'}
       ],
-      listOfOtherOptios: [
+      listOfOtherOptions: [
         {includeFirst: true},
         {includeSecond: true},
         {includeThird: true},
@@ -272,14 +285,13 @@ export default {
     // Sætter alle bools til false og tømmer inputfelter samt textareas
     clear() {
       // Sætter alle bools i listOfOtherOptions til false
-      for (const key in this.listOfOtherOptios) {
-        this.listOfOtherOptios[key] = false
+      for (const key in this.listOfOtherOptions) {
+        this.listOfOtherOptions[key] = false
       }
 
       // Sætter alle bools i listOfIncludes til false
-      for(const key in this.listOfIncludes)
-      {
-       this.listOfIncludes[key].bool = false
+      for (const key in this.listOfIncludes) {
+        this.listOfIncludes[key].bool = false
       }
 
       // Sætter inputfelter og textareas til at være tomme
@@ -351,16 +363,16 @@ export default {
       // Henter symboler fra inputfelterne
       const wrapSymbol = this.$refs.wrapSymbol.value
       const wrapSymbol2 = this.$refs.wrapSymbol2.value
-      let arr = []
+      // let arr = []
 
       // Looper igennem combinedList
       for (const key in this.combinedList) {
         const val = this.combinedList[key]
         // Tilføjer symbol i starten og for enden af symbolet og indsætter i midlertidlig list
-        arr.push(wrapSymbol + val + wrapSymbol2)
+        this.combinedList.push(wrapSymbol + val + wrapSymbol2)
       }
       // combinedList sættes til arr
-      this.combinedList = arr
+      // this.combinedList = arr
     },
     // Wrapper teksten med ord fra inputfelter
     wrapTxtWithWords() {
@@ -545,24 +557,67 @@ export default {
 
       }
     },
+    sortByLength() {
+      this.combinedList.sort(function (a, b) {
+        return b.length - a.length;
+      });
+      this.$refs.resultarea.value = this.combinedList.join("")
+    },
+    sortByAlphabetical() {
+      this.combinedList.sort(function (a, b) {
+        function getCode(c) {
+          c = c.toLowerCase();
+          if (c.substring(0, 2) == 'aa') return 300;
+          switch (c.charCodeAt(0)) {
+            case 229 : //å
+              return 299;
+              break;
+            case 248 : //ø
+              return 298;
+              break;
+            case 230 : //æ
+              return 297;
+              break;
+            default :
+              return c.charCodeAt(0);
+              break;
+          }
+        }
+
+        return getCode(a) - getCode(b);
+      });
+      this.$refs.resultarea.value = this.combinedList.join("")
+    },
+    checkSelectedSort() {
+      switch (this.selectedSort.text) {
+        case 'alfabetisk':
+          console.log('alfabetisk')
+          this.sortByAlphabetical()
+          break;
+        case 'antal anslag':
+          console.log('antal anslag')
+          this.sortByLength()
+          break;
+      }
+    },
     // Hvis boolean er true så eksekver metode, ellers så gør intet
     checkThroughCheckboxes() {
       // Tjekker op på hvilke checkboxe der er true i Wrap delen
-      this.listOfWrapOptions[0].bool ? this.unwrap() : null
-      this.listOfWrapOptions[1].bool ? this.wrapTxtWithQuotes() : null
-      this.listOfWrapOptions[2].bool ? this.wrapTxtWithBrackets() : null
-      this.listOfOtherOptios.wrapWithSymbol ? this.wrapTxtWithSymb() : null
-      this.listOfOtherOptios.wrapWithWords ? this.wrapTxtWithWords() : null
-      this.listOfOtherOptios.replaceSymbol ? this.replaceSymbol() : null
+      // this.listOfWrapOptions[0].bool ? this.unwrap() : null
+      this.listOfOtherOptions.wrapWithWords ? this.wrapTxtWithWords() : null
+      this.listOfWrapOptions[0].bool ? this.wrapTxtWithQuotes() : null
+      this.listOfWrapOptions[1].bool ? this.wrapTxtWithBrackets() : null
+      this.listOfOtherOptions.wrapWithSymbol ? this.wrapTxtWithSymb() : null
+      this.listOfOtherOptions.replaceSymbol ? this.replaceSymbol() : null
 
       // Tjekker op på hvilke checkboxe der er true i Scrub delen
       this.listOfScrubOptions[0].bool ? this.removeDuplicates() : null
       this.listOfScrubOptions[1].bool ? this.removeExtraSpacing() : null
-      this.listOfOtherOptios.removeSymb ? this.removeSymbols() : null
-      this.listOfOtherOptios.removeWord ? this.removeWord() : null
-      this.listOfOtherOptios.removeLine ? this.removeLine() : null
-      this.listOfOtherOptios.numberOfWords ? this.numberOfWords() : null
-      this.listOfOtherOptios.format ? this.selectedFormat() : null
+      this.listOfOtherOptions.removeSymb ? this.removeSymbols() : null
+      this.listOfOtherOptions.removeWord ? this.removeWord() : null
+      this.listOfOtherOptions.removeLine ? this.removeLine() : null
+      this.listOfOtherOptions.numberOfWords ? this.numberOfWords() : null
+      this.listOfOtherOptions.format ? this.selectedFormat() : null
 
       this.showCombinedList()
     },
@@ -578,6 +633,11 @@ export default {
 
 #generatebtn {
   background-color: #29BB9C;
+}
+
+#sort {
+  display: flex;
+  right: 15px;
 }
 
 .btn:hover {
