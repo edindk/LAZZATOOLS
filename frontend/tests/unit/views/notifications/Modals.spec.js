@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { shallowMount } from '@vue/test-utils'
 import CoreuiVue from '@coreui/vue'
-import Modals from '@/views/notifications/Modals'
+import Modals from '@/views/extra views/notifications/Modals'
 
 Vue.use(CoreuiVue)
 

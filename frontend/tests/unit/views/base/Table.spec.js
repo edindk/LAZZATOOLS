@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { mount, shallowMount } from '@vue/test-utils';
 import CoreuiVue from '@coreui/vue'
-import Table from '@/views/base/Table'
+import Table from '@/views/extra views/base/Table'
 
 Vue.use(CoreuiVue)
 

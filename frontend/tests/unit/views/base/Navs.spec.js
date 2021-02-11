@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { shallowMount } from '@vue/test-utils'
 import CoreuiVue from '@coreui/vue'
-import Navs from '@/views/base/Navs'
+import Navs from '@/views/extra views/base/Navs'
 
 Vue.use(CoreuiVue)
 

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { shallowMount } from '@vue/test-utils';
 import CoreuiVue from '@coreui/vue'
-import CChartBarExample from '@/views/charts/CChartBarExample'
+import CChartBarExample from '@/views/extra views/charts/CChartBarExample'
 
 Vue.use(CoreuiVue)
 

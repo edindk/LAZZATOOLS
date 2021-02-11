@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { mount } from '@vue/test-utils'
 import CoreuiVue from '@coreui/vue'
-import Forms from '@/views/base/Forms'
+import Forms from '@/views/extra views/base/Forms'
 
 Vue.use(CoreuiVue)
 
