@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { shallowMount } from '@vue/test-utils'
 import CoreuiVue from '@coreui/vue'
-import ButtonGroups from '@/views/buttons/ButtonGroups'
+import ButtonGroups from '@/views/extra views/buttons/ButtonGroups'
 
 Vue.use(CoreuiVue)
 

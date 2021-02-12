@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { shallowMount } from '@vue/test-utils'
 import CoreuiVue from '@coreui/vue'
-import Typography from '@/views/theme/Typography'
+import Typography from '@/views/extra views/theme/Typography'
 
 Vue.use(CoreuiVue)
 

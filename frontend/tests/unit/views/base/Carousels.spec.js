@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { shallowMount, mount } from '@vue/test-utils'
 import CoreuiVue from '@coreui/vue'
-import Carousels from '@/views/base/Carousels'
+import Carousels from '@/views/extra views/base/Carousels'
 
 Vue.use(CoreuiVue)
 

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { mount, shallowMount } from '@vue/test-utils';
 import CoreuiVue from '@coreui/vue'
-import Switches from '@/views/base/Switches'
+import Switches from '@/views/extra views/base/Switches'
 
 Vue.use(CoreuiVue)
 

@@ -1,7 +1,7 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import CoreuiVue from '@coreui/vue'
-import User from '@/views/users/User'
+import User from '@/views/extra views/users/User'
 import appRouter from '@/router'
 
 const localVue = createLocalVue()
