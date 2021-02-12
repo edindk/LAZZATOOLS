@@ -3,6 +3,13 @@
     <CContainer>
       <CRow class="justify-content-center">
         <CCol md="8">
+          <loading :active.sync="isLoading"
+                   :can-cancel="true"
+                   :is-full-page="fullPage"
+                   :color="color"
+                   :background-color="backgroundcolor"
+          >
+          </loading>
           <CCardGroup>
             <CCard class="p-4">
               <CCardBody action="#" @submit.prevent="login">
@@ -62,19 +69,30 @@
 </template>
 
 <script>
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
+
 export default {
   name: 'Login',
+  components: {
+    Loading
+  },
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      isLoading: false,
+      fullPage: true,
+      color: '#216A90',
+      backgroundcolor: '#216A90'
     }
   },
   methods: {
     login() {
+      this.isLoading = true
       this.$store.dispatch('retrieveToken', {
         username: this.email,
-        password: this.password
+        password: this.password,
       })
           .then(response => {
             this.$router.push({name: 'dashboard'})
