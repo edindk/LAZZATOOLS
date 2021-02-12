@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -14,11 +14,11 @@ class AuthController extends Controller
         $http = new \GuzzleHttp\Client;
 
         try {
-            $response = $http->post(config('services.passport.login_endpoint'), [
+            $response = $http->post('http://api.lazzatools.dk/oauth/token', [
                 'form_params' => [
                     'grant_type' => 'password',
-                    'client_id' => config('services.passport.client_id'),
-                    'client_secret' => config('services.passport.client_secret'),
+                    'client_id' => 2,
+                    'client_secret' => 'VKvasGaQyz12xiWZIidhh08LO8dopGQ9ZznpAd8e',
                     'username' => $request->username,
                     'password' => $request->password,
                 ]
