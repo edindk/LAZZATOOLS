@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Http\Request;
 
 class ResetPasswordController extends Controller
 {
@@ -20,20 +20,16 @@ class ResetPasswordController extends Controller
 
     use ResetsPasswords;
 
-    /**
-     * Where to redirect users after resetting their password.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    protected function sendResetResponse(Request $request, $response)
     {
-        $this->middleware('guest');
+        return response(['message'=> trans($response)]);
+
     }
+
+    protected function sendResetFailedResponse(Request $request, $response)
+    {
+        return response(['error'=> trans($response)], 422);
+    }
+
+
 }
