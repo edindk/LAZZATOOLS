@@ -102,7 +102,6 @@ export default {
   },
   created() {
     this.registeredSuccessfully = this.$store.getters.registeredSuccessfully
-    console.log(this.registeredSuccessfully)
   },
   methods: {
     login() {
