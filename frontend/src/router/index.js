@@ -6,7 +6,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 
 // Views
 const Dashboard = () => import('@/views/Dashboard')
-const RevenueWire = () => import('@/views/revenueWire/RevenueWire')
+const Mixer = () => import('@/views/mixer/Mixer')
 
 // Views - Auth
 const Login = () => import('@/views/auth/Login')
@@ -44,9 +44,9 @@ function configRoutes() {
                     component: Dashboard
                 },
                 {
-                    path: 'revenuewire',
-                    name: 'revenueWire',
-                    component: RevenueWire
+                    path: 'mixer',
+                    name: 'mixer',
+                    component: Mixer
                 },
             ]
         },

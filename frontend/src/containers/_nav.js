@@ -18,8 +18,8 @@ export default [
             },
             {
                 _name: 'CSidebarNavItem',
-                name: 'revenueWire',
-                to: '/revenuewire',
+                name: 'Mixer',
+                to: '/mixer',
                 icon: 'cilText'
             },
         ]
