@@ -7,11 +7,23 @@
                    :can-cancel="true"
                    :is-full-page="fullPage"
                    :color="color"
-                   :background-color="backgroundcolor"
           >
           </loading>
           <CCardGroup>
             <CCard class="p-4">
+              <CAlert v-if="registeredSuccessfully"
+                      :show.sync="dismissCountDown"
+                      closeButton
+                      color="success"
+                      fade
+              >
+                Registrering vellykket!
+              </CAlert>
+              <CAlert :show="badrequest"
+                      color="danger"
+              >
+                Forkert email eller adgangskode.
+              </CAlert>
               <CCardBody action="#" @submit.prevent="login">
                 <CForm>
                   <h4>Log ind</h4>
@@ -34,7 +46,7 @@
                   </CInput>
                   <CRow>
                     <CCol class="text-center col-md-12">
-                      <CButton color="primary" class="px-4" id="loginbtn" v-on:click="login">Log ind</CButton>
+                      <CButton class="btn-md px-4" id="loginbtn" v-on:click="login">Log ind</CButton>
                     </CCol>
                     <CCol col="6" class="text-right">
                       <CButton color="link" class="d-lg-none">Registrer</CButton>
@@ -52,10 +64,9 @@
               <CCardBody>
                 <h2>Registrer</h2>
                 <p>Registrer nu og optimer arbejdsprocessen med LAZZATOOLS!</p>
-                <CButton v-on:click="register"
+                <CButton class="btn-md px-3" v-on:click="register"
                          color="light"
                          variant="outline"
-                         size="lg"
                 >
                   Registrer
                 </CButton>
@@ -79,17 +90,25 @@ export default {
   },
   data() {
     return {
+      dismissCountDown: 10,
       email: '',
       password: '',
       isLoading: false,
       fullPage: true,
       color: '#216A90',
-      backgroundcolor: '#216A90'
+      badrequest: false,
+      registeredSuccessfully: false
     }
+  },
+  created() {
+    this.registeredSuccessfully = this.$store.getters.registeredSuccessfully
+    console.log(this.registeredSuccessfully)
   },
   methods: {
     login() {
+
       this.isLoading = true
+      this.badrequest = false
       this.$store.dispatch('retrieveToken', {
         username: this.email,
         password: this.password,
@@ -97,10 +116,14 @@ export default {
           .then(response => {
             this.$router.push({name: 'dashboard'})
           })
+          .catch((error) => {
+            this.isLoading = false
+            this.badrequest = true
+          })
     },
     register() {
       this.$router.push({name: 'register'})
-    }
+    },
   }
 }
 </script>

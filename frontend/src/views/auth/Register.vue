@@ -3,10 +3,23 @@
     <CContainer fluid>
       <CRow class="justify-content-center">
         <CCol md="6">
+          <loading :active.sync="isLoading"
+                   :can-cancel="true"
+                   :is-full-page="fullPage"
+                   :color="color"
+          >
+          </loading>
           <CCard class="mx-4 mb-0">
             <CCardBody class="p-4">
               <CForm>
                 <h1>Registrer</h1>
+                <CAlert :show="badrequest"
+                        color="danger"
+                >
+                  Et eller flere af felterne indeholder en fejl.
+                  <li v-for="error in errors">{{ error }}</li>
+                </CAlert>
+
                 <CInput v-model="name"
                         placeholder="Navn"
                         type="text"
@@ -26,20 +39,21 @@
                         type="password"
                         autocomplete="new-password"
                 >
+
                   <template #prepend-content>
                     <CIcon name="cil-lock-locked"/>
                   </template>
                 </CInput>
-                <!--                <CInput-->
-                <!--                    placeholder="Gentag adgangskode"-->
-                <!--                    type="password"-->
-                <!--                    autocomplete="new-password"-->
-                <!--                    class="mb-4"-->
-                <!--                >-->
-                <!--                  <template #prepend-content>-->
-                <!--                    <CIcon name="cil-lock-locked"/>-->
-                <!--                  </template>-->
-                <!--                </CInput>-->
+                <CInput v-model="repeatPassword"
+                        placeholder="Gentag adgangskode"
+                        type="password"
+                        autocomplete="new-password"
+                >
+
+                  <template #prepend-content>
+                    <CIcon name="cil-lock-locked"/>
+                  </template>
+                </CInput>
                 <div class="col text-center">
                   <CButton color="primary" class="px-4" id="registerbtn" v-on:click="register">Opret konto</CButton>
                 </div>
@@ -53,25 +67,85 @@
 </template>
 
 <script>
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
+
 export default {
   name: 'Register',
+  components: {
+    Loading
+  },
   data() {
     return {
+      isLoading: false,
+      fullPage: true,
+      color: '#216A90',
       name: '',
       email: '',
-      password: ''
+      password: '',
+      repeatPassword: '',
+      errors: [],
+      badrequest: false,
+      successfullyRegistered: false
     }
   },
   methods: {
     register() {
-      this.$store.dispatch('register', {
-        name: this.name,
-        email: this.email,
-        password: this.password
-      })
-          .then(response => {
-            this.$router.push({name: 'login'})
-          })
+      this.isLoading = true
+      this.errors = []
+
+      if (this.name && this.email && this.password && this.validatePassword(this.password, this.repeatPassword) && this.validateLength(this.password)) {
+        this.badrequest = false
+
+        this.$store.dispatch('register', {
+          name: this.name,
+          email: this.email,
+          password: this.password
+        })
+            .then(response => {
+              this.successfullyRegistered = true
+              this.$store.dispatch('successfullyRegistered', this.successfullyRegistered)
+              this.$router.push({name: 'login'})
+            })
+      } else {
+        this.$store.dispatch('successfullyRegistered', this.successfullyRegistered)
+        this.badrequest = true
+        this.isLoading = false
+      }
+      if (!this.name) {
+        this.errors.push('Navn påkrævet.')
+      }
+      if (!this.email) {
+        this.errors.push('Email påkrævet.')
+      } else if (!this.validEmail(this.email)) {
+        this.errors.push('Ugyldig email.')
+      }
+      if (!this.password) {
+        this.errors.push('Adgangskode påkrævet.')
+      }
+      if (!this.validateLength(this.password)) {
+        this.errors.push('Adgangskoden skal minimum indeholde 6 tegn.')
+      } else if (!this.validatePassword(this.password, this.repeatPassword)) {
+        this.errors.push('Adgangskoderne stemmer ikke overens.')
+      }
+    },
+    validEmail(email) {
+      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email)
+    },
+    validatePassword(password, repeatPassword) {
+      if (password === repeatPassword) {
+        return true
+      } else {
+        return false
+      }
+    },
+    validateLength(password) {
+      if (password.length < 6) {
+        return false
+      } else {
+        return true
+      }
     }
   }
 }

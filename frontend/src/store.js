@@ -11,8 +11,9 @@ const state = {
     sidebarMinimize: false,
     user: {
         name: '',
-        email: ''
-    }
+        email: '',
+    },
+    success: null
 }
 
 const getters = {
@@ -21,6 +22,9 @@ const getters = {
     },
     userDetails(state) {
         return state.user
+    },
+    registeredSuccessfully(state) {
+        return state.success
     }
 }
 
@@ -48,10 +52,16 @@ const mutations = {
     storeUser(state, user) {
         state.user.name = user.name
         state.user.email = user.email
+    },
+    storeSuccess(state, success) {
+        state.success = success
     }
 }
 
 const actions = {
+    successfullyRegistered(context, success) {
+        context.commit('storeSuccess', success)
+    },
     register(context, data) {
         return new Promise((resolve, reject) => {
             axios.post('/register', {
@@ -62,8 +72,8 @@ const actions = {
                 .then(response => {
                     resolve(response)
                 })
-                .catch(error => {
-                    reject(error)
+                .catch((error) => {
+                    reject(error.response.data.errors)
                 })
         })
     },
@@ -81,15 +91,13 @@ const actions = {
                     context.commit('retrieveToken', token)
                     resolve(response)
                 })
-                .catch(error => {
-                    console.log(error)
-                    reject(error)
+                .catch((error) => {
+                    reject(error.response.data.errors)
                 })
         })
     },
     retrieveUser(context) {
         if (state.user.name === '' && state.user.email === '') {
-            console.log('inside of if in retrieveUser')
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
             return new Promise((resolve, reject) => {
                 axios.get('/user')
