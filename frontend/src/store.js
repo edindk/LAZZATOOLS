@@ -87,6 +87,19 @@ const actions = {
                 })
         })
     },
+    resetEmail(context, data){
+        return new Promise((resolve, reject) => {
+            axios.post('password/email', {
+                email: data.email
+            })
+                .then(response => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error.response.data.errors)
+                })
+        })
+    },
     reset(context, data) {
         return new Promise((resolve, reject) => {
             axios.post('/password/reset', {

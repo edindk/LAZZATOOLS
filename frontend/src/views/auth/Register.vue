@@ -12,7 +12,7 @@
           <CCard class="mx-4 mb-0">
             <CCardBody class="p-4">
               <CForm>
-                <h1>Registrer</h1>
+                <h4>Registrer</h4>
                 <CAlert :show="badrequest"
                         color="danger"
                 >
