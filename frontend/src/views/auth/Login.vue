@@ -55,6 +55,7 @@
                   <CRow>
                     <CCol class="text-center col-md-12">
                       <CButton class="btn-md px-4" id="loginbtn" v-on:click="login">Log ind</CButton>
+                      <CButton class="btn-md px-4" id="resetPass" v-on:click="resetPass">Glemt adgangskode?</CButton>
                     </CCol>
                     <CCol col="6" class="text-right">
                       <CButton color="link" class="d-lg-none">Registrer</CButton>
@@ -114,6 +115,9 @@ export default {
     this.resetSuccess = this.$store.getters.resetSuccess
   },
   methods: {
+    resetPass(){
+      this.$router.push({name: 'resetemail'})
+    },
     login() {
 
       this.isLoading = true
@@ -170,7 +174,12 @@ h2, h4 {
   background-color: #29BB9C;
   border-color: transparent !important;
 }
-
+#resetPass{
+  color: lightgray;
+}
+#resetPass:hover {
+  color: black;
+}
 .btn:hover {
   color: lightgray;
 }

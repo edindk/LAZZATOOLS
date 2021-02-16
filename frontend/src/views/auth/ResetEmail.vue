@@ -11,12 +11,20 @@
           </loading>
           <CCard class="mx-4 mb-0">
             <CCardBody class="p-4">
+              <CAlert v-if="emailSentSuccessfully"
+                      :show.sync="dismissCountDown"
+                      closeButton
+                      color="success"
+                      fade
+              >
+                Email med gendannelses link er sendt!
+              </CAlert>
               <CForm>
                 <h4>Gendan adgangskode</h4>
                 <CAlert :show="badrequest"
                         color="danger"
                 >
-                  Et eller flere af felterne indeholder en fejl.
+                  Feltet indeholder en eller flere fejl.
                   <li v-for="error in errors">{{ error }}</li>
                 </CAlert>
 
@@ -25,28 +33,9 @@
                         autocomplete="email"
                         prepend="@"
                 />
-                <CInput v-model="password"
-                        placeholder="Ny adgangskode"
-                        type="password"
-                        autocomplete="new-password"
-                >
-
-                  <template #prepend-content>
-                    <CIcon name="cil-lock-locked"/>
-                  </template>
-                </CInput>
-                <CInput v-model="repeatPassword"
-                        placeholder="Gentag adgangskode"
-                        type="password"
-                        autocomplete="new-password"
-                >
-
-                  <template #prepend-content>
-                    <CIcon name="cil-lock-locked"/>
-                  </template>
-                </CInput>
                 <div class="col text-center">
-                  <CButton color="primary" class="px-4" id="resetbtn" v-on:click="reset">Gendan</CButton>
+                  <CButton color="primary" class="px-4" id="resetbtn" v-on:click="reset">Send gendannelses link
+                  </CButton>
                 </div>
               </CForm>
             </CCardBody>
@@ -68,84 +57,47 @@ export default {
   },
   data() {
     return {
+      dismissCountDown: 10,
       isLoading: false,
       fullPage: true,
       color: '#216A90',
       email: '',
-      password: '',
-      repeatPassword: '',
       errors: [],
       badrequest: false,
-      resetSuccess: false
+      emailSentSuccessfully: false
     }
   },
   methods: {
     reset() {
       this.isLoading = true
       this.errors = []
-      let token = this.$route.query.resettoken
-      console.log(token)
 
-      if (this.email && this.password && this.validatePassword(this.password, this.repeatPassword) && this.validateLength(this.password)) {
-        this.badrequest = false
-
-        this.$store.dispatch('reset', {
+      if (this.email) {
+        this.$store.dispatch('resetEmail', {
           email: this.email,
-          token: token,
-          password: this.password,
-          password_confirmation: this.repeatPassword
         })
             .then(response => {
-              this.successfully = true
-              this.$store.dispatch('resetSuccess', this.resetSuccess)
-              this.$router.push({name: 'login'})
+              this.emailSentSuccessfully = true
             })
             .catch(error => {
               this.badrequest = true
               this.isLoading = false
-              this.errors.push('Prøv igen.')
+              this.errors.push('Ugyldig email indtastet.')
             })
       } else {
-        this.$store.dispatch('resetSuccess', this.resetSuccess)
         this.badrequest = true
         this.isLoading = false
-      }
-      if (this.badrequest) {
-        this.isLoading = false
-        this.errors.push('Prøv igen.')
       }
       if (!this.email) {
         this.errors.push('Email påkrævet.')
       } else if (!this.validEmail(this.email)) {
         this.errors.push('Ugyldig email.')
       }
-      if (!this.password) {
-        this.errors.push('Adgangskode påkrævet.')
-      }
-      if (!this.validateLength(this.password)) {
-        this.errors.push('Adgangskoden skal minimum indeholde 6 tegn.')
-      } else if (!this.validatePassword(this.password, this.repeatPassword)) {
-        this.errors.push('Adgangskoderne stemmer ikke overens.')
-      }
     },
     validEmail(email) {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email)
     },
-    validatePassword(password, repeatPassword) {
-      if (password === repeatPassword) {
-        return true
-      } else {
-        return false
-      }
-    },
-    validateLength(password) {
-      if (password.length < 6) {
-        return false
-      } else {
-        return true
-      }
-    }
   }
 }
 </script>

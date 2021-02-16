@@ -12,6 +12,7 @@ const Mixer = () => import('@/views/mixer/Mixer')
 const Login = () => import('@/views/auth/Login')
 const Register = () => import('@/views/auth/Register')
 const Logout = () => import('@/views/auth/Logout')
+const ResetEmail = () => import('@/views/auth/ResetEmail')
 const Reset = () => import('@/views/auth/Reset')
 
 // Views - Pages
@@ -63,6 +64,11 @@ function configRoutes() {
             path: '/reset',
             name: 'reset',
             component: Reset,
+        },
+        {
+            path: '/resetemail',
+            name: 'resetemail',
+            component: ResetEmail,
         },
         {
             path: '/login',
