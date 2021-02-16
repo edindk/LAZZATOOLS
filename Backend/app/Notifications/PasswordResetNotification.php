@@ -44,14 +44,16 @@ class PasswordResetNotification extends Notification
     public function toMail($notifiable)
     {
         // Indtast URL fra lazzatools.dk
-        $urlToResetForm = "https://vueapp.test/vue-app/reset-password-form/?token=". $this->token;
+        $urlToResetForm = "http://lazzatools.dk/#/reset?resettoken=". $this->token;
         return (new MailMessage)
             ->greeting(Lang::get('Hejsa'))
             ->subject(Lang::get('Gendannelse af adgangskode'))
             ->line(Lang::get('Du modtager denne email fordi du har anmodet om gendannelse af din adgangskode.'))
-            ->action(Lang::get('Gendan din adgangskode'), url(route('password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
+            ->action(Lang::get('Gendan din adgangskode'), $urlToResetForm)
             ->line(Lang::get('Hvis du ikke har andmodet om gendannelse af adgangskoden, så skal du intet foretage dig.'))
-            ->salutation(Lang::get('Med venlig hilsen, praktikanten Edin fra produktudvikling ;)'));
+            ->salutation(Lang::get('Med venlig hilsen, praktikanten Edin fra produktudvikling ;)')
+
+            );
 
 
 
