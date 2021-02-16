@@ -12,6 +12,7 @@ const Mixer = () => import('@/views/mixer/Mixer')
 const Login = () => import('@/views/auth/Login')
 const Register = () => import('@/views/auth/Register')
 const Logout = () => import('@/views/auth/Logout')
+const Reset = () => import('@/views/auth/Reset')
 
 // Views - Pages
 const Page404 = () => import('@/views/pages/Page404')
@@ -57,6 +58,11 @@ function configRoutes() {
             meta: {
                 requiresVisitor: true
             }
+        },
+        {
+            path: '/reset',
+            name: 'reset',
+            component: Reset,
         },
         {
             path: '/login',

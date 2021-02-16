@@ -13,7 +13,8 @@ const state = {
         name: '',
         email: '',
     },
-    success: null
+    success: null,
+    resetSuccess: null
 }
 
 const getters = {
@@ -24,6 +25,9 @@ const getters = {
         return state.user
     },
     registeredSuccessfully(state) {
+        return state.success
+    },
+    resetSuccess(state) {
         return state.success
     }
 }
@@ -55,6 +59,9 @@ const mutations = {
     },
     storeSuccess(state, success) {
         state.success = success
+    },
+    storeResetSuccess(state, success) {
+        state.resetSuccess = success
     }
 }
 
@@ -62,12 +69,31 @@ const actions = {
     successfullyRegistered(context, success) {
         context.commit('storeSuccess', success)
     },
+    resetSuccess(context, success) {
+        context.commit('storeResetSuccess', success)
+    },
     register(context, data) {
         return new Promise((resolve, reject) => {
             axios.post('/register', {
                 name: data.name,
                 email: data.email,
                 password: data.password,
+            })
+                .then(response => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    reject(error.response.data.errors)
+                })
+        })
+    },
+    reset(context, data) {
+        return new Promise((resolve, reject) => {
+            axios.post('/password/reset', {
+                email: data.email,
+                token: data.token,
+                password: data.password,
+                password_confirmation: data.password_confirmation
             })
                 .then(response => {
                     resolve(response)

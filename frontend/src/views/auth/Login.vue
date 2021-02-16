@@ -19,6 +19,14 @@
               >
                 Registrering vellykket!
               </CAlert>
+              <CAlert v-if="resetSuccess"
+                      :show.sync="dismissCountDown"
+                      closeButton
+                      color="success"
+                      fade
+              >
+                Adgangskode gendannet!
+              </CAlert>
               <CAlert :show="badrequest"
                       color="danger"
               >
@@ -97,11 +105,13 @@ export default {
       fullPage: true,
       color: '#216A90',
       badrequest: false,
-      registeredSuccessfully: false
+      registeredSuccessfully: false,
+      resetSuccess: false
     }
   },
   created() {
     this.registeredSuccessfully = this.$store.getters.registeredSuccessfully
+    this.resetSuccess = this.$store.getters.resetSuccess
   },
   methods: {
     login() {
