@@ -34,6 +34,7 @@ import {
 import {
     cilArrowRight,
     cilText,
+    cilSearch,
     cilBan,
     cilBasket,
     cilBell,
@@ -86,6 +87,7 @@ export const iconsSet = Object.assign(
     {},
     {logo},
     {
+        cilSearch,
         cilArrowRight,
         cilBan,
         cilBasket,

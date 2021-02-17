@@ -49,7 +49,8 @@ class WhoisController extends Controller
         }
     }
 
-    public function getAllWhoisRecords(){
-            return Whois::all();
+    public function getAllWhoisRecords()
+    {
+        return Whois::all();
     }
 }
