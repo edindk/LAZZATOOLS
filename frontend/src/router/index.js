@@ -7,6 +7,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 // Views
 const Dashboard = () => import('@/views/Dashboard')
 const Mixer = () => import('@/views/mixer/Mixer')
+const Whois = () => import('@/views/whois/Whois')
 
 // Views - Auth
 const Login = () => import('@/views/auth/Login')
@@ -49,6 +50,11 @@ function configRoutes() {
                     path: 'mixer',
                     name: 'mixer',
                     component: Mixer
+                },
+                {
+                    path: 'whois',
+                    name: 'whois',
+                    component: Whois
                 },
             ]
         },
