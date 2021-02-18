@@ -93,7 +93,7 @@ export default {
   methods: {
     apiCall() {
       axios
-          .get('http://api.lazzatools.dk/api/getallwhois')
+          .get('https://api.lazzatools.dk/api/whois/all')
           .then(response => (this.setData(response)))
     },
     setData(response) {
@@ -131,7 +131,7 @@ export default {
     },
     addDomain() {
       axios
-          .post('http://api.lazzatools.dk/api/getwhois', {
+          .post('https://api.lazzatools.dk/api/whois/store', {
             domain: this.domainToAdd
           })
           .then(this.apiCall)

@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 
 Vue.use(Vuex)
-axios.defaults.baseURL = 'http://api.lazzatools.dk/api'
+axios.defaults.baseURL = 'https://api.lazzatools.dk/api'
 
 const state = {
     token: localStorage.getItem('access_token') || null,
