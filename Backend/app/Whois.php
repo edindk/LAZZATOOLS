@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Whois extends Model
 {
+    public $timestamps = false;
     protected $fillable = [
-        'createdDate', 'updatedDate', 'expiresDate', 'registrant', 'domainName'
+        'id', 'createdDate', 'expiresDate', 'registrant', 'domainName'
     ];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);

@@ -32,5 +32,5 @@ Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEm
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.reset');
 
 // Whois routes
-Route::post('getwhois', [WhoisController::class, 'getWhosisRecord']);
-Route::get('getallwhois', [WhoisController::class, 'getAllWhoisRecords']);
+Route::post('whois/store', [WhoisController::class, 'storeWhois']);
+Route::get('whois/all', [WhoisController::class, 'getAllWhoisRecords']);

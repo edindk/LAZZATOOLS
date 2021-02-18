@@ -27,12 +27,16 @@
       }"
           :footerOptions="{
         btn1: 'Annuller',
+        btn1Style: {
+          backgroundColor: '#033760'
+        },
         btn2: 'Tilføj domæne',
         btn2Style: {
-          backgroundColor: 'green',
+          backgroundColor: '#29BB9C',
         },
         btn2OnClick: () => {
           addDomain();
+          $vm2.close('modal-1');
         },
         btn1OnClick: () => {
           $vm2.close('modal-1');
@@ -51,7 +55,6 @@
           <th scope="col">Domæne</th>
           <th scope="col">Udløber</th>
           <th scope="col">Oprettet</th>
-          <th scope="col">Opdateret</th>
           <th scope="col">Ejer</th>
           <th scope="col">Status</th>
         </tr>
@@ -61,7 +64,6 @@
           <th scope="row">{{ whois.domainName }}</th>
           <td>{{ whois.expiresDate }}</td>
           <td>{{ whois.createdDate }}</td>
-          <td>{{ whois.updatedDate }}</td>
           <td>{{ whois.registrant }}</td>
           <td v-if="whois.status"><span class="badge badge-success">Aktiv</span></td>
           <td v-else="!whois.status"><span class="badge badge-danger">Inaktiv</span></td>
@@ -89,7 +91,6 @@ export default {
     this.apiCall()
   },
   methods: {
-
     apiCall() {
       axios
           .get('http://api.lazzatools.dk/api/getallwhois')
@@ -133,8 +134,8 @@ export default {
           .post('http://api.lazzatools.dk/api/getwhois', {
             domain: this.domainToAdd
           })
-
-      this.showAll()
+          .then(this.apiCall)
+          .then(this.domainToAdd = '')
     }
   },
 }
@@ -146,7 +147,7 @@ h4 {
 }
 
 #addBtn {
-  background-color: #29BB9C !important;
+  background-color: #29BB9C;
 }
 
 .btn:hover {
