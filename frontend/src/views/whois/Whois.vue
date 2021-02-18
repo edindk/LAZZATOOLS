@@ -13,7 +13,7 @@
           </div>
         </div>
         <div class="col-8">
-          <button type="button" class="btn btn-success float-right float-right" @click="$vm2.open('modal-1')">+ Tilføj
+          <button type="button" class="btn float-right float-right" id="addBtn" @click="$vm2.open('modal-1')">+ Tilføj
             domæne
           </button>
         </div>
@@ -145,10 +145,33 @@ h4 {
   font-family: "Sofia Pro Bold";
 }
 
+#addBtn {
+  background-color: #29BB9C !important;
+}
+
+.btn:hover {
+  color: lightgray;
+}
+
+.form-control {
+  font-family: "Sofia Pro Light";
+}
+
+.btn, .btn:focus, .btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+  font-family: "Sofia Pro Regular";
+  color: white;
+}
+
 .form-check-label {
   margin-left: 3px;
   width: 150px;
   display: inline-block;
+  font-family: "Sofia Pro Light";
+}
+
+.table {
   font-family: "Sofia Pro Light";
 }
 
