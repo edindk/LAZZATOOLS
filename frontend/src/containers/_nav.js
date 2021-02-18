@@ -22,6 +22,12 @@ export default [
                 to: '/mixer',
                 icon: 'cilText'
             },
+            {
+                _name: 'CSidebarNavItem',
+                name: 'Domæne status',
+                to: '/whois',
+                icon: 'cilBell'
+            },
         ]
     }
 ]
