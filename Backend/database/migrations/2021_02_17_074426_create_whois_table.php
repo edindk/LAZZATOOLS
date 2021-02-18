@@ -15,9 +15,7 @@ class CreateWhoisTable extends Migration
     {
         Schema::create('whois', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
             $table->string('createdDate');
-            $table->string('updatedDate');
             $table->string('expiresDate');
             $table->string('registrant');
             $table->string('domainName');

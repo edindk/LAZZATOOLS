@@ -28,3 +28,18 @@
     background: #0E8EAC;
   }
 }
+
+.vm2__header {
+  font-family: "Sofia Pro Light";
+}
+
+.vm2__green, .vm2__btn, .vm2__green:focus, vm2__btn:focus, .vm2__green:active, vm2__btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+  font-family: "Sofia Pro Regular";
+  color: white;
+}
+
+.vm2__green:hover, .vm2__btn:hover {
+  color: lightgray;
+}
