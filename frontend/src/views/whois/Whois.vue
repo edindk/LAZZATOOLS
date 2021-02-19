@@ -3,16 +3,13 @@
     <h4 class="pb-3">Domæne status</h4>
     <div class="col-12">
       <div class="row">
-        <div class="col-md-4 pb-2">
+        <div class="col-md-2 pb-2">
           <div class="input-group">
             <input type="text" class="form-control" style="height: 38px" placeholder="Søg efter domæne..."
-                   v-model="searchDomain" v-on:change="showAll">
-            <span class="input-group-btn">
-        <button class="btn btn-secondary" type="button" v-on:click="search"><CIcon name="cil-search"/></button>
-      </span>
+                   v-model="searchDomain" v-on:change="search">
           </div>
         </div>
-        <div class="col-8">
+        <div class="col-10">
           <button type="button" class="btn float-right float-right" id="addBtn" @click="$vm2.open('modal-1')">+ Tilføj
             domæne
           </button>
@@ -116,19 +113,26 @@ export default {
     },
     search() {
       let arr = []
+      let isFound = false;
 
       for (const key in this.whoisData) {
         if (this.whoisData[key].domainName === this.searchDomain) {
           arr.push(this.whoisData[key])
+          isFound = true;
         }
       }
-      this.whoisData = arr
-    },
-    showAll() {
-      if (this.searchDomain === '') {
+
+      if (isFound) {
+        this.whoisData = arr
+      } else {
         this.apiCall()
       }
     },
+    // showAll() {
+    //   if (this.searchDomain === '') {
+    //     this.apiCall()
+    //   }
+    // },
     addDomain() {
       axios
           .post('https://api.lazzatools.dk/api/whois/store', {
