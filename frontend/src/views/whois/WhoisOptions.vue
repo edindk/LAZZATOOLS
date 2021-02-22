@@ -48,34 +48,6 @@
                 </CCardBody>
               </CCollapse>
             </CCard>
-            <CCard class="mb-1">
-              <CButton
-                  block
-                  class="text-left shadow-none card-header"
-                  @click="accordion = accordion === 1 ? false : 1"
-              >
-                <h6 class="m-0">UptimeRobot</h6>
-              </CButton>
-              <CCollapse :show="accordion === 1">
-                <CCardBody>
-                  UptiemRobot
-                </CCardBody>
-              </CCollapse>
-            </CCard>
-            <CCard class="mb-0">
-              <CButton
-                  block
-                  class="text-left shadow-none card-header"
-                  @click="accordion = accordion === 2 ? false : 2"
-              >
-                <h6 class="m-0">GTmetrix</h6>
-              </CButton>
-              <CCollapse :show="accordion === 2">
-                <CCardBody>
-                  GTmetrix
-                </CCardBody>
-              </CCollapse>
-            </CCard>
           </div>
         </CCardBody>
       </CCard>
@@ -129,7 +101,7 @@ p {
   color: lightgray;
 }
 
-.float-right, .float-right:focus, .float-right:active {
+.btn-sm, .btn-sm:focus, .btn-sm:active {
   outline: none !important;
   box-shadow: none !important;
   font-family: "Sofia Pro Regular";

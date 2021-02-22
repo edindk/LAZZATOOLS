@@ -7,19 +7,17 @@ use Illuminate\Support\Facades\DB;
 
 class ApiCredentialsController extends Controller
 {
-    public function getWhoisXmlApiCredentials()
-    {
-        $result = DB::select('SELECT * FROM api_credentials');
-    }
-
     public function insertWhoisXmlApiCredentials(Request $request)
     {
-        // Sætter alle andre nøgler til inaktive
-        $updateValues = array('status' => 'inactive');
-        DB::table('api_credentials')->update($updateValues);
+        $result = DB::table('api_credentials')->where('name', 'WhoisXmlApi')->get();
+        $result->toArray();
 
-        // Indsætter den nye nøgle
-        $values = array('name' => 'WhoisXmlApi', 'key' => $request->key, 'username' => 'null', 'status' => 'active');
-        DB::table('api_credentials')->insert($values);
+        if (!count($result)) {
+            $values = array('name' => 'WhoisXmlApi', 'key' => $request->key, 'username' => 'null', 'status' => 'active');
+            DB::table('api_credentials')->insert($values);
+        } else {
+            DB::table('api_credentials')->where('name', 'WhoisXmlApi')->update(['name' => 'WhoisXmlApi', 'key' => $request->key, 'username' => 'null', 'status' => 'active']);
+        }
+
     }
 }
