@@ -47,6 +47,7 @@ class WhoisController extends Controller
             $response = $http->get('https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=' . $apiKey . '&domainName=' . $domain . '&outputFormat=JSON');
             foreach (json_decode($response->getBody()) as $response) {
                 $whois = new Whois([
+                    'external_id' => '',
                     'createdDate' => $response->registryData->createdDate,
                     'expiresDate' => $response->registryData->expiresDate,
                     'registrant' => $response->registryData->registrant->name,

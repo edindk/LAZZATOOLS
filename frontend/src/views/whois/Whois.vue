@@ -1,6 +1,12 @@
 <template xmlns="http://www.w3.org/1999/html">
   <div>
     <h4 class="pb-3">Domæne status</h4>
+    <loading :active.sync="isLoading"
+             :can-cancel="true"
+             :is-full-page="fullPage"
+             :color="color"
+    >
+    </loading>
     <div class="col-12">
       <div class="row">
         <div class="col-md-2 pb-2">
@@ -54,6 +60,7 @@
           <th scope="col">Oprettet</th>
           <th scope="col">Ejer</th>
           <th scope="col">HTTP response</th>
+          <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
@@ -63,6 +70,11 @@
           <td>{{ whois.createdDate }}</td>
           <td>{{ whois.registrant }}</td>
           <td v-bind:style="{color:  whois.statusColor}">{{ whois.status }}</td>
+          <td v-on:click="deleteDomain(whois.domainName)">
+            <button class="btn btn-icon btn-icon-active" id="trashBtn">
+              <CIcon name="cilTrash"/>
+            </button>
+          </td>
 
         </tr>
         </tbody>
@@ -73,12 +85,19 @@
 
 <script>
 import axios from "axios";
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
 
 export default {
   name: "Whois",
-  components: {},
+  components: {
+    Loading
+  },
   data() {
     return {
+      isLoading: true,
+      fullPage: true,
+      color: '#216A90',
       whoisData: [],
       searchDomain: null,
       domainToAdd: null
@@ -112,21 +131,24 @@ export default {
         console.log('inside of if')
         this.txtColor = 'green';
       }
+      this.isLoading = false;
     },
     search() {
       let arr = []
       let isFound = false;
 
       for (const key in this.whoisData) {
-        if (this.whoisData[key].domainName === this.searchDomain) {
+        if (this.whoisData[key].domainName.includes(this.searchDomain)) {
           arr.push(this.whoisData[key])
           isFound = true;
         }
       }
-
       if (isFound) {
         this.whoisData = arr
-      } else {
+        isFound = false
+      }
+      if (this.searchDomain === "") {
+        this.isLoading = true
         this.apiCall()
       }
     },
@@ -137,6 +159,9 @@ export default {
           })
           .then(this.apiCall)
           .then(this.domainToAdd = '')
+    },
+    deleteDomain(domainName) {
+      console.log(domainName)
     }
   },
 }
@@ -149,6 +174,14 @@ h4 {
 
 #addBtn {
   background-color: #29BB9C;
+}
+
+#trashBtn {
+  color: black;
+}
+
+#trashBtn:hover {
+  color: orangered;
 }
 
 .btn:hover {
