@@ -161,7 +161,11 @@ export default {
           .then(this.domainToAdd = '')
     },
     deleteDomain(domainName) {
-      console.log(domainName)
+      axios
+          .post('https://api.lazzatools.dk/api/whois/delete', {
+            domain: domainName
+          })
+          .then(this.apiCall)
     }
   },
 }
