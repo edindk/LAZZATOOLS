@@ -50,8 +50,6 @@
         <thead>
         <tr>
           <th scope="col">Domæne</th>
-          <th scope="col">Oppe tid</th>
-          <th scope="col">Load tid</th>
           <th scope="col">Udløber</th>
           <th scope="col">Oprettet</th>
           <th scope="col">Ejer</th>
@@ -61,8 +59,6 @@
         <tbody>
         <tr v-for="whois in whoisData">
           <th scope="row">{{ whois.domainName }}</th>
-          <td>{{ 'null' }}</td>
-          <td>{{ 'null' }}</td>
           <td>{{ whois.expiresDate }}</td>
           <td>{{ whois.createdDate }}</td>
           <td>{{ whois.registrant }}</td>
