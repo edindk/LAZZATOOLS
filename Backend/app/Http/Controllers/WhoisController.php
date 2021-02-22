@@ -92,6 +92,7 @@ class WhoisController extends Controller
 
     public function deleteDomain(Request $request)
     {
+        // Fjerner domæne i DB
         DB::table('whois')->where('domainName', $request->domain)->delete();
     }
 }
