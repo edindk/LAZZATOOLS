@@ -91,6 +91,7 @@ p {
 
 .btn {
   border: 0;
+  color: black
 }
 
 #updateBtn {
@@ -105,7 +106,7 @@ p {
   outline: none !important;
   box-shadow: none !important;
   font-family: "Sofia Pro Regular";
-  color: white;
+  color: white !important;
 }
 
 .form-control:focus {
