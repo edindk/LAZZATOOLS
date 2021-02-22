@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Whois;
 use DateTime;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Mockery\Exception;
+use function MongoDB\BSON\toJSON;
 
 class WhoisController extends Controller
 {
@@ -30,12 +34,14 @@ class WhoisController extends Controller
                 $record->save();
             }
         }
-        return $arr;
+        return $this->getStatusCode($arr);
     }
 
     public function getWhoisRecordFromApi($domain)
     {
-        $apiKey = 'at_PiWTiCVTAJocXPd0uUi8imriFCJs4';
+        $result = DB::table('api_credentials')->where('status', 'active')->first();
+
+        $apiKey = $result->key;
         $http = new \GuzzleHttp\Client;
         try {
             $response = $http->get('https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=' . $apiKey . '&domainName=' . $domain . '&outputFormat=JSON');
@@ -68,5 +74,18 @@ class WhoisController extends Controller
         $updatedList = $this->checkList($listOfWhoisRecords);
 
         return $updatedList;
+    }
+
+    public function getStatusCode($arr)
+    {
+        $http = new \GuzzleHttp\Client;
+        foreach ($arr as $element) {
+            try {
+                $element->status = $http->get($element->domainName)->getStatusCode();
+            } catch (ConnectException $e) {
+                $element->status = 500;
+            }
+        }
+        return $arr;
     }
 }
