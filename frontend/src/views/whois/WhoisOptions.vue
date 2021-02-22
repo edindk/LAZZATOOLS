@@ -129,7 +129,7 @@ p {
   color: lightgray;
 }
 
-.float-right, .float-right:focus, .float-right:active {
+.btn-sm, .btn-sm:focus, .btn-sm:active {
   outline: none !important;
   box-shadow: none !important;
   font-family: "Sofia Pro Regular";
