@@ -50,20 +50,24 @@
         <thead>
         <tr>
           <th scope="col">Domæne</th>
+          <th scope="col">Oppe tid</th>
+          <th scope="col">Load tid</th>
           <th scope="col">Udløber</th>
           <th scope="col">Oprettet</th>
           <th scope="col">Ejer</th>
-          <th scope="col">Status</th>
+          <th scope="col">HTTP response</th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="whois in whoisData">
           <th scope="row">{{ whois.domainName }}</th>
+          <td>{{ 'null' }}</td>
+          <td>{{ 'null' }}</td>
           <td>{{ whois.expiresDate }}</td>
           <td>{{ whois.createdDate }}</td>
           <td>{{ whois.registrant }}</td>
-          <td v-if="whois.status"><span class="badge badge-success">Aktiv</span></td>
-          <td v-else="!whois.status"><span class="badge badge-danger">Inaktiv</span></td>
+          <td v-bind:style="{color:  whois.statusColor}">{{ whois.status }}</td>
+
         </tr>
         </tbody>
       </table>
@@ -96,19 +100,21 @@ export default {
     setData(response) {
       this.whoisData = response.data
 
-      this.whoisData.forEach(function (element) {
-        element.status = ''
-      })
-
       for (const key in this.whoisData) {
-        const currentDate = new Date();
-        const givenDate = new Date(this.whoisData[key].expiresDate)
-
-        if (givenDate > currentDate) {
-          this.whoisData[key].status = true
-        } else {
-          this.whoisData[key].status = false
+        if (this.whoisData[key].status.toString().startsWith(2)) {
+          this.whoisData[key].statusColor = 'green'
+        } else if (this.whoisData[key].status.toString().startsWith(3)) {
+          this.whoisData[key].statusColor = 'blue'
+        } else if (this.whoisData[key].status.toString().startsWith(4)) {
+          this.whoisData[key].statusColor = 'orange'
+        } else if (this.whoisData[key].status.toString().startsWith(5)) {
+          this.whoisData[key].statusColor = 'red'
         }
+      }
+
+      if (this.whoisData.status === 200) {
+        console.log('inside of if')
+        this.txtColor = 'green';
       }
     },
     search() {
@@ -128,11 +134,6 @@ export default {
         this.apiCall()
       }
     },
-    // showAll() {
-    //   if (this.searchDomain === '') {
-    //     this.apiCall()
-    //   }
-    // },
     addDomain() {
       axios
           .post('https://api.lazzatools.dk/api/whois/store', {

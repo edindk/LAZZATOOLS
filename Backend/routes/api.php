@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\ApiCredentialsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WhoisController;
 use Illuminate\Http\Request;
@@ -32,5 +33,7 @@ Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEm
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.reset');
 
 // Whois routes
+Route::get('whois/credentials', [ApiCredentialsController::class, 'getWhoisXmlApiCredentials']);
+Route::post('whois/credentials/store', [ApiCredentialsController::class, 'insertWhoisXmlApiCredentials']);
 Route::post('whois/store', [WhoisController::class, 'storeWhois']);
 Route::get('whois/all', [WhoisController::class, 'getAllWhoisRecords']);
