@@ -35,4 +35,5 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('
 // Whois routes
 Route::post('whois/credentials/store', [ApiCredentialsController::class, 'insertWhoisXmlApiCredentials']);
 Route::post('whois/store', [WhoisController::class, 'storeWhois']);
+Route::post('whois/delete', [WhoisController::class, 'deleteDomain']);
 Route::get('whois/all', [WhoisController::class, 'getAllWhoisRecords']);
