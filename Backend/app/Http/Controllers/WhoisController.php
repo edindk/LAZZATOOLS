@@ -37,11 +37,31 @@ class WhoisController extends Controller
         return $this->getStatusCode($arr);
     }
 
-    public function getWhoisRecordFromApi($domain)
+    public function comDomains($apiKey, $domain)
     {
-        $result = DB::table('api_credentials')->where('status', 'active')->first();
+        $http = new \GuzzleHttp\Client;
+        try {
+            $response = $http->get('https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=' . $apiKey . '&domainName=' . $domain . '&outputFormat=JSON');
+            foreach (json_decode($response->getBody()) as $response) {
+                $whois = new Whois([
+                    'external_id' => '',
+                    'createdDate' => $response->createdDate,
+                    'expiresDate' => $response->expiresDate,
+                    'registrant' => $response->registrant->name,
+                    'domainName' => $response->domainName,
+                ]);
+                return $whois;
+            }
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            if ($e->getCode() === 400) {
+                return response()->json('Invalid Request.');
+            }
+            return response()->json('Something went wrong on the server', $e->getCode());
+        }
+    }
 
-        $apiKey = $result->key;
+    public function dkDomains($apiKey, $domain)
+    {
         $http = new \GuzzleHttp\Client;
         try {
             $response = $http->get('https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=' . $apiKey . '&domainName=' . $domain . '&outputFormat=JSON');
@@ -60,6 +80,17 @@ class WhoisController extends Controller
                 return response()->json('Invalid Request.');
             }
             return response()->json('Something went wrong on the server', $e->getCode());
+        }
+    }
+
+    public function getWhoisRecordFromApi($domain)
+    {
+        $result = DB::table('api_credentials')->where('status', 'active')->first();
+        $apiKey = $result->key;
+        if (str_ends_with($domain, '.dk')) {
+            return $this->dkDomains($apiKey, $domain);
+        } else if (str_ends_with($domain, '.com')) {
+            return $this->comDomains($apiKey, $domain);
         }
     }
 
