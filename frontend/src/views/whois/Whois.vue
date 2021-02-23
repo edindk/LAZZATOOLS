@@ -1,6 +1,18 @@
 <template xmlns="http://www.w3.org/1999/html">
   <div>
     <h4 class="pb-3">Domæne status</h4>
+    <CAlert v-show="successfullyAdded"
+            color="success"
+            fade
+    >
+      Domæne tilføjet!
+    </CAlert>
+    <CAlert v-show="successfullyDeleted"
+            color="danger"
+            fade
+    >
+      Domæne blev slettet.
+    </CAlert>
     <loading :active.sync="isLoading"
              :can-cancel="true"
              :is-full-page="fullPage"
@@ -95,6 +107,8 @@ export default {
   },
   data() {
     return {
+      successfullyDeleted: false,
+      successfullyAdded: false,
       isLoading: true,
       fullPage: true,
       color: '#216A90',
@@ -159,6 +173,36 @@ export default {
           })
           .then(this.apiCall)
           .then(this.domainToAdd = '')
+          .then(this.changeSuccessfullyAdded)
+
+    },
+    changeSuccessfullyAdded() {
+      this.showSuccessfullyAdded()
+      setTimeout(this.hideSuccessfullyAdded, 5000)
+    },
+    showSuccessfullyAdded() {
+      this.$nextTick(() => {
+        this.successfullyAdded = true
+      })
+    },
+    hideSuccessfullyAdded() {
+      this.$nextTick(() => {
+        this.successfullyAdded = false
+      })
+    },
+    changeSuccessfullyDeleted() {
+      this.showSuccessfullyDeleted()
+      setTimeout(this.hideSuccessfullyDeleted, 5000)
+    },
+    showSuccessfullyDeleted() {
+      this.$nextTick(() => {
+        this.successfullyDeleted = true
+      })
+    },
+    hideSuccessfullyDeleted() {
+      this.$nextTick(() => {
+        this.successfullyDeleted = false
+      })
     },
     deleteDomain(domainName) {
       axios
@@ -166,6 +210,7 @@ export default {
             domain: domainName
           })
           .then(this.apiCall)
+          .then(this.changeSuccessfullyDeleted)
     }
   },
 }
