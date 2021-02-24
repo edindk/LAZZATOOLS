@@ -8,6 +8,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Dashboard = () => import('@/views/Dashboard')
 const Mixer = () => import('@/views/mixer/Mixer')
 const Whois = () => import('@/views/whois/Whois')
+const MapScraper = () => import('@/views/mapscraper/MapScraper')
 
 // Views - Auth
 const Login = () => import('@/views/auth/Login')
@@ -55,6 +56,11 @@ function configRoutes() {
                     path: 'whois',
                     name: 'whois',
                     component: Whois
+                },
+                {
+                    path: 'mapscraper',
+                    name: 'mapscraper',
+                    component: MapScraper
                 },
             ]
         },
