@@ -28,6 +28,12 @@ export default [
                 to: '/whois',
                 icon: 'cilBell'
             },
+            {
+                _name: 'CSidebarNavItem',
+                name: 'Map scraper',
+                to: '/mapscraper',
+                icon: 'cilMap'
+            },
         ]
     }
 ]
