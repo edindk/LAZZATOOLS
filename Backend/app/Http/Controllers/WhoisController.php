@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Whois;
 use DateTime;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\ServerException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Mockery\Exception;
@@ -152,7 +154,7 @@ class WhoisController extends Controller
         foreach ($arr as $element) {
             try {
                 $element->status = $http->get($element->domainName)->getStatusCode();
-            } catch (ConnectException $e) {
+            } catch (ConnectException | ServerException | RequestException $e) {
                 $element->status = 500;
             }
         }
