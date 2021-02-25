@@ -12,6 +12,56 @@ use function MongoDB\BSON\toJSON;
 
 class WhoisController extends Controller
 {
+    public function getWhoisRecordsBulk()
+    {
+        $data = [
+            "apiKey" => "at_PiWTiCVTAJocXPd0uUi8imriFCJs4",
+            "requestId" => "59c3d40e-946f-44f3-a0be-d6f6c42dfd93",
+            "maxRecords" => 100,
+            "startIndex" => 1,
+            "decode_content" => true,
+            "outputFormat" => "JSON"
+        ];
+
+        $http = new \GuzzleHttp\Client;
+        try {
+            $response = $http->post('https://www.whoisxmlapi.com/BulkWhoisLookup/bulkServices/getRecords', [
+                'body' => json_encode($data),
+                'headers' => ['Accept' => 'application/json']
+            ]);
+
+            $decoded = json_decode(utf8_encode($response->getBody()->getContents()));
+//            var_dump(json_last_error());
+//            var_dump(json_last_error_msg());
+
+            $decoded = $decoded->whoisRecords;
+
+            for ($i = 0; $i < count($decoded); $i++) {
+
+                if (isset($decoded[$i]->whoisRecord->registryData->createdDate) && isset($decoded[$i]->whoisRecord->registryData->expiresDate) && isset($decoded[$i]->whoisRecord->registryData->registrant->name) && isset($decoded[$i]->domainName)) {
+                    $createdDate = $decoded[$i]->whoisRecord->registryData->createdDate;
+                    $expiresDate = $decoded[$i]->whoisRecord->registryData->expiresDate;
+                    $registrant = $decoded[$i]->whoisRecord->registryData->registrant->name;
+                    $domainName = $decoded[$i]->domainName;
+
+                    $whois = new Whois([
+                        'external_id' => null,
+                        'createdDate' => $createdDate,
+                        'expiresDate' => $expiresDate,
+                        'registrant' => $registrant,
+                        'domainName' => $domainName
+                    ]);
+                    $whois->save();
+                } else {
+                    $whois = null;
+                }
+            }
+        } catch (Exception $e) {
+
+        }
+
+    }
+
     public function checkList($listOfWhoisRecords)
     {
         $arr = [];
