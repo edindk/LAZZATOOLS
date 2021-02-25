@@ -135,8 +135,7 @@ class WhoisController extends Controller
     public function storeWhois(Request $request)
     {
         $whois = $this->getWhoisRecordFromApi($request->domain);
-        dd($whois);
-        //$whois->save();
+        $whois->save();
     }
 
     public function getAllWhoisRecords()
