@@ -128,6 +128,7 @@ export default {
     },
     setData(response) {
       this.whoisData = response.data
+      this.$store.commit('storeWhois', response.data)
 
       for (const key in this.whoisData) {
         if (this.whoisData[key].status.toString().startsWith(2)) {
@@ -142,7 +143,6 @@ export default {
       }
 
       if (this.whoisData.status === 200) {
-        console.log('inside of if')
         this.txtColor = 'green';
       }
       this.isLoading = false;
@@ -162,8 +162,7 @@ export default {
         isFound = false
       }
       if (this.searchDomain === "") {
-        this.isLoading = true
-        this.apiCall()
+        this.whoisData = this.$store.getters.getWhoisData
       }
     },
     addDomain() {
@@ -209,7 +208,7 @@ export default {
           .post('https://api.lazzatools.dk/api/whois/delete', {
             domain: domainName
           })
-          .then(this.apiCall)
+          .then(this.whoisData = this.whoisData = this.$store.getters.getWhoisData)
           .then(this.changeSuccessfullyDeleted)
     }
   },

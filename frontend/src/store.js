@@ -14,7 +14,8 @@ const state = {
         email: '',
     },
     success: null,
-    resetSuccess: null
+    resetSuccess: null,
+    whoisData: []
 }
 
 const getters = {
@@ -29,6 +30,9 @@ const getters = {
     },
     resetSuccess(state) {
         return state.success
+    },
+    getWhoisData(state) {
+        return state.whoisData
     }
 }
 
@@ -62,6 +66,9 @@ const mutations = {
     },
     storeResetSuccess(state, success) {
         state.resetSuccess = success
+    },
+    storeWhois(state, whoisData) {
+        state.whoisData = whoisData
     }
 }
 
@@ -87,7 +94,7 @@ const actions = {
                 })
         })
     },
-    resetEmail(context, data){
+    resetEmail(context, data) {
         return new Promise((resolve, reject) => {
             axios.post('password/email', {
                 email: data.email
