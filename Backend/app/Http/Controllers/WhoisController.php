@@ -59,7 +59,6 @@ class WhoisController extends Controller
         } catch (Exception $e) {
 
         }
-
     }
 
     public function checkList($listOfWhoisRecords)
@@ -87,67 +86,57 @@ class WhoisController extends Controller
         return $this->getStatusCode($arr);
     }
 
-    public function comDomains($apiKey, $domain)
-    {
-        $http = new \GuzzleHttp\Client;
-        try {
-            $response = $http->get('https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=' . $apiKey . '&domainName=' . $domain . '&outputFormat=JSON');
-            foreach (json_decode($response->getBody()) as $response) {
-                $whois = new Whois([
-                    'external_id' => '',
-                    'createdDate' => $response->createdDate,
-                    'expiresDate' => $response->expiresDate,
-                    'registrant' => $response->registrant->name,
-                    'domainName' => $response->domainName,
-                ]);
-                return $whois;
-            }
-        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
-            if ($e->getCode() === 400) {
-                return response()->json('Invalid Request.');
-            }
-            return response()->json('Something went wrong on the server', $e->getCode());
-        }
-    }
-
-    public function dkDomains($apiKey, $domain)
-    {
-        $http = new \GuzzleHttp\Client;
-        try {
-            $response = $http->get('https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=' . $apiKey . '&domainName=' . $domain . '&outputFormat=JSON');
-            foreach (json_decode($response->getBody()) as $response) {
-                $whois = new Whois([
-                    'external_id' => '',
-                    'createdDate' => $response->registryData->createdDate,
-                    'expiresDate' => $response->registryData->expiresDate,
-                    'registrant' => $response->registryData->registrant->name,
-                    'domainName' => $response->domainName,
-                ]);
-                return $whois;
-            }
-        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
-            if ($e->getCode() === 400) {
-                return response()->json('Invalid Request.');
-            }
-            return response()->json('Something went wrong on the server', $e->getCode());
-        }
-    }
-
     public function getWhoisRecordFromApi($domain)
     {
         $result = DB::table('api_credentials')->where('status', 'active')->first();
         $apiKey = $result->key;
-        if (str_ends_with($domain, '.dk')) {
-            return $this->dkDomains($apiKey, $domain);
-        } else if (str_ends_with($domain, '.com')) {
-            return $this->comDomains($apiKey, $domain);
+
+        $http = new \GuzzleHttp\Client;
+        try {
+            $response = $http->get('https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=' . $apiKey . '&domainName=' . $domain . '&outputFormat=JSON');
+            $response = json_decode($response->getBody()->getContents());
+            foreach ($response as $value) {
+
+                $whois = new Whois();
+                if (isset($value->registryData->createdDate)) {
+                    $whois->createdDate = $value->registryData->createdDate;
+                } else {
+                    $whois->createdDate = 'Ikke oplyst';
+                }
+                if (isset($value->registryData->expiresDate)) {
+                    $whois->expiresDate = $value->registryData->expiresDate;
+                } else {
+                    $whois->expiresDate = 'Ikke oplyst';
+                }
+                if (isset($value->registryData->registrant->name)) {
+                    $whois->registrant = $value->registryData->registrant->name;
+                } else if (isset($value->registrant->name)) {
+                    $whois->registrant = $value->registrant->name;
+                } else {
+                    $whois->registrant = 'Ikke oplyst';
+                }
+                if (isset($value->domainName)) {
+                    $whois->domainName = $value->domainName;
+                } else {
+                    $whois->registrant = 'Ikke oplyst';
+                }
+            }
+            return $whois;
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            if ($e->getCode() === 400) {
+                return response()->json('Invalid Request.');
+            }
+            return response()->json('Something went wrong on the server', $e->getCode());
         }
+
     }
+
 
     public function storeWhois(Request $request)
     {
         $whois = $this->getWhoisRecordFromApi($request->domain);
-        $whois->save();
+        dd($whois);
+        //$whois->save();
     }
 
     public function getAllWhoisRecords()
