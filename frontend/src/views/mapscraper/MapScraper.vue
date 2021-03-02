@@ -41,6 +41,7 @@ export default {
   },
   methods: {
     init() {
+      this.markers = []
       this.map = new google.maps.Map(document.getElementById("map"), {
         zoom: 7,
         center: {lat: 56.26392, lng: 9.501785}
