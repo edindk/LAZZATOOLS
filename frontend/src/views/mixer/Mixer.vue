@@ -612,8 +612,8 @@ export default {
 
       // Tjekker op på hvilke checkboxe der er true i Scrub delen
       this.listOfScrubOptions[0].bool ? this.removeDuplicates() : null
-      this.listOfScrubOptions[1].bool ? this.removeExtraSpacing() : null
       this.listOfOtherOptions.removeSymb ? this.removeSymbols() : null
+      this.listOfScrubOptions[1].bool ? this.removeExtraSpacing() : null
       this.listOfOtherOptions.removeWord ? this.removeWord() : null
       this.listOfOtherOptions.removeLine ? this.removeLine() : null
       this.listOfOtherOptions.numberOfWords ? this.numberOfWords() : null

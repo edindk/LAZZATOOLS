@@ -37,3 +37,6 @@ Route::post('whois/credentials/store', [ApiCredentialsController::class, 'insert
 Route::post('whois/store', [WhoisController::class, 'storeWhois']);
 Route::post('whois/delete', [WhoisController::class, 'deleteDomain']);
 Route::get('whois/all', [WhoisController::class, 'getAllWhoisRecords']);
+Route::post('whois/statuscode', [WhoisController::class, 'getStatusCode']);
+Route::get('whois/updateAll', [WhoisController::class, 'updateAllWhoisRecords']);
+Route::post('whois/updatewhois', [WhoisController::class, 'updateWhoisRecord']);

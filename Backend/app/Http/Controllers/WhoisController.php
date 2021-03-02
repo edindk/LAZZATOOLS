@@ -63,31 +63,69 @@ class WhoisController extends Controller
         }
     }
 
-    public function checkList($listOfWhoisRecords)
+//    public function checkList($listOfWhoisRecords)
+//    {
+//        $arr = [];
+//        $currentDate = new DateTime('now');
+//
+//        foreach ($listOfWhoisRecords as $record) {
+//            $givenDate = new DateTime($record->expiresDate);
+//
+//            if ($givenDate > $currentDate) {
+//                array_push($arr, $record);
+//            } else {
+//                $updatedWhois = $this->getWhoisRecordFromApi($record->domainName);
+//                $record->createdDate = $updatedWhois->createdDate;
+//                $record->expiresDate = $updatedWhois->expiresDate;
+//                $record->registrant = $updatedWhois->registrant;
+//                $record->domainName = $updatedWhois->domainName;
+//
+//                array_push($arr, $record);
+//                $record->save();
+//            }
+//        }
+//        return $arr;
+//    }
+
+    // Opdaterer alle whois records
+    public function updateAllWhoisRecords()
     {
+        $listOfWhoisRecords = Whois::all();
         $arr = [];
-        $currentDate = new DateTime('now');
 
         foreach ($listOfWhoisRecords as $record) {
-            $givenDate = new DateTime($record->expiresDate);
+            $updatedWhois = $this->getWhoisRecordFromApi($record->domainName);
+            $record->createdDate = $updatedWhois->createdDate;
+            $record->expiresDate = $updatedWhois->expiresDate;
+            $record->registrant = $updatedWhois->registrant;
+            $record->domainName = $updatedWhois->domainName;
 
-            if ($givenDate > $currentDate) {
-                array_push($arr, $record);
-            } else {
+            array_push($arr, $record);
+            $record->save();
+        }
+        return $arr;
+    }
+
+    // Opdaterer en enkelt whois record
+    public function updateWhoisRecord(Request $request)
+    {
+        $listOfWhoisRecords = Whois::all();
+
+        foreach ($listOfWhoisRecords as $record) {
+            if ($record->domainName == $request->domainName) {
                 $updatedWhois = $this->getWhoisRecordFromApi($record->domainName);
-
                 $record->createdDate = $updatedWhois->createdDate;
                 $record->expiresDate = $updatedWhois->expiresDate;
                 $record->registrant = $updatedWhois->registrant;
                 $record->domainName = $updatedWhois->domainName;
 
-                array_push($arr, $record);
                 $record->save();
+                return $record;
             }
         }
-        return $this->getStatusCode($arr);
     }
 
+    // Henter whois data ved kald til whoisxmlapi
     public function getWhoisRecordFromApi($domain)
     {
         $result = DB::table('api_credentials')->where('status', 'active')->first();
@@ -133,33 +171,33 @@ class WhoisController extends Controller
 
     }
 
-
+    // Gemmer whois record i DB
     public function storeWhois(Request $request)
     {
         $whois = $this->getWhoisRecordFromApi($request->domain);
         $whois->save();
     }
 
+    // Returner alle whois records fra DB
     public function getAllWhoisRecords()
     {
         $listOfWhoisRecords = Whois::all();
-        $updatedList = $this->checkList($listOfWhoisRecords);
 
-        return $updatedList;
+        return $listOfWhoisRecords;
     }
 
-    public function getStatusCode($arr)
+    // Henter statuskode
+    public function getStatusCode(Request $request)
     {
         $http = new \GuzzleHttp\Client;
-        foreach ($arr as $element) {
-            try {
-                $element->status = $http->get($element->domainName)->getStatusCode();
-            } catch (ConnectException | ServerException | RequestException $e) {
-                $element->status = 500;
-            }
+        try {
+            $status = $http->get($request->domainName)->getStatusCode();
+        } catch (ConnectException | ServerException | RequestException $e) {
+            $status = 500;
         }
-        return $arr;
+        return $status;
     }
+
 
     // Sletter domænet fra DB
     public function deleteDomain(Request $request)

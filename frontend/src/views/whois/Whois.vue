@@ -64,7 +64,7 @@
         </div>
       </modal-vue>
 
-      <table class="table">
+      <table class="table" v-bind="whoisData">
         <thead>
         <tr>
           <th scope="col">Domæne</th>
@@ -73,15 +73,46 @@
           <th scope="col">Ejer</th>
           <th scope="col">HTTP response</th>
           <th scope="col"></th>
+          <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="whois in whoisData">
-          <th scope="row">{{ whois.domainName }}</th>
-          <td>{{ whois.expiresDate }}</td>
-          <td>{{ whois.createdDate }}</td>
-          <td>{{ whois.registrant }}</td>
-          <td v-bind:style="{color:  whois.statusColor}">{{ whois.status }}</td>
+          <th scope="row" v-if="whois.domainSpinner">
+            <clip-loader :loading="whois.domainSpinner" :color="spinnerColor"
+                         :size="spinnerSize"></clip-loader>
+          </th>
+          <th scope="row" v-else>{{ whois.domainName }}</th>
+          <td v-if="whois.expiresSpinner">
+            <clip-loader :loading="whois.expiresSpinner" :color="spinnerColor"
+                         :size="spinnerSize"></clip-loader>
+          </td>
+          <td v-else>{{ whois.expiresDate }}</td>
+          <td v-if="whois.createdSpinner">
+            <clip-loader :loading="whois.createdSpinner" :color="spinnerColor"
+                         :size="spinnerSize"></clip-loader>
+          </td>
+          <td v-else>{{ whois.createdDate }}</td>
+          <td v-if="whois.registrantSpinner">
+            <clip-loader :loading="whois.registrantSpinner" :color="spinnerColor"
+                         :size="spinnerSize"></clip-loader>
+          </td>
+          <td v-else>{{ whois.registrant }}</td>
+          <td style="text-align: center" v-bind:style="{color: whois.statusColor}" v-if="whois.status">
+            {{ whois.status }}
+          </td>
+          <td v-if="!whois.status">
+            <clip-loader :loading="whois.statusSpinner" :color="spinnerColor"
+                         :size="spinnerSize"></clip-loader>
+            <button v-if="whois.showBtn" type="button" class="btn btn-sm" id="btnShow"
+                    v-on:click="statusCodeApiCall(whois)">Vis status
+            </button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-sm" id="updateBtn" v-on:click="updateWhoisApiCall(whois)">
+              Opdater
+            </button>
+          </td>
           <td v-on:click="deleteDomain(whois.domainName)">
             <button class="btn btn-icon btn-icon-active" id="trashBtn">
               <CIcon name="cilTrash"/>
@@ -99,14 +130,19 @@
 import axios from "axios";
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
+import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
 
 export default {
   name: "Whois",
   components: {
-    Loading
+    Loading,
+    ClipLoader
   },
   data() {
     return {
+      spinnerColor: 'green',
+      spinnerSize: '20px',
+      statusAdded: false,
       successfullyDeleted: false,
       successfullyAdded: false,
       isLoading: true,
@@ -126,25 +162,62 @@ export default {
           .get('https://api.lazzatools.dk/api/whois/all')
           .then(response => (this.setData(response)))
     },
-    setData(response) {
-      this.whoisData = response.data
-      this.$store.commit('storeWhois', response.data)
+    statusCodeApiCall(whois) {
+      whois.statusSpinner = true
+      whois.showBtn = false
 
       for (const key in this.whoisData) {
-        if (this.whoisData[key].status.toString().startsWith(2)) {
-          this.whoisData[key].statusColor = 'green'
-        } else if (this.whoisData[key].status.toString().startsWith(3)) {
-          this.whoisData[key].statusColor = 'blue'
-        } else if (this.whoisData[key].status.toString().startsWith(4)) {
-          this.whoisData[key].statusColor = 'orange'
-        } else if (this.whoisData[key].status.toString().startsWith(5)) {
-          this.whoisData[key].statusColor = 'red'
+        if (this.whoisData[key].domainName === whois.domainName) {
+          this.$set(this.whoisData[key] = whois)
         }
       }
 
-      if (this.whoisData.status === 200) {
-        this.txtColor = 'green';
+      return new Promise((resolve, reject) => {
+        axios.post('https://api.lazzatools.dk/api/whois/statuscode', {
+          domainName: whois.domainName
+        })
+            .then(response => {
+              this.addStatus(response.data, whois)
+              resolve(response)
+            })
+      })
+
+    },
+    addStatus(status, whois) {
+      whois.status = status
+      whois.statusSpinner = false
+
+      for (const key in this.whoisData) {
+        if (this.whoisData[key].domainName === whois.domainName) {
+          this.$set(this.whoisData, key, whois)
+          if (this.whoisData[key].status) {
+            if (this.whoisData[key].status.toString().startsWith(2)) {
+              this.whoisData[key].statusColor = 'green'
+            } else if (this.whoisData[key].status.toString().startsWith(3)) {
+              this.whoisData[key].statusColor = 'blue'
+            } else if (this.whoisData[key].status.toString().startsWith(4)) {
+              this.whoisData[key].statusColor = 'orange'
+            } else if (this.whoisData[key].status.toString().startsWith(5)) {
+              this.whoisData[key].statusColor = 'red'
+            }
+          }
+        }
       }
+    },
+    setData(response) {
+      this.whoisData = response.data
+
+      for (const key in this.whoisData) {
+        this.whoisData[key].statusSpinner = false
+        this.whoisData[key].domainSpinner = false
+        this.whoisData[key].expiresSpinner = false
+        this.whoisData[key].createdSpinner = false
+        this.whoisData[key].registrantSpinner = false
+        this.whoisData[key].showBtn = true
+      }
+
+      this.$store.commit('storeWhois', response.data)
+
       this.isLoading = false;
     },
     search() {
@@ -210,8 +283,58 @@ export default {
           })
           .then(this.whoisData = this.whoisData = this.$store.getters.getWhoisData)
           .then(this.changeSuccessfullyDeleted)
+    },
+    updateWhoisApiCall(whois) {
+      whois.domainSpinner = true
+      whois.expiresSpinner = true
+      whois.createdSpinner = true
+      whois.registrantSpinner = true
+      whois.status = null
+      whois.showBtn = true
+
+      for (const key in this.whoisData) {
+        if (this.whoisData[key].domainName === whois.domainName) {
+          this.$set(this.whoisData[key] = whois)
+        }
+      }
+
+      return new Promise((resolve, reject) => {
+        axios.post('https://api.lazzatools.dk/api/whois/updatewhois', {
+          domainName: whois.domainName
+        })
+            .then(response => {
+              this.updateWhoisData(response.data, whois)
+              resolve(response)
+            })
+      })
+    },
+    updateWhoisData(data, whois) {
+
+      whois.domainName = data.domainName
+      whois.expiresDate = data.expiresDate
+      whois.createdDate = data.createdDate
+      whois.registrant = data.registrant
+
+      whois.domainSpinner = false
+      whois.expiresSpinner = false
+      whois.createdSpinner = false
+      whois.registrantSpinner = false
+      whois.showBtn = true
+
+      for (const key in this.whoisData) {
+        if (this.whoisData[key].domainName === whois.domainName) {
+          this.$set(this.whoisData[key], this.whoisData[key].domainSpinner, false)
+          this.$set(this.whoisData[key], this.whoisData[key].expiresSpinner, false)
+          this.$set(this.whoisData[key], this.whoisData[key].createdSpinner, false)
+          this.$set(this.whoisData[key], this.whoisData[key].registrantSpinner, false)
+          this.$set(this.whoisData[key], this.whoisData[key].showBtn, true)
+          this.$set(this.whoisData, this.whoisData[key], whois)
+        }
+      }
+
+      this.$store.commit('storeWhois', this.whoisData)
     }
-  },
+  }
 }
 </script>
 
@@ -220,8 +343,12 @@ h4 {
   font-family: "Sofia Pro Bold";
 }
 
-#addBtn {
+#addBtn, #btnShow {
   background-color: #29BB9C;
+}
+
+#updateBtn {
+  background-color: #033760;
 }
 
 #trashBtn {
@@ -230,10 +357,6 @@ h4 {
 
 #trashBtn:hover {
   color: orangered;
-}
-
-.btn:hover {
-  color: lightgray;
 }
 
 .form-control {
@@ -245,6 +368,10 @@ h4 {
   box-shadow: none !important;
   font-family: "Sofia Pro Regular";
   color: white;
+}
+
+.btn:hover {
+  color: lightgray;
 }
 
 .form-check-label {
