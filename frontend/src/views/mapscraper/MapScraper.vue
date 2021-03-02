@@ -19,6 +19,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import MarkerClusterer from '@googlemaps/markerclustererplus';
+
 export default {
   name: "MapScraper",
   components: {},
@@ -29,17 +32,33 @@ export default {
       searchAreaMarker: null,
       circleAdded: false,
       resultList: [],
-      listOfLatLng: [
-        {name: 'Horsens', lat: 55.85855190477934, lng: 9.841137104805311},
-        {name: 'Aalborg', lat: 57.05, lng: 9.93},
-      ],
+      listOfLatLng: [],
+      // listOfLatLng: [
+      //   {name: 'Horsens', lat: 55.85855190477934, lng: 9.841137104805311},
+      //   {name: 'Aalborg', lat: 57.05, lng: 9.93},
+      // ],
       markers: [],
     }
   },
   mounted() {
-    this.init()
+    this.getCitiesApi()
   },
   methods: {
+    getCitiesApi() {
+      axios
+          .get('https://api.lazzatools.dk/api/city/all')
+          .then(response => (this.setListOfLatLng(response)))
+    },
+    setListOfLatLng(response) {
+      this.listOfLatLng = response.data
+
+      for (const key in this.listOfLatLng) {
+        this.listOfLatLng[key].lat = parseFloat(this.listOfLatLng[key].lat.replace(',', '.'))
+        this.listOfLatLng[key].lng = parseFloat(this.listOfLatLng[key].lng.replace(',', '.'))
+      }
+
+      this.init()
+    },
     init() {
       this.markers = []
       this.map = new google.maps.Map(document.getElementById("map"), {
@@ -65,6 +84,10 @@ export default {
         })
         this.markers.push(marker)
       }
+
+      const markerClusterer = new MarkerClusterer(this.map, this.markers, {
+        imagePath: 'https://raw.githubusercontent.com/googlemaps/js-markerclustererplus/main/images/m'
+      })
     },
     addCircle(mapsMouseEvent, map) {
       const latLngClick = mapsMouseEvent.latLng.toJSON()
