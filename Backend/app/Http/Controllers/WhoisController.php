@@ -14,6 +14,7 @@ use function MongoDB\BSON\toJSON;
 
 class WhoisController extends Controller
 {
+    // Henter data på alle domæner
     public function getWhoisRecordsBulk()
     {
         $data = [
@@ -63,30 +64,6 @@ class WhoisController extends Controller
         }
     }
 
-//    public function checkList($listOfWhoisRecords)
-//    {
-//        $arr = [];
-//        $currentDate = new DateTime('now');
-//
-//        foreach ($listOfWhoisRecords as $record) {
-//            $givenDate = new DateTime($record->expiresDate);
-//
-//            if ($givenDate > $currentDate) {
-//                array_push($arr, $record);
-//            } else {
-//                $updatedWhois = $this->getWhoisRecordFromApi($record->domainName);
-//                $record->createdDate = $updatedWhois->createdDate;
-//                $record->expiresDate = $updatedWhois->expiresDate;
-//                $record->registrant = $updatedWhois->registrant;
-//                $record->domainName = $updatedWhois->domainName;
-//
-//                array_push($arr, $record);
-//                $record->save();
-//            }
-//        }
-//        return $arr;
-//    }
-
     // Opdaterer alle whois records
     public function updateAllWhoisRecords()
     {
@@ -106,7 +83,7 @@ class WhoisController extends Controller
         return $arr;
     }
 
-    // Opdaterer en enkelt whois record
+    // Opdaterer en enkel whois record
     public function updateWhoisRecord(Request $request)
     {
         $listOfWhoisRecords = Whois::all();
@@ -186,7 +163,7 @@ class WhoisController extends Controller
         return $listOfWhoisRecords;
     }
 
-    // Henter statuskode
+    // Henter statuskode ved brug af GuzzleHttp
     public function getStatusCode(Request $request)
     {
         $http = new \GuzzleHttp\Client;

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class ApiCredentialsController extends Controller
 {
+    // Indsætter api-nøgle til WhoisXmlApi i DB
     public function insertWhoisXmlApiCredentials(Request $request)
     {
         $result = DB::table('api_credentials')->where('name', 'WhoisXmlApi')->get();

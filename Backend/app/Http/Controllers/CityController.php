@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
+    // Returnerer alle byer
     public function getCities()
     {
         return City::all();
