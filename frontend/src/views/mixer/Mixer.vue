@@ -268,7 +268,7 @@ export default {
       // Tømmer resultarea
       this.$refs.resultarea.value = '';
 
-      // Tjekker hvilke række der skal medtages i resultarea
+      // Tjekker hvilke rækker der skal medtages i resultarea
       if (this.listOfIncludes[0].bool && this.listOfIncludes[1].bool && this.listOfIncludes[2].bool) {
         this.populateCombinedList('includeAll', this.combinedList, this.list1, this.list2, this.list3)
       } else if (this.listOfIncludes[0].bool && this.listOfIncludes[2].bool) {
