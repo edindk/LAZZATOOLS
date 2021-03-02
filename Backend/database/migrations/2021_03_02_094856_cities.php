@@ -17,7 +17,7 @@ class Cities extends Migration
             $table->bigIncrements('id');
             $table->string('city');
             $table->string('lat');
-            $table->string('longs');
+            $table->string('lng');
         });
     }
 
