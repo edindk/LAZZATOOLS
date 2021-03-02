@@ -98,7 +98,7 @@
                          :size="spinnerSize"></clip-loader>
           </td>
           <td v-else>{{ whois.registrant }}</td>
-          <td style="text-align: center" v-bind:style="{color: whois.statusColor}" v-if="whois.status">
+          <td v-bind:style="{color: whois.statusColor}" v-if="whois.status">
             {{ whois.status }}
           </td>
           <td v-if="!whois.status">
@@ -166,9 +166,10 @@ export default {
       whois.statusSpinner = true
       whois.showBtn = false
 
+      console.log(whois)
       for (const key in this.whoisData) {
         if (this.whoisData[key].domainName === whois.domainName) {
-          this.$set(this.whoisData[key] = whois)
+          this.$set(this.whoisData, key, whois)
         }
       }
 
@@ -289,24 +290,26 @@ export default {
       whois.expiresSpinner = true
       whois.createdSpinner = true
       whois.registrantSpinner = true
-      whois.status = null
+      whois.status = ''
       whois.showBtn = true
+
+      console.log(whois)
 
       for (const key in this.whoisData) {
         if (this.whoisData[key].domainName === whois.domainName) {
-          this.$set(this.whoisData[key] = whois)
+          this.$set(this.whoisData, key, whois)
+          return new Promise((resolve, reject) => {
+            axios.post('https://api.lazzatools.dk/api/whois/updatewhois', {
+              domainName: whois.domainName
+            })
+                .then(response => {
+                  this.updateWhoisData(response.data, whois)
+                  resolve(response)
+                })
+          })
         }
       }
 
-      return new Promise((resolve, reject) => {
-        axios.post('https://api.lazzatools.dk/api/whois/updatewhois', {
-          domainName: whois.domainName
-        })
-            .then(response => {
-              this.updateWhoisData(response.data, whois)
-              resolve(response)
-            })
-      })
     },
     updateWhoisData(data, whois) {
 
@@ -328,7 +331,7 @@ export default {
           this.$set(this.whoisData[key], this.whoisData[key].createdSpinner, false)
           this.$set(this.whoisData[key], this.whoisData[key].registrantSpinner, false)
           this.$set(this.whoisData[key], this.whoisData[key].showBtn, true)
-          this.$set(this.whoisData, this.whoisData[key], whois)
+          this.$set(this.whoisData, key, whois)
         }
       }
 
