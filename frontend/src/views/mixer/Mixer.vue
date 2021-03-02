@@ -255,6 +255,16 @@ export default {
           args[1].push(finalList[key])
         }
       }
+      dict['includeOne'] = function (...args) {
+
+        let finalList = []
+        let val
+        for (const key in args[2]) {
+          val = args[2][key]
+          args[1].push(val)
+          //finalList.push(val)
+        }
+      }
       dict[args[0]](...args)
 
     },
@@ -277,6 +287,12 @@ export default {
         this.populateCombinedList('includeTwo', this.combinedList, this.list2, this.list3)
       } else if (this.listOfIncludes[0].bool && this.listOfIncludes[1].bool) {
         this.populateCombinedList('includeTwo', this.combinedList, this.list1, this.list2)
+      } else if (this.listOfIncludes[0].bool) {
+        this.populateCombinedList('includeOne', this.combinedList, this.list1)
+      } else if (this.listOfIncludes[1].bool) {
+        this.populateCombinedList('includeOne', this.combinedList, this.list2)
+      } else if (this.listOfIncludes[2].bool) {
+        this.populateCombinedList('includeOne', this.combinedList, this.list3)
       }
 
       // Kalder checkThroughCheckboxes
@@ -342,9 +358,12 @@ export default {
     },
     // Wrapper teksten med quotes
     wrapTxtWithQuotes() {
+
+
       for (const combinedKey in this.combinedList) {
         let value = this.combinedList[combinedKey]
-        this.combinedList.push('"' + value + '"')
+        this.combinedList[combinedKey] = '"' + value.trim() + '"'
+        //this.combinedList.push('"' + value + '"')
       }
     },
     // Wrapper teksten med brackets
@@ -352,7 +371,8 @@ export default {
       for (const combinedKey in this.combinedList) {
         if (!this.combinedList[combinedKey].includes('"', '"')) {
           let value = this.combinedList[combinedKey]
-          this.combinedList.push('[' + value + ']')
+          this.combinedList[combinedKey] = '[' + value.trim() + ']'
+          //this.combinedList.push('[' + value + ']')
         } else {
           // Do nothing
         }
@@ -369,7 +389,8 @@ export default {
       for (const key in this.combinedList) {
         const val = this.combinedList[key]
         // Tilføjer symbol i starten og for enden af symbolet og indsætter i midlertidlig list
-        this.combinedList.push(wrapSymbol + val + wrapSymbol2)
+        this.combinedList[key] = wrapSymbol + val.trim() + wrapSymbol2
+        //this.combinedList.push(wrapSymbol + val + wrapSymbol2)
       }
       // combinedList sættes til arr
       // this.combinedList = arr
