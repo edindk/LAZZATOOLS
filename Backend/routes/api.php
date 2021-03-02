@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\CityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,3 +41,6 @@ Route::get('whois/all', [WhoisController::class, 'getAllWhoisRecords']);
 Route::post('whois/statuscode', [WhoisController::class, 'getStatusCode']);
 Route::get('whois/updateAll', [WhoisController::class, 'updateAllWhoisRecords']);
 Route::post('whois/updatewhois', [WhoisController::class, 'updateWhoisRecord']);
+
+// City routes
+Route::Get('city/all', [CityController::class, 'getCities']);
