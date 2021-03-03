@@ -1,9 +1,8 @@
 <?php
 
-
 use App\Http\Controllers\ApiCredentialsController;
-use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\WhoisController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +24,7 @@ use App\Http\Controllers\CityController;
 Auth::routes(['verify' => true]);
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+
 });
 // Auth routes
 Route::post('login', [AuthController::class, 'login']);
@@ -37,7 +37,7 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('
 
 // Email verification
 Route::get('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
-Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.resend');
 
 // Whois routes
 Route::post('whois/credentials/store', [ApiCredentialsController::class, 'insertWhoisXmlApiCredentials']);
