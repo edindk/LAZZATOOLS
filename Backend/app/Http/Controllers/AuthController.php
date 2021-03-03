@@ -42,11 +42,24 @@ class AuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        return User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        $loginRequest = new Request([
+            'username' => $request->email,
+            'password' => $request->password
+        ]);
+
+
+        $accessToken = $this->login($loginRequest);
+
+        $accessToken = json_decode($accessToken->getContents());
+
+        $user->accessToken = $accessToken->access_token;
+        return $user;
     }
 
     public function logout()
