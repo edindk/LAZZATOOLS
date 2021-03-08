@@ -53,13 +53,20 @@ class AuthController extends Controller
             'password' => $request->password
         ]);
 
+        $loginResponse = $this->login($loginRequest);
 
-        $accessToken = $this->login($loginRequest);
+        $decodedLoginResponse = json_decode($loginResponse->getContents());
 
-        $accessToken = json_decode($accessToken->getContents());
+        $http = new \GuzzleHttp\Client;
+        $response = $http->get('https://api.lazzatools.dk/api/email/resend', [
+            'headers' => [
+                'accept' => 'application/json',
+                'authorization' => 'Bearer ' . $decodedLoginResponse->access_token
+            ]
+        ]);
+        return $response->getBody();
+        //return $user;
 
-        $user->accessToken = $accessToken->access_token;
-        return $user;
     }
 
     public function logout()
