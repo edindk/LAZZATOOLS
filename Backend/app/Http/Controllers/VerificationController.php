@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Redirect;
 
 class VerificationController extends Controller
 {
@@ -45,14 +46,15 @@ class VerificationController extends Controller
     /**
      * Resend the email verification notification.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function resend(Request $request)
     {
+
         if ($request->user()->hasVerifiedEmail()) {
 
-            return response(['message' => 'Already verified']);
+            return response(['message'=>'Already verified']);
         }
 
         $request->user()->sendEmailVerificationNotification();
@@ -68,8 +70,8 @@ class VerificationController extends Controller
     /**
      * Mark the authenticated user's email address as verified.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function verify(Request $request)
@@ -82,7 +84,7 @@ class VerificationController extends Controller
 
         if ($request->user()->hasVerifiedEmail()) {
 
-            return response(['message' => 'Already verified']);
+            return response(['message'=>'Already verified']);
 
             // return redirect($this->redirectPath());
         }
@@ -90,8 +92,11 @@ class VerificationController extends Controller
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
-
-        return response(['message' => 'Successfully verified']);
+        auth()->user()->tokens->each(function ($token, $key) {
+            $token->delete();
+        });
+        return Redirect::to('https://lazzatools.dk');
+        //return response(['message'=>'Successfully verified']);
 
     }
 
