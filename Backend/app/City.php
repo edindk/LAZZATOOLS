@@ -8,6 +8,6 @@ class City extends Model
 {
     public $timestamps = false;
     protected $fillable = [
-        'id', 'city', 'lat', 'lng'
+        'id', 'city', 'lat', 'lng', 'zipcode'
     ];
 }
