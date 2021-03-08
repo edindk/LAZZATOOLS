@@ -12,6 +12,7 @@ const state = {
     user: {
         name: '',
         email: '',
+        email_verified_at: '' || null
     },
     success: null,
     resetSuccess: null,
@@ -53,6 +54,10 @@ const mutations = {
     },
     destroyToken(state) {
         state.token = null
+
+        state.user.name = ''
+        state.user.email = ''
+        state.user.email_verified_at = ''
     },
     storeToken(state, token) {
         state.token = token
@@ -60,6 +65,7 @@ const mutations = {
     storeUser(state, user) {
         state.user.name = user.name
         state.user.email = user.email
+        state.user.email_verified_at = user.email_verified_at
     },
     storeSuccess(state, success) {
         state.success = success

@@ -1,5 +1,5 @@
 <template xmlns="http://www.w3.org/1999/html">
-  <div>
+  <div v-if="isLazzaEmployee">
     <h4 class="pb-3">Domæne status</h4>
     <CAlert v-show="successfullyAdded"
             color="success"
@@ -155,6 +155,11 @@ export default {
   },
   created() {
     this.apiCall()
+  },
+  computed: {
+    isLazzaEmployee() {
+      return this.$store.getters.userDetails.email.split('@')[1] === 'lazzaweb.dk' && this.$store.getters.userDetails.email_verified_at
+    }
   },
   methods: {
     apiCall() {
