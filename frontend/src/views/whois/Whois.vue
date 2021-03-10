@@ -1,401 +1,227 @@
-<template xmlns="http://www.w3.org/1999/html">
-  <div v-if="isLazzaEmployee">
-    <h4 class="pb-3">Domæne status</h4>
-    <CAlert v-show="successfullyAdded"
-            color="success"
-            fade
-    >
-      Domæne tilføjet!
-    </CAlert>
-    <CAlert v-show="successfullyDeleted"
-            color="danger"
-            fade
-    >
-      Domæne blev slettet.
-    </CAlert>
-    <loading :active.sync="isLoading"
-             :can-cancel="true"
-             :is-full-page="fullPage"
-             :color="color"
-    >
-    </loading>
-    <div class="col-12">
-      <div class="row">
-        <div class="col-md-2 pb-2">
-          <div class="input-group">
-            <input type="text" class="form-control" style="height: 38px" placeholder="Søg efter domæne..."
-                   v-model="searchDomain" v-on:change="search">
-          </div>
-        </div>
-        <div class="col-10">
-          <button type="button" class="btn float-right float-right" id="addBtn" @click="$vm2.open('modal-1')">+ Tilføj
-            domæne
-          </button>
-        </div>
-      </div>
+<template>
+  <v-app style="height: 600px">
+    <v-data-table :headers="headers" :items="this.whoisData" class="elevation-1" disable-pagination :search="search"
+                  sort-by="expiresDate" hide-default-footer height="600px" fixed-header>
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-col md="3">
+            <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                label="Søg"
+                single-line
+                hide-details
+            ></v-text-field>
+          </v-col>
+          <v-spacer></v-spacer>
+          <v-dialog v-model="dialog" max-width="500px">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn color="success" dark v-bind="attrs" v-on="on" id="addBtn">+Tilføj domæne</v-btn>
+            </template>
+            <v-card>
+              <v-card-title>
+                <span class="headline">{{ formTitle }}</span>
+              </v-card-title>
 
-      <modal-vue
-          @on-close="$vm2.close('modal-1')"
-          name="modal-1"
-          :headerOptions="{
-        title: 'Tilføj domæne',
-      }"
-          :footerOptions="{
-        btn1: 'Annuller',
-        btn1Style: {
-          backgroundColor: '#033760'
-        },
-        btn2: 'Tilføj domæne',
-        btn2Style: {
-          backgroundColor: '#29BB9C',
-        },
-        btn2OnClick: () => {
-          addDomain();
-          $vm2.close('modal-1');
-        },
-        btn1OnClick: () => {
-          $vm2.close('modal-1');
-        },
-      }"
-      >
-        <div class="col-md-8 align-items-center offset-2">
-          <input type="text" class="form-control" style="height: 38px" placeholder="Indtast domæne"
-                 v-model="domainToAdd">
-        </div>
-      </modal-vue>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-text-field v-model="editedItem.name"
+                                    label="Domæne">
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
 
-      <table class="table" v-bind="whoisData">
-        <thead>
-        <tr>
-          <th scope="col">Domæne</th>
-          <th scope="col">Udløber</th>
-          <th scope="col">Oprettet</th>
-          <th scope="col">Ejer</th>
-          <th scope="col">HTTP response</th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="whois in whoisData">
-          <th scope="row" v-if="whois.domainSpinner">
-            <clip-loader :loading="whois.domainSpinner" :color="spinnerColor"
-                         :size="spinnerSize"></clip-loader>
-          </th>
-          <th scope="row" v-else>{{ whois.domainName }}</th>
-          <td v-if="whois.expiresSpinner">
-            <clip-loader :loading="whois.expiresSpinner" :color="spinnerColor"
-                         :size="spinnerSize"></clip-loader>
-          </td>
-          <td v-else>{{ whois.expiresDate }}</td>
-          <td v-if="whois.createdSpinner">
-            <clip-loader :loading="whois.createdSpinner" :color="spinnerColor"
-                         :size="spinnerSize"></clip-loader>
-          </td>
-          <td v-else>{{ whois.createdDate }}</td>
-          <td v-if="whois.registrantSpinner">
-            <clip-loader :loading="whois.registrantSpinner" :color="spinnerColor"
-                         :size="spinnerSize"></clip-loader>
-          </td>
-          <td v-else>{{ whois.registrant }}</td>
-          <td v-bind:style="{color: whois.statusColor}" v-if="whois.status">
-            {{ whois.status }}
-          </td>
-          <td v-if="!whois.status">
-            <clip-loader :loading="whois.statusSpinner" :color="spinnerColor"
-                         :size="spinnerSize"></clip-loader>
-            <button v-if="whois.showBtn" type="button" class="btn btn-sm" id="btnShow"
-                    v-on:click="statusCodeApiCall(whois)">Vis status
-            </button>
-          </td>
-          <td>
-            <button type="button" class="btn btn-sm" id="updateBtn" v-on:click="updateWhoisApiCall(whois)">
-              Opdater
-            </button>
-          </td>
-          <td v-on:click="deleteDomain(whois.domainName)">
-            <button class="btn btn-icon btn-icon-active" id="trashBtn">
-              <CIcon name="cilTrash"/>
-            </button>
-          </td>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn id="finalAddBtn" color="blue darken-1" text @click="save">Tilføj</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+      <template v-slot:item.domainName="{item}">
+        <strong>{{ item.domainName }}</strong>
+      </template>
+      <template v-slot:item.expiresDate="{item}">
+        <div v-bind:style="{color: item.expiresDateColor}">{{ item.expiresDate }}</div>
+      </template>
+      <template v-slot:item.status="{item}">
+        <v-btn id="showStatusBtn" v-if="item.showStatusBtn" style="margin-left: 10px" color="green darken-1" text
+               @click="statusCodeApiCall(item)">
+          <v-icon style="margin-right: 10px">mdi-application</v-icon>
+          Vis status
+        </v-btn>
+        <div v-if="item.statusCode" v-bind:style="{color: item.statusColor}">{{ item.statusCode }}</div>
+      </template>
+      <template v-slot:item.actions="{item}">
+        <v-btn id="updateBtn" color="blue darken-1" text @click="updateWhoisApiCall(item)">
+          <v-icon style="margin-right: 10px">mdi-reload</v-icon>
+          Opdater
+        </v-btn>
+        <v-btn id="deleteBtn" color="red" text @click="deleteItem(item)">
+          <v-icon style="margin-right: 10px">mdi-delete</v-icon>
+          Slet
+        </v-btn>
+      </template>
 
-        </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+    </v-data-table>
+  </v-app>
 </template>
 
 <script>
-import axios from "axios";
-import Loading from 'vue-loading-overlay'
-import 'vue-loading-overlay/dist/vue-loading.css'
-import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
+import axios from 'axios';
 
 export default {
-  name: "Whois",
-  components: {
-    Loading,
-    ClipLoader
+  name: 'Whois',
+  watch: {
+    dialog(val) {
+      val || this.close()
+    },
   },
-  data() {
-    return {
-      spinnerColor: 'green',
-      spinnerSize: '20px',
-      statusAdded: false,
-      successfullyDeleted: false,
-      successfullyAdded: false,
-      isLoading: true,
-      fullPage: true,
-      color: '#216A90',
-      whoisData: [],
-      searchDomain: null,
-      domainToAdd: null
-    }
-  },
-  created() {
-    this.apiCall()
-  },
+  data: () => ({
+    editedItem: {
+      name: ''
+    },
+    dialog: false,
+    search: '',
+    whoisData: [],
+    headers: [
+      {text: "Domæne", value: "domainName"},
+      {text: "Udløber", value: "expiresDate"},
+      {text: "Oprettet", value: "createdDate"},
+      {text: "Ejer", value: "registrant"},
+      {text: "Status", value: "status", sortable: false},
+      {text: "", value: 'actions', sortable: false},
+    ],
+  }),
   computed: {
-    isLazzaEmployee() {
-      return this.$store.getters.userDetails.email.split('@')[1] === 'lazzaweb.dk' && this.$store.getters.userDetails.email_verified_at
-    }
+    formTitle() {
+      return 'Tilføj domæne'
+    },
   },
   methods: {
-    apiCall() {
+    save() {
+      axios
+          .post('https://api.lazzatools.dk/api/whois/store', {
+            domain: this.editedItem.name
+          })
+          .then(this.getWhois)
+
+      this.close()
+    },
+    close() {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem.name = ''
+      })
+    },
+    getWhois() {
       axios
           .get('https://api.lazzatools.dk/api/whois/all')
-          .then(response => (this.setData(response)))
+          .then(response => this.setData(response))
     },
-    statusCodeApiCall(whois) {
-      whois.statusSpinner = true
-      whois.showBtn = false
-
-      console.log(whois)
-      for (const key in this.whoisData) {
-        if (this.whoisData[key].domainName === whois.domainName) {
-          this.$set(this.whoisData, key, whois)
-        }
-      }
-
-      return new Promise((resolve, reject) => {
-        axios.post('https://api.lazzatools.dk/api/whois/statuscode', {
-          domainName: whois.domainName
-        })
-            .then(response => {
-              this.addStatus(response.data, whois)
-              resolve(response)
-            })
-      })
-
-    },
-    addStatus(status, whois) {
-      whois.status = status
-      whois.statusSpinner = false
+    setData(response) {
+      this.whoisData = response.data
+      let now = new Date()
 
       for (const key in this.whoisData) {
-        if (this.whoisData[key].domainName === whois.domainName) {
-          this.$set(this.whoisData, key, whois)
-          if (this.whoisData[key].status) {
-            if (this.whoisData[key].status.toString().startsWith(2)) {
-              this.whoisData[key].statusColor = 'green'
-            } else if (this.whoisData[key].status.toString().startsWith(3)) {
-              this.whoisData[key].statusColor = 'blue'
-            } else if (this.whoisData[key].status.toString().startsWith(4)) {
-              this.whoisData[key].statusColor = 'orange'
-            } else if (this.whoisData[key].status.toString().startsWith(5)) {
-              this.whoisData[key].statusColor = 'red'
-            }
+        this.whoisData[key].showStatusBtn = true
+        this.whoisData[key].statusCode = ''
+
+        let expiresDate = new Date(this.whoisData[key].expiresDate)
+        if (expiresDate < now) {
+          this.whoisData[key].expiresDateColor = 'red'
+        } else {
+          const oneDay = 24 * 60 * 60 * 1000
+          const expiresDate = new Date(this.whoisData[key].expiresDate)
+          const now = new Date()
+          const diffDays = Math.round(Math.abs((expiresDate - now) / oneDay))
+          if (diffDays <= 31) {
+            this.whoisData[key].expiresDateColor = 'orange'
           }
         }
       }
     },
-    setData(response) {
-      this.whoisData = response.data
-
-      for (const key in this.whoisData) {
-        this.whoisData[key].statusSpinner = false
-        this.whoisData[key].domainSpinner = false
-        this.whoisData[key].expiresSpinner = false
-        this.whoisData[key].createdSpinner = false
-        this.whoisData[key].registrantSpinner = false
-        this.whoisData[key].showBtn = true
-      }
-
-      this.$store.commit('storeWhois', response.data)
-
-      this.isLoading = false;
+    statusCodeApiCall(item) {
+      return new Promise((resolve, reject) => {
+        axios.post('https://api.lazzatools.dk/api/whois/statuscode', {
+          domainName: item.domainName
+        })
+            .then(response => {
+              this.addStatus(response.data, item)
+              resolve(response)
+            })
+      })
     },
-    search() {
-      let arr = []
-      let isFound = false;
+    addStatus(response, item) {
+      item.showStatusBtn = false
+      item.statusCode = response
+
 
       for (const key in this.whoisData) {
-        if (this.whoisData[key].domainName.includes(this.searchDomain)) {
-          arr.push(this.whoisData[key])
-          isFound = true;
+        if (this.whoisData[key].domainName === item.domainName) {
+          this.$set(this.whoisData, key, item)
+          if (this.whoisData[key].statusCode.toString().startsWith(2)) {
+            this.whoisData[key].statusColor = 'green'
+          } else if (this.whoisData[key].statusCode.toString().startsWith(3)) {
+            this.whoisData[key].statusColor = 'blue'
+          } else if (this.whoisData[key].statusCode.toString().startsWith(4)) {
+            this.whoisData[key].statusColor = 'orange'
+          } else if (this.whoisData[key].statusCode.toString().startsWith(5)) {
+            this.whoisData[key].statusColor = 'red'
+          }
         }
       }
-      if (isFound) {
-        this.whoisData = arr
-        isFound = false
-      }
-      if (this.searchDomain === "") {
-        this.whoisData = this.$store.getters.getWhoisData
-      }
     },
-    addDomain() {
-      axios
-          .post('https://api.lazzatools.dk/api/whois/store', {
-            domain: this.domainToAdd
-          })
-          .then(this.apiCall)
-          .then(this.domainToAdd = '')
-          .then(this.changeSuccessfullyAdded)
-
-    },
-    changeSuccessfullyAdded() {
-      this.showSuccessfullyAdded()
-      setTimeout(this.hideSuccessfullyAdded, 5000)
-    },
-    showSuccessfullyAdded() {
-      this.$nextTick(() => {
-        this.successfullyAdded = true
-      })
-    },
-    hideSuccessfullyAdded() {
-      this.$nextTick(() => {
-        this.successfullyAdded = false
-      })
-    },
-    changeSuccessfullyDeleted() {
-      this.showSuccessfullyDeleted()
-      setTimeout(this.hideSuccessfullyDeleted, 5000)
-    },
-    showSuccessfullyDeleted() {
-      this.$nextTick(() => {
-        this.successfullyDeleted = true
-      })
-    },
-    hideSuccessfullyDeleted() {
-      this.$nextTick(() => {
-        this.successfullyDeleted = false
-      })
-    },
-    deleteDomain(domainName) {
-      axios
-          .post('https://api.lazzatools.dk/api/whois/delete', {
-            domain: domainName
-          })
-          .then(this.whoisData = this.whoisData = this.$store.getters.getWhoisData)
-          .then(this.changeSuccessfullyDeleted)
-    },
-    updateWhoisApiCall(whois) {
-      whois.domainSpinner = true
-      whois.expiresSpinner = true
-      whois.createdSpinner = true
-      whois.registrantSpinner = true
-      whois.status = ''
-      whois.showBtn = true
-
-      console.log(whois)
-
+    updateWhoisApiCall(item) {
       for (const key in this.whoisData) {
-        if (this.whoisData[key].domainName === whois.domainName) {
-          this.$set(this.whoisData, key, whois)
+        if (this.whoisData[key].domainName === item.domainName) {
           return new Promise((resolve, reject) => {
             axios.post('https://api.lazzatools.dk/api/whois/updatewhois', {
-              domainName: whois.domainName
+              domainName: item.domainName
             })
                 .then(response => {
-                  this.updateWhoisData(response.data, whois)
+                  this.updateWhoisData(response.data, item)
                   resolve(response)
                 })
           })
         }
       }
-
     },
-    updateWhoisData(data, whois) {
-
-      whois.domainName = data.domainName
-      whois.expiresDate = data.expiresDate
-      whois.createdDate = data.createdDate
-      whois.registrant = data.registrant
-
-      whois.domainSpinner = false
-      whois.expiresSpinner = false
-      whois.createdSpinner = false
-      whois.registrantSpinner = false
-      whois.showBtn = true
+    updateWhoisData(data, item) {
+      item.domainName = data.domainName
+      item.expiresDate = data.expiresDate
+      item.createdDate = data.createdDate
+      item.registrant = data.registrant
 
       for (const key in this.whoisData) {
-        if (this.whoisData[key].domainName === whois.domainName) {
-          this.$set(this.whoisData[key], this.whoisData[key].domainSpinner, false)
-          this.$set(this.whoisData[key], this.whoisData[key].expiresSpinner, false)
-          this.$set(this.whoisData[key], this.whoisData[key].createdSpinner, false)
-          this.$set(this.whoisData[key], this.whoisData[key].registrantSpinner, false)
-          this.$set(this.whoisData[key], this.whoisData[key].showBtn, true)
-          this.$set(this.whoisData, key, whois)
+        if (this.whoisData[key].domainName === item.domainName) {
+          this.$set(this.whoisData[key], this.whoisData[key].showStatusBtn, true)
+          this.$set(this.whoisData, key, item)
         }
       }
-
-      this.$store.commit('storeWhois', this.whoisData)
+      this.getWhois()
+    },
+    deleteItem(item) {
+      axios
+          .post('https://api.lazzatools.dk/api/whois/delete', {
+            domain: item.domainName
+          })
+          .then(this.getWhois)
     }
-  }
-}
+  },
+  created() {
+    this.getWhois()
+  },
+};
 </script>
-
-<style scoped>
-h4 {
-  font-family: "Sofia Pro Bold";
-}
-
-#addBtn, #btnShow {
-  background-color: #29BB9C;
-}
-
-#updateBtn {
-  background-color: #033760;
-}
-
-#trashBtn {
-  color: black;
-}
-
-#trashBtn:hover {
-  color: orangered;
-}
-
-.form-control {
-  font-family: "Sofia Pro Light";
-}
-
-.btn, .btn:focus, .btn:active {
+<style scope>
+#addBtn:focus, #showStatusBtn:focus, #updateBtn:focus, #deleteBtn:focus, #finalAddBtn:focus {
   outline: none !important;
-  box-shadow: none !important;
-  font-family: "Sofia Pro Regular";
-  color: white;
 }
 
-.btn:hover {
-  color: lightgray;
-}
-
-.form-check-label {
-  margin-left: 3px;
-  width: 150px;
-  display: inline-block;
-  font-family: "Sofia Pro Light";
-}
-
-.table {
-  font-family: "Sofia Pro Light";
-}
-
-.form-control:focus {
-  outline: none !important;
-  border: 1px solid #0FB5C8;
-  box-shadow: 0 0 5px #0FB5C8;
-}
 </style>

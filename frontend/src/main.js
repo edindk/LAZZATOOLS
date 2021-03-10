@@ -7,6 +7,7 @@ import { iconsSet as icons } from './assets/icons/icons.js'
 import store from './store'
 import 'bootstrap'
 import Modal from "@burhanahmeed/vue-modal-2";
+import vuetify from './plugins/vuetify';
 
 Vue.config.performance = true
 Vue.use(CoreuiVue)
@@ -43,6 +44,8 @@ new Vue({
   store,
   icons,
   template: '<App/>',
+  vuetify,
+
   components: {
     App
   }

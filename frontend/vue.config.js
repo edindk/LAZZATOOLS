@@ -9,6 +9,7 @@ module.exports = {
   },
   transpileDependencies: [
     '@coreui/utils',
-    '@coreui/vue'
+    '@coreui/vue',
+    'vuetify'
   ]
 }
