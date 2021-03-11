@@ -45,10 +45,6 @@ class AuthController extends Controller
                 return response()->json('Your credentials are incorrect. Please try again', $e->getCode());
             }
             return response()->json('Something went wrong on the server.', $e->getCode());
-        } catch (Exception $e) {
-            if ($e->getMessage() == 'Mail not verified') {
-                return json_encode('Din email er ikke verificeret');
-            }
         }
     }
 
