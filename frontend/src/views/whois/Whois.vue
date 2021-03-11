@@ -67,6 +67,7 @@
           Slet
         </v-btn>
       </template>
+      <template v-slot:no-data>Ingen data tilgængelig</template>
 
     </v-data-table>
   </v-app>
