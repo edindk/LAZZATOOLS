@@ -137,7 +137,7 @@ const actions = {
                 password: credentials.password,
             })
                 .then(response => {
-                    const token = response.data.access_token
+                    const token = response.data
 
                     localStorage.setItem('access_token', token)
                     context.commit('retrieveToken', token)
