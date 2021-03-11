@@ -22,8 +22,21 @@ use App\Http\Controllers\CityController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    // Whois routes
+    Route::post('whois/credentials/store', [ApiCredentialsController::class, 'insertWhoisXmlApiCredentials']);
+    Route::post('whois/store', [WhoisController::class, 'storeWhois']);
+    Route::post('whois/delete', [WhoisController::class, 'deleteDomain']);
+    Route::get('whois/all', [WhoisController::class, 'getAllWhoisRecords']);
+    Route::post('whois/statuscode', [WhoisController::class, 'getStatusCode']);
+    Route::get('whois/updateAll', [WhoisController::class, 'updateAllWhoisRecords']);
+    Route::post('whois/updatewhois', [WhoisController::class, 'updateWhoisRecord']);
+
+// City routes
+    Route::Get('city/all', [CityController::class, 'getCities']);
 });
 
 //Verification routes
@@ -39,14 +52,3 @@ Route::middleware('auth:api')->post('logout', 'AuthController@logout');
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.reset');
 
-// Whois routes
-Route::post('whois/credentials/store', [ApiCredentialsController::class, 'insertWhoisXmlApiCredentials']);
-Route::post('whois/store', [WhoisController::class, 'storeWhois']);
-Route::post('whois/delete', [WhoisController::class, 'deleteDomain']);
-Route::get('whois/all', [WhoisController::class, 'getAllWhoisRecords']);
-Route::post('whois/statuscode', [WhoisController::class, 'getStatusCode']);
-Route::get('whois/updateAll', [WhoisController::class, 'updateAllWhoisRecords']);
-Route::post('whois/updatewhois', [WhoisController::class, 'updateWhoisRecord']);
-
-// City routes
-Route::Get('city/all', [CityController::class, 'getCities']);
