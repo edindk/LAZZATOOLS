@@ -1,6 +1,6 @@
 <template>
   <div>
-    <WhoisOptions v-if="isLazzaEmployee"></WhoisOptions>
+    <WhoisOptions></WhoisOptions>
   </div>
 </template>
 
@@ -15,10 +15,5 @@ export default {
   created() {
     this.$store.dispatch('retrieveUser')
   },
-  computed: {
-    isLazzaEmployee() {
-      return this.$store.getters.userDetails.email.split('@')[1] === 'lazzaweb.dk' && this.$store.getters.userDetails.email_verified_at
-    }
-  }
 }
 </script>
