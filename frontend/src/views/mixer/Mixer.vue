@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container col-md-10">
     <h4 id="title">Combine, scrub og wrap</h4>
 
     <!-- Text areas for inputting words -->
@@ -158,7 +158,7 @@
 <script>
 
 export default {
-  name: "RevenueWire",
+  name: "Mixer",
   components: {},
   data() {
     return {

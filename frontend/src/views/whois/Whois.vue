@@ -1,76 +1,78 @@
 <template>
-  <v-app style="height: 600px">
-    <v-data-table :headers="headers" :items="this.whoisData" class="elevation-1" disable-pagination :search="search"
-                  sort-by="expiresDate" hide-default-footer height="600px" fixed-header>
-      <template v-slot:top>
-        <v-toolbar flat>
-          <v-col md="3">
-            <v-text-field
-                v-model="search"
-                append-icon="mdi-magnify"
-                label="Søg"
-                single-line
-                hide-details
-            ></v-text-field>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" max-width="500px">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn color="success" dark v-bind="attrs" v-on="on" id="addBtn">+Tilføj domæne</v-btn>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
-              </v-card-title>
+  <div class="container">
+    <v-app>
+      <v-data-table :headers="headers" :items="this.whoisData" class="elevation-1" disable-pagination :search="search"
+                    sort-by="expiresDate" hide-default-footer>
+        <template v-slot:top>
+          <v-toolbar flat>
+            <v-col md="3">
+              <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Søg"
+                  single-line
+                  hide-details
+              ></v-text-field>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-dialog v-model="dialog" max-width="500px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="success" dark v-bind="attrs" v-on="on" id="addBtn">+Tilføj domæne</v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">{{ formTitle }}</span>
+                </v-card-title>
 
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12">
-                      <v-text-field v-model="editedItem.name"
-                                    label="Domæne">
-                      </v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-text-field v-model="editedItem.name"
+                                      label="Domæne">
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
 
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn id="finalAddBtn" color="blue darken-1" text @click="save">Tilføj</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-toolbar>
-      </template>
-      <template v-slot:item.domainName="{item}">
-        <strong>{{ item.domainName }}</strong>
-      </template>
-      <template v-slot:item.expiresDate="{item}">
-        <div v-bind:style="{color: item.expiresDateColor}">{{ item.expiresDate }}</div>
-      </template>
-      <template v-slot:item.status="{item}">
-        <v-btn id="showStatusBtn" v-if="item.showStatusBtn" style="margin-left: 10px" color="green darken-1" text
-               @click="statusCodeApiCall(item)">
-          <v-icon style="margin-right: 10px">mdi-application</v-icon>
-          Vis status
-        </v-btn>
-        <div v-if="item.statusCode" v-bind:style="{color: item.statusColor}">{{ item.statusCode }}</div>
-      </template>
-      <template v-slot:item.actions="{item}">
-        <v-btn id="updateBtn" color="blue darken-1" text @click="updateWhoisApiCall(item)">
-          <v-icon style="margin-right: 10px">mdi-reload</v-icon>
-          Opdater
-        </v-btn>
-        <v-btn id="deleteBtn" color="red" text @click="deleteItem(item)">
-          <v-icon style="margin-right: 10px">mdi-delete</v-icon>
-          Slet
-        </v-btn>
-      </template>
-      <template v-slot:no-data>Ingen data tilgængelig</template>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn id="finalAddBtn" color="blue darken-1" text @click="save">Tilføj</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-toolbar>
+        </template>
+        <template v-slot:item.domainName="{item}">
+          <strong>{{ item.domainName }}</strong>
+        </template>
+        <template v-slot:item.expiresDate="{item}">
+          <div v-bind:style="{color: item.expiresDateColor}">{{ item.expiresDate }}</div>
+        </template>
+        <template v-slot:item.status="{item}">
+          <v-btn id="showStatusBtn" v-if="item.showStatusBtn" style="margin-left: 10px" color="green darken-1" text
+                 @click="statusCodeApiCall(item)">
+            <v-icon style="margin-right: 10px">mdi-application</v-icon>
+            Vis status
+          </v-btn>
+          <div v-if="item.statusCode" v-bind:style="{color: item.statusColor}">{{ item.statusCode }}</div>
+        </template>
+        <template v-slot:item.actions="{item}">
+          <v-btn id="updateBtn" color="blue darken-1" text @click="updateWhoisApiCall(item)">
+            <v-icon style="margin-right: 10px">mdi-reload</v-icon>
+            Opdater
+          </v-btn>
+          <v-btn id="deleteBtn" color="red" text @click="deleteItem(item)">
+            <v-icon style="margin-right: 10px">mdi-delete</v-icon>
+            Slet
+          </v-btn>
+        </template>
+        <template v-slot:no-data>Ingen data tilgængelig</template>
 
-    </v-data-table>
-  </v-app>
+      </v-data-table>
+    </v-app>
+  </div>
 </template>
 
 <script>
@@ -103,6 +105,10 @@ export default {
     formTitle() {
       return 'Tilføj domæne'
     },
+  },
+  created() {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
+    this.getWhois()
   },
   methods: {
     save() {
@@ -214,10 +220,7 @@ export default {
           })
           .then(this.getWhois)
     }
-  },
-  created() {
-    this.getWhois()
-  },
+  }
 };
 </script>
 <style scope>
