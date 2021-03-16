@@ -97,6 +97,7 @@ class WhoisController extends Controller
             $record->expiresDate = $updatedWhois->expiresDate;
             $record->registrant = $updatedWhois->registrant;
             $record->domainName = $updatedWhois->domainName;
+            $record->hostName = $updatedWhois->hostName;
 
             array_push($arr, $record);
             $record->save();
@@ -116,6 +117,7 @@ class WhoisController extends Controller
                 $record->expiresDate = $updatedWhois->expiresDate;
                 $record->registrant = $updatedWhois->registrant;
                 $record->domainName = $updatedWhois->domainName;
+                $record->hostName = $updatedWhois->hostName;
 
                 $record->save();
                 return $record;
@@ -157,6 +159,14 @@ class WhoisController extends Controller
                     $whois->domainName = $value->domainName;
                 } else {
                     $whois->registrant = 'Ikke oplyst';
+                }
+                if (isset($value->registryData->nameServers->rawText)) {
+                    $hostNames = explode("\n", $value->registryData->nameServers->rawText);
+                    $hostNameTrimmed = trim(substr($hostNames[0], strpos($hostNames[0], '.') + 1));
+
+                    $whois->hostName = $hostNameTrimmed;
+                } else {
+                    $whois->hostName = 'Ikke oplyst';
                 }
             }
             return $whois;
@@ -203,3 +213,4 @@ class WhoisController extends Controller
         DB::table('whois')->where('domainName', $request->domain)->delete();
     }
 }
+
