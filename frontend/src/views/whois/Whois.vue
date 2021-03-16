@@ -97,7 +97,7 @@ export default {
       {text: "Udløber", value: "expiresDate"},
       {text: "Oprettet", value: "createdDate"},
       {text: "Ejer", value: "registrant"},
-      {text: "Name servers", value: "hostNames"},
+      {text: "Host name", value: "hostName", sortable: false},
       {text: "Status", value: "status", sortable: false},
       {text: "", value: 'actions', sortable: false},
     ],
