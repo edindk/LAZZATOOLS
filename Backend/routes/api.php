@@ -13,12 +13,12 @@ use App\Http\Controllers\CityController;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| api routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
+| here is where you can register api routes for your application. these
+| routes are loaded by the routeserviceprovider within a group which
+| is assigned the "api" middleware group. enjoy building your api!
 |
 */
 
@@ -51,4 +51,7 @@ Route::middleware('auth:api')->post('logout', 'AuthController@logout');
 // Forgot password routes
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.reset');
+
+// Insert WhoisBulkRecords
+Route::get('whois/bulk', [WhoisController::class, 'insertWhoisRecordsBulk']);
 

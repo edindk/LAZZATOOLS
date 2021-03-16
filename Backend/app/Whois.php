@@ -8,7 +8,7 @@ class Whois extends Model
 {
     public $timestamps = false;
     protected $fillable = [
-        'id', 'createdDate', 'expiresDate', 'registrant', 'domainName'
+        'id', 'createdDate', 'expiresDate', 'registrant', 'domainName', 'hostName'
     ];
 
     public function __construct(array $attributes = [])

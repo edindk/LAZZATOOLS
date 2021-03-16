@@ -19,6 +19,7 @@ class CreateWhoisTable extends Migration
             $table->string('expiresDate');
             $table->string('registrant');
             $table->string('domainName');
+            $table->string('hostName');
         });
     }
 
