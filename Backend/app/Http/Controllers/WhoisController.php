@@ -15,11 +15,11 @@ use function MongoDB\BSON\toJSON;
 class WhoisController extends Controller
 {
     // Henter data på alle domæner
-    public function getWhoisRecordsBulk()
+    public function insertWhoisRecordsBulk()
     {
         $data = [
-            "apiKey" => "at_PiWTiCVTAJocXPd0uUi8imriFCJs4",
-            "requestId" => "59c3d40e-946f-44f3-a0be-d6f6c42dfd93",
+            "apiKey" => "at_QIsl2fPxpeDnAvFnSSBkjKdW7YMze",
+            "requestId" => "9f1ae70a-b238-443d-a10f-91d28e96caac",
             "maxRecords" => 100,
             "startIndex" => 1,
             "decode_content" => true,
@@ -41,18 +41,39 @@ class WhoisController extends Controller
 
             for ($i = 0; $i < count($decoded); $i++) {
 
-                if (isset($decoded[$i]->whoisRecord->registryData->createdDate) && isset($decoded[$i]->whoisRecord->registryData->expiresDate) && isset($decoded[$i]->whoisRecord->registryData->registrant->name) && isset($decoded[$i]->domainName)) {
-                    $createdDate = $decoded[$i]->whoisRecord->registryData->createdDate;
-                    $expiresDate = $decoded[$i]->whoisRecord->registryData->expiresDate;
-                    $registrant = $decoded[$i]->whoisRecord->registryData->registrant->name;
+                if (isset($decoded[$i]->whoisRecord->createdDate) || isset($decoded[$i]->whoisRecord->registryData->createdDate)
+                    && isset($decoded[$i]->whoisRecord->expiresDate) || isset($decoded[$i]->whoisRecord->registryData->expiresDate)
+                    && isset($decoded[$i]->whoisRecord->registrarName) || isset($decoded[$i]->whoisRecord->registrant) || isset($decoded[$i]->whoisRecord->registryData->registrant->name) && isset($decoded[$i]->domainName)
+                    && isset($decoded[$i]->whoisRecord->registryData->nameServers->rawText)) {
+//                if (isset($decoded[$i]->whoisRecord->registryData->createdDate) && isset($decoded[$i]->whoisRecord->registryData->expiresDate) && isset($decoded[$i]->whoisRecord->registryData->registrant->name) && isset($decoded[$i]->domainName)) {
+                    if (isset($decoded[$i]->whoisRecord->createdDate)) {
+                        $createdDate = $decoded[$i]->whoisRecord->createdDate;
+                    } else if (isset($decoded[$i]->whoisRecord->registryData->createdDate)) {
+                        $createdDate = $decoded[$i]->whoisRecord->registryData->createdDate;
+                    }
+                    if (isset($decoded[$i]->whoisRecord->expiresDate)) {
+                        $expiresDate = $decoded[$i]->whoisRecord->expiresDate;
+                    } else if (isset($decoded[$i]->whoisRecord->registryData->expiresDate)) {
+                        $expiresDate = $decoded[$i]->whoisRecord->registryData->expiresDate;
+                    }
+                    if (isset($decoded[$i]->whoisRecord->registrarName)) {
+                        $registrant = $decoded[$i]->whoisRecord->registrarName;
+                    } else if (isset($decoded[$i]->whoisRecord->registrant)) {
+                        $registrant = $decoded[$i]->whoisRecord->registrant;
+                    } else if (isset($decoded[$i]->whoisRecord->registryData->registrant->name)) {
+                        $registrant = $decoded[$i]->whoisRecord->registryData->registrant->name;
+                    }
+
                     $domainName = $decoded[$i]->domainName;
+                    $hostNames = explode("\n", $decoded[$i]->whoisRecord->registryData->nameServers->rawText);
+                    $hostNameTrimmed = trim(substr($hostNames[0], strpos($hostNames[0], '.') + 1));
 
                     $whois = new Whois([
-                        'external_id' => null,
                         'createdDate' => $createdDate,
                         'expiresDate' => $expiresDate,
                         'registrant' => $registrant,
-                        'domainName' => $domainName
+                        'domainName' => $domainName,
+                        'hostName' => $hostNameTrimmed
                     ]);
                     $whois->save();
                 } else {

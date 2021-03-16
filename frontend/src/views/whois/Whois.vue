@@ -97,6 +97,7 @@ export default {
       {text: "Udløber", value: "expiresDate"},
       {text: "Oprettet", value: "createdDate"},
       {text: "Ejer", value: "registrant"},
+      {text: "Name servers", value: "hostNames"},
       {text: "Status", value: "status", sortable: false},
       {text: "", value: 'actions', sortable: false},
     ],
@@ -204,6 +205,7 @@ export default {
       item.expiresDate = data.expiresDate
       item.createdDate = data.createdDate
       item.registrant = data.registrant
+      item.hostNames = data.hostNames
 
       for (const key in this.whoisData) {
         if (this.whoisData[key].domainName === item.domainName) {
