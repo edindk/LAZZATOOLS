@@ -8,8 +8,10 @@ import store from './store'
 import 'bootstrap'
 import Modal from "@burhanahmeed/vue-modal-2";
 import vuetify from './plugins/vuetify';
+import gtm from './gtm.js'
 
 Vue.config.performance = true
+Vue.use(gtm)
 Vue.use(CoreuiVue)
 Vue.use(Modal, {
   componentName: "ModalVue"

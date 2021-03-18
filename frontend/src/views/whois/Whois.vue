@@ -77,6 +77,7 @@
 
 <script>
 import axios from 'axios';
+import gtm from '/frontend/src/gtm.js';
 
 export default {
   name: 'Whois',
@@ -224,6 +225,8 @@ export default {
     }
   }
 };
+
+
 </script>
 <style scope>
 #addBtn:focus, #showStatusBtn:focus, #updateBtn:focus, #deleteBtn:focus, #finalAddBtn:focus {

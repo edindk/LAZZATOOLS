@@ -55,3 +55,4 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('
 // Insert WhoisBulkRecords
 Route::get('whois/bulk', [WhoisController::class, 'insertWhoisRecordsBulk']);
 
+Route::post('upload', [FileController::class, 'uploadFiles']);
