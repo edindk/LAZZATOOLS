@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Search;
 use Illuminate\Http\Request;
 use Mockery\Exception;
 
@@ -10,48 +9,47 @@ class FileController extends Controller
 {
     function uploadFiles(Request $request)
     {
-        $request->file('search_terms_report')->store('apiDocs');
-        return 'success';
-
-
-        $searchTermsArr = null;
-        $searchKeyword = null;
+        $searchTermsArr = [];
+        $searchKeywordArr = [];
 
         if ($request->file('search_terms_report') !== null) {
             $searchTermsArr = $this->filterSearchTerms($request->file('search_terms_report'));
-
         }
         if ($request->file('search_keyword_report') !== null) {
-            $searchKeyword = $this->filterSearchKeyword($request->file('search_keyword_report'));
+            $searchKeywordArr = $this->filterSearchKeyword($request->file('search_keyword_report'));
         }
 
         $tempArr = [];
 
+        $tempArr = array_udiff($searchTermsArr, $searchKeywordArr, 'strcasecmp');
 
-        for ($iSearchTerms = 0; $iSearchTerms < count($searchTermsArr); $iSearchTerms++) {
-            for ($iSearchKeyword = 0; $iSearchKeyword < count($searchKeyword); $iSearchKeyword++) {
-                if ($searchTermsArr[$iSearchTerms] == $searchKeyword[$iSearchKeyword]) {
-//                    var_dump($searchTermsArr[$iSearchTerms]);
-//                    $searchTermsArr[$iSearchTerms] = '';
 
-                    $searchWord = new Search(
-                        [
-                            'searchWord' => $searchTermsArr[$iSearchTerms],
-                            'status' => 'EXISTS'
-                        ]
-                    );
-
-                    array_push($tempArr, $searchWord);
-                } else {
-                    $searchWord = new Search([
-                        'searchWord' => $searchTermsArr[$iSearchTerms],
-                        'status' => 'DOES NOT EXIST'
-                    ]);
-                    array_push($tempArr, $searchWord);
-                }
-            }
-        }
-        return array_unique($tempArr);
+//        for ($iSearchTerms = 0; $iSearchTerms < count($searchTermsArr); $iSearchTerms++) {
+//            for ($iSearchKeyword = 0; $iSearchKeyword < count($searchKeyword); $iSearchKeyword++) {
+//                if ($searchTermsArr[$iSearchTerms] == $searchKeyword[$iSearchKeyword]) {
+////                    var_dump($searchTermsArr[$iSearchTerms]);
+////                    $searchTermsArr[$iSearchTerms] = '';
+//
+//                    $searchWord = new Search(
+//                        [
+//                            'searchWord' => $searchTermsArr[$iSearchTerms],
+//                            'status' => 'EXISTS'
+//                        ]
+//                    );
+//
+//                    array_push($tempArr, $searchWord);
+//                    unset($searchTermsArr[$iSearchTerms]);
+//                } else {
+//                    $searchWord = new Search([
+//                        'searchWord' => $searchTermsArr[$iSearchTerms],
+//                        'status' => 'DOES NOT EXIST'
+//                    ]);
+//                    array_push($tempArr, $searchWord);
+//                    unset($searchTermsArr[$iSearchTerms]);
+//                }
+//            }
+//        }
+        return $tempArr;
     }
 
     function filterSearchTerms($file)
