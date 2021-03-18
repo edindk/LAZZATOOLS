@@ -34,6 +34,12 @@ export default [
                 to: '/mapscraper',
                 icon: 'cilMap'
             },
+            {
+                _name: 'CSidebarNavItem',
+                name: 'Søgeordshøster',
+                to: '/search',
+                icon: 'cilSearch'
+            },
         ]
     }
 ]

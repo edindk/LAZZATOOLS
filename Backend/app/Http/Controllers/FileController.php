@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Search;
 use Illuminate\Http\Request;
-use Mockery\Exception;
+
 
 class FileController extends Controller
 {
@@ -19,37 +20,18 @@ class FileController extends Controller
             $searchKeywordArr = $this->filterSearchKeyword($request->file('search_keyword_report'));
         }
 
-        $tempArr = [];
-
         $tempArr = array_udiff($searchTermsArr, $searchKeywordArr, 'strcasecmp');
+        $arrToReturn = [];
 
 
-//        for ($iSearchTerms = 0; $iSearchTerms < count($searchTermsArr); $iSearchTerms++) {
-//            for ($iSearchKeyword = 0; $iSearchKeyword < count($searchKeyword); $iSearchKeyword++) {
-//                if ($searchTermsArr[$iSearchTerms] == $searchKeyword[$iSearchKeyword]) {
-////                    var_dump($searchTermsArr[$iSearchTerms]);
-////                    $searchTermsArr[$iSearchTerms] = '';
-//
-//                    $searchWord = new Search(
-//                        [
-//                            'searchWord' => $searchTermsArr[$iSearchTerms],
-//                            'status' => 'EXISTS'
-//                        ]
-//                    );
-//
-//                    array_push($tempArr, $searchWord);
-//                    unset($searchTermsArr[$iSearchTerms]);
-//                } else {
-//                    $searchWord = new Search([
-//                        'searchWord' => $searchTermsArr[$iSearchTerms],
-//                        'status' => 'DOES NOT EXIST'
-//                    ]);
-//                    array_push($tempArr, $searchWord);
-//                    unset($searchTermsArr[$iSearchTerms]);
-//                }
-//            }
-//        }
-        return $tempArr;
+        foreach ($tempArr as $item) {
+            $search = new Search([
+                'search' => $item
+            ]);
+            array_push($arrToReturn, $search);
+        }
+
+        return $arrToReturn;
     }
 
     function filterSearchTerms($file)
