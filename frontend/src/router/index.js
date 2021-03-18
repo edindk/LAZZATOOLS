@@ -9,6 +9,7 @@ const Dashboard = () => import('@/views/Dashboard')
 const Mixer = () => import('@/views/mixer/Mixer')
 const Whois = () => import('@/views/whois/Whois')
 const MapScraper = () => import('@/views/mapscraper/MapScraper')
+const Search = () => import('@/views/search/Search')
 
 // Views - Auth
 const Login = () => import('@/views/auth/Login')
@@ -20,6 +21,7 @@ const Reset = () => import('@/views/auth/Reset')
 // Views - Pages
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
+
 
 Vue.use(Router)
 
@@ -39,7 +41,7 @@ function configRoutes() {
             name: 'LAZZATOOLS',
             component: TheContainer,
             meta: {
-              requiresAuth: true,
+                requiresAuth: true,
             },
             children: [
                 {
@@ -61,6 +63,11 @@ function configRoutes() {
                     path: 'mapscraper',
                     name: 'mapscraper',
                     component: MapScraper
+                },
+                {
+                    path: 'search',
+                    name: 'search',
+                    component: Search
                 },
             ]
         },

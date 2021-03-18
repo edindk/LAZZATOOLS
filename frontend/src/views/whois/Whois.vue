@@ -224,6 +224,8 @@ export default {
     }
   }
 };
+
+
 </script>
 <style scope>
 #addBtn:focus, #showStatusBtn:focus, #updateBtn:focus, #deleteBtn:focus, #finalAddBtn:focus {
