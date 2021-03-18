@@ -71,7 +71,7 @@ export default {
       }
       axios({
         method: "post",
-        url: "http://api.lazzatools.dk/api/upload",
+        url: "https://api.lazzatools.dk/api/upload",
         data: formData,
         headers: {"Content-Type": "multipart/form-data"},
       })
