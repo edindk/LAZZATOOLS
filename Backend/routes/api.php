@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\FileController;
 
 /*
 |--------------------------------------------------------------------------
