@@ -58,7 +58,7 @@
                       <CButton class="btn-md px-4" id="resetPass" v-on:click="resetPass">Glemt adgangskode?</CButton>
                     </CCol>
                     <CCol col="6" class="text-right">
-                      <CButton color="link" class="d-lg-none">Registrer</CButton>
+                      <CButton color="link" class="d-lg-none" v-on:click="register">Registrer</CButton>
                     </CCol>
                   </CRow>
                 </CForm>
