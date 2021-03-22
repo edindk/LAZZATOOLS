@@ -43,6 +43,7 @@ Route::middleware('auth:api')->group(function () {
 //Verification routes
 Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::post('/email/verification', [AuthController::class, 'sendVerification']);
 
 // Auth routes
 Route::post('login', [AuthController::class, 'login']);
@@ -56,4 +57,5 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('
 // Insert WhoisBulkRecords
 Route::get('whois/bulk', [WhoisController::class, 'insertWhoisRecordsBulk']);
 
+// Upload sheet files
 Route::post('upload', [FileController::class, 'uploadFiles']);

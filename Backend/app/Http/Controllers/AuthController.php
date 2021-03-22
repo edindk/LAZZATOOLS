@@ -9,6 +9,13 @@ use Mockery\Exception;
 
 class AuthController extends Controller
 {
+
+    /**
+     * @param Request $request
+     * @param null $registerToken
+     * @return \Illuminate\Http\JsonResponse|mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function login(Request $request, $registerToken = null)
     {
         $http = new \GuzzleHttp\Client;
@@ -36,18 +43,28 @@ class AuthController extends Controller
                 $logoutResponse = $http->post('https://api.lazzatools.dk/api/logout', [
                     'headers' => ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . $response->access_token]
                 ]);
-                throw new Exception('Email not verified');
+
+                throw new Exception('Email not verified', 500);
             }
         } catch (\GuzzleHttp\Exception\BadResponseException $e) {
             if ($e->getCode() === 400) {
                 return response()->json('Invalid Request. Please enter a username or a password.', $e->getCode());
-            } else if ($e->getCode() === 401) {
+            }
+            if ($e->getCode() === 401) {
                 return response()->json('Your credentials are incorrect. Please try again', $e->getCode());
             }
             return response()->json('Something went wrong on the server.', $e->getCode());
+        } catch (Exception $e) {
+            if ($e->getMessage() == 'Email not verified') {
+                return response()->json('Email not verified', $e->getCode());
+            }
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Psr\Http\Message\StreamInterface
+     */
     public function register(Request $request)
     {
         // Validering af name, email og password
@@ -64,20 +81,35 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $response = $this->sendVerification($request);
+        return $response->getBody();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function sendVerification(Request $request)
+    {
         // Funktionskald til login for at få access_token
         $loginResponse = $this->login(new Request(['username' => $request->email, 'password' => $request->password]), $registerToken = true);
 
         // Sender verificerings mail
         $http = new \GuzzleHttp\Client;
-        $response = $http->get('https://api.lazzatools.dk/api/email/resend', [
+        return $http->get('https://api.lazzatools.dk/api/email/resend', [
             'headers' => [
                 'accept' => 'application/json',
                 'authorization' => 'Bearer ' . $loginResponse->access_token
             ]
         ]);
-        return $response->getBody();
     }
 
+    /**
+     * @param $response
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function retrieveUser($response)
     {
         $http = new \GuzzleHttp\Client;
@@ -89,6 +121,9 @@ class AuthController extends Controller
         return json_decode($userResponse->getBody()->getContents());
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout()
     {
         auth()->user()->tokens->each(function ($token, $key) {

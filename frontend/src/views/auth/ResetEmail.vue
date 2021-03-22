@@ -78,6 +78,7 @@ export default {
         })
             .then(response => {
               this.emailSentSuccessfully = true
+              this.isLoading = false
             })
             .catch(error => {
               this.badrequest = true
