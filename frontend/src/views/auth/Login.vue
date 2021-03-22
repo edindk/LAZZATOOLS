@@ -17,7 +17,7 @@
                       color="success"
                       fade
               >
-                Registrering vellykket!
+                Registrering vellykket! Du vil modtage en verificeringsmail.
               </CAlert>
               <CAlert v-if="resetSuccess"
                       :show.sync="dismissCountDown"
@@ -31,6 +31,14 @@
                       color="danger"
               >
                 Forkert email eller adgangskode.
+              </CAlert>
+              <CAlert :show="notVerified"
+                      color="danger"
+              >
+                Du mangler at verificer din email.
+                <li>
+                  <CButton class="btn-md" id="resendBtn" v-on:click="resend">Gensend link</CButton>
+                </li>
               </CAlert>
               <CCardBody action="#" @submit.prevent="login">
                 <CForm>
@@ -91,6 +99,7 @@
 <script>
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
+import axios from "axios";
 
 export default {
   name: 'Login',
@@ -107,15 +116,24 @@ export default {
       color: '#216A90',
       badrequest: false,
       registeredSuccessfully: false,
-      resetSuccess: false
+      resetSuccess: false,
+      notVerified: false
     }
   },
   created() {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
     this.registeredSuccessfully = this.$store.getters.registeredSuccessfully
     this.resetSuccess = this.$store.getters.resetSuccess
   },
   methods: {
-    resetPass(){
+    resend() {
+      axios
+          .post('https://api.lazzatools.dk/api/email/verification', {
+            email: this.email,
+            password: this.password
+          })
+    },
+    resetPass() {
       this.$router.push({name: 'resetemail'})
     },
     login() {
@@ -131,7 +149,13 @@ export default {
           })
           .catch((error) => {
             this.isLoading = false
-            this.badrequest = true
+
+            if (error.response.data === 'Email not verified') {
+              this.notVerified = true
+            } else {
+              this.badrequest = true
+            }
+
           })
     },
     register() {
@@ -174,12 +198,23 @@ h2, h4 {
   background-color: #29BB9C;
   border-color: transparent !important;
 }
-#resetPass{
+
+#resetPass {
   color: lightgray;
 }
+
 #resetPass:hover {
   color: black;
 }
+
+#resendBtn {
+  color: #772b35;
+}
+
+#resendBtn:hover {
+  color: white
+}
+
 .btn:hover {
   color: lightgray;
 }
@@ -195,4 +230,5 @@ h2, h4 {
   border: 1px solid #0FB5C8;
   box-shadow: 0 0 5px #0FB5C8;
 }
+
 </style>

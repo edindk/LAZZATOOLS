@@ -104,7 +104,9 @@ export default {
         })
             .then(response => {
               this.successfullyRegistered = true
-              this.$store.dispatch('successfullyRegistered', this.successfullyRegistered)
+              this.$store.commit('storeSuccess', this.successfullyRegistered)
+              this.$store.commit('storeResetSuccess', false)
+
               this.$router.push({name: 'login'})
             })
       } else {

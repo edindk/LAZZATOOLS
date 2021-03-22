@@ -30,7 +30,7 @@ const getters = {
         return state.success
     },
     resetSuccess(state) {
-        return state.success
+        return state.resetSuccess
     },
     getWhoisData(state) {
         return state.whoisData
@@ -83,6 +83,7 @@ const actions = {
         context.commit('storeSuccess', success)
     },
     resetSuccess(context, success) {
+        console.log(success + ' inside of resetSuccess (actions)')
         context.commit('storeResetSuccess', success)
     },
     register(context, data) {
@@ -144,7 +145,8 @@ const actions = {
                     resolve(response)
                 })
                 .catch((error) => {
-                    reject(error.response.data.errors)
+                    //reject(error.response.data.errors)
+                    reject(error)
                 })
         })
     },
