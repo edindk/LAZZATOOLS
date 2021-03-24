@@ -69,32 +69,55 @@ export default {
   },
   methods: {
     reset() {
+      // Starter spinner
       this.isLoading = true
+
+      // Sætter errors kollektionen til tom
       this.errors = []
 
+      // Hvs email ikke er null, eksekver indeholdet af if sætningen
       if (this.email) {
+
+        // Trigger resetEmail action i store.js og sender email med
         this.$store.dispatch('resetEmail', {
           email: this.email,
         })
             .then(response => {
+              // Sættes til true, hvis der ingen fejl opstod
               this.emailSentSuccessfully = true
+
+              // Stopper spinner
               this.isLoading = false
             })
             .catch(error => {
+              // Sætter badrequest til true
               this.badrequest = true
+
+              // Stopper spinner
               this.isLoading = false
+
+              // Pusher fejlmeddelelse til errors
               this.errors.push('Ugyldig email indtastet.')
             })
       } else {
+        // Sætter badrequest til true
         this.badrequest = true
+
+        // Stopper spinner
         this.isLoading = false
       }
+
+      // Hvis email ikke er indtastet push fejlmeddelelse til errors
       if (!this.email) {
         this.errors.push('Email påkrævet.')
-      } else if (!this.validEmail(this.email)) {
+      }
+      // Hvis email ikke er valid push fejlmeddelelse til errors
+      else if (!this.validEmail(this.email)) {
         this.errors.push('Ugyldig email.')
       }
     },
+
+    // Validering af email
     validEmail(email) {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email)
@@ -113,11 +136,6 @@ export default {
   box-shadow: 0 0 5px #0FB5C8;
 }
 
-#resetbtn {
-  background-color: #29BB9C;
-  border-color: transparent !important;
-}
-
 .btn:hover {
   color: lightgray;
 }
@@ -130,5 +148,10 @@ export default {
 
 .form-group, p {
   font-family: "Sofia Pro Light";
+}
+
+#resetbtn {
+  background-color: #29BB9C;
+  border-color: transparent !important;
 }
 </style>

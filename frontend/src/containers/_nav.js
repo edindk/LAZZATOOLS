@@ -7,10 +7,6 @@ export default [
                 name: 'Kontrolpanel',
                 to: '/dashboard',
                 icon: 'cil-speedometer',
-                // badge: {
-                //     color: 'primary',
-                //     text: 'NEW'
-                // }
             },
             {
                 _name: 'CSidebarNavTitle',

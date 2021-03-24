@@ -20,12 +20,22 @@ class ResetPasswordController extends Controller
 
     use ResetsPasswords;
 
+    /**
+     * @param Request $request
+     * @param $response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     protected function sendResetResponse(Request $request, $response)
     {
         return response(['message'=> trans($response)]);
 
     }
 
+    /**
+     * @param Request $request
+     * @param $response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     protected function sendResetFailedResponse(Request $request, $response)
     {
         return response(['error'=> trans($response)], 422);

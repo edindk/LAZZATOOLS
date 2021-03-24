@@ -38,8 +38,4 @@ export default {
 #sidebarBrand, #sidebarFooter {
   background-color: white;
 }
-
-#sidebarMinimizer {
-  background-color: black;
-}
 </style>

@@ -83,11 +83,9 @@ import {
     cilXCircle
 
 } from '@coreui/icons'
-import {logo} from './logo'
 
 export const iconsSet = Object.assign(
     {},
-    {logo},
     {
         cilMap,
         cilTrash,

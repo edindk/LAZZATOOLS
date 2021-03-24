@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -25,14 +24,7 @@ class VerificationController extends Controller
     use VerifiesEmails;
 
     /**
-     * Where to redirect users after verification.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
+     * Creates a new controller instance.
      *
      * @return void
      */
@@ -51,14 +43,15 @@ class VerificationController extends Controller
      */
     public function resend(Request $request)
     {
-
+        // Hvis brugerens Email er verificeret
         if ($request->user()->hasVerifiedEmail()) {
-
             return response(['message'=>'Already verified']);
         }
 
+        // Send verificerings mail
         $request->user()->sendEmailVerificationNotification();
 
+        // Hvis requestet ønsker svar i JSON-format
         if ($request->wantsJson()) {
             return response(['message' => 'Email Sent']);
         }
@@ -83,7 +76,6 @@ class VerificationController extends Controller
         }
 
         if ($request->user()->hasVerifiedEmail()) {
-
             return response(['message'=>'Already verified']);
 
             // return redirect($this->redirectPath());
@@ -92,13 +84,12 @@ class VerificationController extends Controller
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
+
         auth()->user()->tokens->each(function ($token, $key) {
             $token->delete();
         });
+
         return Redirect::to('https://lazzatools.dk');
         //return response(['message'=>'Successfully verified']);
-
     }
-
-
 }

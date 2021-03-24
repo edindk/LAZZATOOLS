@@ -15,11 +15,6 @@
     <CDropdownHeader tag="div" class="text-center" color="light">
       <strong>{{ this.user.name }}</strong>
     </CDropdownHeader>
-    <CDropdownItem>
-      <CIcon name="cil-user"/>
-      Ret profil
-    </CDropdownItem>
-    <CDropdownDivider/>
     <CDropdownItem v-on:click="logout">
       <CIcon name="cil-lock-locked"/>
       Log ud
@@ -28,6 +23,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: 'TheHeaderDropdownAccnt',
   data() {
@@ -36,6 +33,7 @@ export default {
     }
   },
   created() {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
     this.user = this.$store.getters.userDetails
   },
   computed: {
