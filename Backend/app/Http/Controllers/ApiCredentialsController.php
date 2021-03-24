@@ -7,7 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 class ApiCredentialsController extends Controller
 {
-    // Indsætter api-nøgle til WhoisXmlApi i DB
+    /**
+     * Indsætter api-nøgle til WhoisXmlApi i databasen
+     *
+     * @param Request $request
+     */
     public function insertWhoisXmlApiCredentials(Request $request)
     {
         $result = DB::table('api_credentials')->where('name', 'WhoisXmlApi')->get();
@@ -19,6 +23,5 @@ class ApiCredentialsController extends Controller
         } else {
             DB::table('api_credentials')->where('name', 'WhoisXmlApi')->update(['name' => 'WhoisXmlApi', 'key' => $request->key, 'username' => 'null', 'status' => 'active']);
         }
-
     }
 }

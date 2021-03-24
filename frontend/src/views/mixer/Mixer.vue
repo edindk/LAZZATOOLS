@@ -1,157 +1,176 @@
 <template>
-  <div class="container col-md-10">
-    <h4 id="title">Combine, scrub og wrap</h4>
-
-    <!-- Text areas for inputting words -->
-    <div class="row">
-      <div class="col-4">
-        <div class="form-group">
-          <textarea class="form-control" rows="5" ref="textarea1"></textarea>
+  <v-app id="mixer">
+    <h4 id="title" style="margin-bottom: 20px">Combine, wrap og scrub</h4>
+    <div class="col-md-10 offset-md-1">
+      <!-- Text areas for inputting words -->
+      <div class="row">
+        <div class="col-4">
+          <v-textarea
+              v-model="list1"
+              outlined
+              label="Første liste"
+          ></v-textarea>
         </div>
-      </div>
-      <div class="col-4">
-        <div class="form-group">
-          <textarea class="form-control" rows="5" ref="textarea2"></textarea>
+        <div class="col-4">
+          <v-textarea
+              v-model="list2"
+              outlined
+              label="Anden liste"
+          ></v-textarea>
         </div>
-      </div>
-      <div class="col-4">
-        <div class="form-group">
-          <textarea class="form-control" rows="5" ref="textarea3"></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- Options -->
-    <div class="row">
-      <div class="col-4">
-        <h5>Inkluder</h5>
-        <div class="input-group mb-2 mt-2" v-for="include in listOfIncludes"
-             v-bind:value="{bool: include.bool, text: include.name}">
-          <input class="form-check-input" type="checkbox" v-model="include.bool">
-          <label class="form-check-label">
-            {{ include.name }}
-          </label>
+        <div class="col-4">
+          <v-textarea
+              v-model="list3"
+              outlined
+              label="Tredje liste"
+          ></v-textarea>
         </div>
       </div>
 
-      <div class="col-4">
-        <h5>Wrap</h5>
-        <div class="input-group mb-2 mt-2" v-for="wrap in listOfWrapOptions"
-             v-bind:value="{bool: wrap.bool, text: wrap.name}">
-          <input class="form-check-input" type="checkbox" value="" v-model="wrap.bool">
-          <label class="form-check-label">
-            {{ wrap.name }}
-          </label>
-        </div>
-
-        <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.wrapWithSymbol">
-          <label class="form-check-label">Wrap med symboler:</label>
-          <div class="input-group col-sm-5">
-            <input class="form-control form-control-sm" type="text" ref="wrapSymbol" placeholder="-">
-            <input class="form-control form-control-sm" type="text" ref="wrapSymbol2" placeholder="+">
+      <!-- Options -->
+      <div class="row">
+        <div class="col-4">
+          <h5>Combine</h5>
+          <div class="input-group mb-2 mt-2" v-for="include in listOfIncludes"
+               v-bind:value="{bool: include.bool, text: include.name}">
+            <input class="form-check-input" type="checkbox" v-model="include.bool">
+            <label class="form-check-label">
+              {{ include.name }}
+            </label>
           </div>
         </div>
 
+        <div class="col-4">
+          <h5>Wrap</h5>
+          <div class="input-group mb-2 mt-2" v-for="wrap in listOfWrapOptions"
+               v-bind:value="{bool: wrap.bool, text: wrap.name}">
+            <input class="form-check-input" type="checkbox" value="" v-model="wrap.bool">
+            <label class="form-check-label">
+              {{ wrap.name }}
+            </label>
+          </div>
 
-        <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.wrapWithWords">
-          <label class="form-check-label">Wrap med ord:</label>
-          <div class="input-group col-sm-5">
-            <input class="form-control form-control-sm" type="text" ref="wrapWord" placeholder="køb">
-            <input class="form-control form-control-sm" type="text" ref="wrapWord2" placeholder="nu">
+          <div class="input-group mb-2 mt-2">
+            <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.wrapWithSymbol">
+            <label class="form-check-label">Wrap med symboler:</label>
+            <div class="input-group col-sm-5">
+              <input class="form-control form-control-sm" type="text" ref="wrapSymbol" placeholder="-">
+              <input class="form-control form-control-sm" type="text" ref="wrapSymbol2" placeholder="+">
+            </div>
+          </div>
+
+
+          <div class="input-group mb-2 mt-2">
+            <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.wrapWithWords">
+            <label class="form-check-label">Wrap med ord:</label>
+            <div class="input-group col-sm-5">
+              <input class="form-control form-control-sm" type="text" ref="wrapWord" placeholder="køb">
+              <input class="form-control form-control-sm" type="text" ref="wrapWord2" placeholder="nu">
+            </div>
+          </div>
+          <div class="input-group mb-2 mt-2">
+            <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.replaceSymbol">
+            <label class="form-check-label">Erstat med:</label>
+            <div class="input-group col-sm-5">
+              <input class="form-control form-control-sm" type="text" ref="replaceSymb" placeholder="køb">
+              <input class="form-control form-control-sm" type="text" ref="replaceSymb2" placeholder="nu">
+            </div>
           </div>
         </div>
-        <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.replaceSymbol">
-          <label class="form-check-label">Erstat med:</label>
-          <div class="input-group col-sm-5">
-            <input class="form-control form-control-sm" type="text" ref="replaceSymb" placeholder="køb">
-            <input class="form-control form-control-sm" type="text" ref="replaceSymb2" placeholder="nu">
+
+        <div class="col-4" id="scrub">
+          <h5>Scrub</h5>
+          <div class="input-group mb-2 mt-2" v-for="scrub in listOfScrubOptions"
+               v-bind:value="{bool:scrub.bool, text: scrub.name}">
+            <input class="form-check-input" type="checkbox" value="" v-model="scrub.bool">
+            <label class="form-check-label">
+              {{ scrub.name }}
+            </label>
           </div>
+          <div class="input-group mb-2 mt-2">
+            <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.removeSymb">
+            <label class="form-check-label">Fjern tegn:</label>
+            <div class="input-group col-sm-5">
+              <input class="form-control form-control-sm" type="text" ref="removeSymb" placeholder="@#$/\%^&*">
+            </div>
+          </div>
+          <div class="input-group mb-2 mt-2">
+            <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.removeWord">
+            <label class="form-check-label">Fjern ord:</label>
+            <div class="input-group col-sm-5">
+              <input class="form-control form-control-sm" type="text" ref="removeWord" placeholder="køb">
+            </div>
+          </div>
+
+          <div class="input-group mb-2 mt-2">
+            <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.removeLine">
+            <label class="form-check-label">Fjern linjer der indeholder:</label>
+            <div class="input-group col-sm-5">
+              <input class="form-control form-control-sm" type="text" ref="removeLine" placeholder="køb">
+            </div>
+          </div>
+
+          <div class="input-group mb-2 mt-2">
+            <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.numberOfWords">
+            <label class="form-check-label">Maks antal tegn:</label>
+            <div class="input-group col-sm-5">
+              <input class="form-control form-control-sm" type="number" ref="numberOfWords" placeholder="14">
+            </div>
+          </div>
+
+          <div class="input-group mb-2 mt-2 mb-4">
+            <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.format">
+            <label class="form-check-label">Ændring af formatet:</label>
+            <div class="col-sm-5">
+              <select class="form-control form-control-sm form-select" v-model="selected">
+                <option v-for="format in listOfFormats" v-bind:value="{id: format.id, text: format.name}">
+                  {{ format.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <div class="col-4">
-        <h5>Scrub</h5>
-        <div class="input-group mb-2 mt-2" v-for="scrub in listOfScrubOptions"
-             v-bind:value="{bool:scrub.bool, text: scrub.name}">
-          <input class="form-check-input" type="checkbox" value="" v-model="scrub.bool">
-          <label class="form-check-label">
-            {{ scrub.name }}
-          </label>
-        </div>
-        <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.removeSymb">
-          <label class="form-check-label">Fjern tegn:</label>
-          <div class="input-group col-sm-5">
-            <input class="form-control form-control-sm" type="text" ref="removeSymb" placeholder="@#$/\%^&*">
-          </div>
-        </div>
-        <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.removeWord">
-          <label class="form-check-label">Fjern ord:</label>
-          <div class="input-group col-sm-5">
-            <input class="form-control form-control-sm" type="text" ref="removeWord" placeholder="køb">
-          </div>
-        </div>
-
-        <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.removeLine">
-          <label class="form-check-label">Fjern linjer der indeholder:</label>
-          <div class="input-group col-sm-5">
-            <input class="form-control form-control-sm" type="text" ref="removeLine" placeholder="køb">
-          </div>
-        </div>
-
-        <div class="input-group mb-2 mt-2">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.numberOfWords">
-          <label class="form-check-label">Maks antal tegn:</label>
-          <div class="input-group col-sm-5">
-            <input class="form-control form-control-sm" type="number" ref="numberOfWords" placeholder="14">
-          </div>
-        </div>
-
-        <div class="input-group mb-2 mt-2 mb-4">
-          <input class="form-check-input" type="checkbox" value="" v-model="listOfOtherOptions.format">
-          <label class="form-check-label">Ændring af formatet:</label>
-          <div class="col-sm-5">
-            <select class="form-control form-control-sm form-select" v-model="selected">
-              <option v-for="format in listOfFormats" v-bind:value="{id: format.id, text: format.name}">
-                {{ format.name }}
+      <!-- Text area showing the result -->
+      <div class="row">
+        <div class="col-12 mt-3">
+          <!--        <h4>Resultat</h4>-->
+          <div class="col-sm-5 mb-2" id="sort" style="width: 200px">
+            <label>Sorter</label>
+            <select class="form-control form-control-sm form-select ml-2 mb-1" v-model="selectedSort"
+                    v-on:change="checkSelectedSort">
+              <option v-for="sort in listOfSorts" v-bind:value="{id: sort.id, text: sort.name}">
+                {{ sort.name }}
               </option>
             </select>
           </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Text area showing the result -->
-    <div class="row">
-      <div class="col-12 mt-3">
-        <h4>Resultat</h4>
-        <div class="col-sm-5" id="sort" style="width: 200px">
-          <label>Sorter</label>
-          <select class="form-control form-control-sm form-select ml-2 mb-1" v-model="selectedSort"
-                  v-on:change="checkSelectedSort">
-            <option v-for="sort in listOfSorts" v-bind:value="{id: sort.id, text: sort.name}">
-              {{ sort.name }}
-            </option>
-          </select>
-        </div>
-        <div class="form-group">
-          <textarea class="form-control" rows="10" ref="resultarea"></textarea>
+          <div class="form-group">
+            <v-textarea
+                v-model="resultList"
+                outlined
+                label="Resultat"
+                rows="7"
+            >
+            </v-textarea>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-12 mb-4">
-        <button type="button" class="btn" id="generatebtn" v-on:click="combine()">Generer resultat</button>
-        <button type="button" class="btn ml-1" id="resetbtn" v-on:click="clear()">Nulstil</button>
+      <div class="row">
+        <div class="col-12" id="btnGroup">
+          <v-btn color="success" id="generatebtn"
+                 @click="combine()">
+            Generer resultat
+          </v-btn>
+          <v-btn color="#033760" id="resetbtn"
+                 @click="clear()">
+            Nulstil
+          </v-btn>
+        </div>
       </div>
     </div>
-  </div>
+  </v-app>
 
 </template>
 
@@ -166,6 +185,10 @@ export default {
       list1: [],
       list2: [],
       list3: [],
+      splittedList1: [],
+      splittedList2: [],
+      splittedList3: [],
+      resultList: [],
       selected: '',
       listOfFormats: [
         {id: 1, name: 'initial caps'},
@@ -210,9 +233,15 @@ export default {
   methods: {
     // Henter alt tekst fra textarea1, 2 og 3
     getValuesFromTextAreas() {
-      this.list1 = this.$refs.textarea1.value.split("\n");
-      this.list2 = this.$refs.textarea2.value.split("\n");
-      this.list3 = this.$refs.textarea3.value.split("\n");
+      if (this.list1.length !== 0) {
+        this.splittedList1 = this.list1.split("\n")
+      }
+      if (this.list2.length !== 0) {
+        this.splittedList2 = this.list2.split("\n")
+      }
+      if (this.list3.length !== 0) {
+        this.splittedList3 = this.list3.split("\n")
+      }
     },
     // Indsætter kombinerede sætninger i combinedList
     populateCombinedList(...args) {
@@ -262,7 +291,6 @@ export default {
         for (const key in args[2]) {
           val = args[2][key]
           args[1].push(val)
-          //finalList.push(val)
         }
       }
       dict[args[0]](...args)
@@ -276,23 +304,23 @@ export default {
       this.getValuesFromTextAreas()
 
       // Tømmer resultarea
-      this.$refs.resultarea.value = '';
+      this.resultList = []
 
       // Tjekker hvilke rækker der skal medtages i resultarea
       if (this.listOfIncludes[0].bool && this.listOfIncludes[1].bool && this.listOfIncludes[2].bool) {
-        this.populateCombinedList('includeAll', this.combinedList, this.list1, this.list2, this.list3)
+        this.populateCombinedList('includeAll', this.combinedList, this.splittedList1, this.splittedList2, this.splittedList3)
       } else if (this.listOfIncludes[0].bool && this.listOfIncludes[2].bool) {
-        this.populateCombinedList('includeTwo', this.combinedList, this.list1, this.list3)
+        this.populateCombinedList('includeTwo', this.combinedList, this.splittedList1, this.splittedList3)
       } else if (this.listOfIncludes[1].bool && this.listOfIncludes[2].bool) {
-        this.populateCombinedList('includeTwo', this.combinedList, this.list2, this.list3)
+        this.populateCombinedList('includeTwo', this.combinedList, this.splittedList2, this.splittedList3)
       } else if (this.listOfIncludes[0].bool && this.listOfIncludes[1].bool) {
-        this.populateCombinedList('includeTwo', this.combinedList, this.list1, this.list2)
+        this.populateCombinedList('includeTwo', this.combinedList, this.splittedList1, this.splittedList2)
       } else if (this.listOfIncludes[0].bool) {
-        this.populateCombinedList('includeOne', this.combinedList, this.list1)
+        this.populateCombinedList('includeOne', this.combinedList, this.splittedList1)
       } else if (this.listOfIncludes[1].bool) {
-        this.populateCombinedList('includeOne', this.combinedList, this.list2)
+        this.populateCombinedList('includeOne', this.combinedList, this.splittedList2)
       } else if (this.listOfIncludes[2].bool) {
-        this.populateCombinedList('includeOne', this.combinedList, this.list3)
+        this.populateCombinedList('includeOne', this.combinedList, this.splittedList3)
       }
 
       // Kalder checkThroughCheckboxes
@@ -317,10 +345,10 @@ export default {
       this.$refs.wrapSymbol2.value = '';
       this.$refs.wrapWord.value = '';
       this.$refs.wrapWord2.value = '';
-      this.$refs.resultarea.value = '';
-      this.$refs.textarea1.value = '';
-      this.$refs.textarea2.value = '';
-      this.$refs.textarea3.value = '';
+      this.resultList = []
+      this.list1 = []
+      this.list2 = []
+      this.list3 = []
       this.$refs.wrapSymbol.value = '';
       this.$refs.wrapSymbol2.value = '';
       this.$refs.wrapWord.value = '';
@@ -347,7 +375,7 @@ export default {
       }
       this.combinedList = arr
 
-      this.$refs.resultarea.value = this.combinedList.join("")
+      this.resultList = this.combinedList.join("")
     },
     // Unwrapper teksten så combinedList både indeholder wrapped og unwrapped versioner af teksten
     unwrap() {
@@ -363,7 +391,6 @@ export default {
       for (const combinedKey in this.combinedList) {
         let value = this.combinedList[combinedKey]
         this.combinedList[combinedKey] = '"' + value.trim() + '"'
-        //this.combinedList.push('"' + value + '"')
       }
     },
     // Wrapper teksten med brackets
@@ -372,7 +399,6 @@ export default {
         if (!this.combinedList[combinedKey].includes('"', '"')) {
           let value = this.combinedList[combinedKey]
           this.combinedList[combinedKey] = '[' + value.trim() + ']'
-          //this.combinedList.push('[' + value + ']')
         } else {
           // Do nothing
         }
@@ -383,17 +409,13 @@ export default {
       // Henter symboler fra inputfelterne
       const wrapSymbol = this.$refs.wrapSymbol.value
       const wrapSymbol2 = this.$refs.wrapSymbol2.value
-      // let arr = []
 
       // Looper igennem combinedList
       for (const key in this.combinedList) {
         const val = this.combinedList[key]
         // Tilføjer symbol i starten og for enden af symbolet og indsætter i midlertidlig list
         this.combinedList[key] = wrapSymbol + val.trim() + wrapSymbol2
-        //this.combinedList.push(wrapSymbol + val + wrapSymbol2)
       }
-      // combinedList sættes til arr
-      // this.combinedList = arr
     },
     // Wrapper teksten med ord fra inputfelter
     wrapTxtWithWords() {
@@ -582,7 +604,7 @@ export default {
       this.combinedList.sort(function (a, b) {
         return b.length - a.length;
       });
-      this.$refs.resultarea.value = this.combinedList.join("")
+      this.resultList = this.combinedList.join("")
     },
     sortByAlphabetical() {
       this.combinedList.sort(function (a, b) {
@@ -607,7 +629,7 @@ export default {
 
         return getCode(a) - getCode(b);
       });
-      this.$refs.resultarea.value = this.combinedList.join("")
+      this.resultList = this.combinedList.join("")
     },
     checkSelectedSort() {
       switch (this.selectedSort.text) {
@@ -624,7 +646,6 @@ export default {
     // Hvis boolean er true så eksekver metode, ellers så gør intet
     checkThroughCheckboxes() {
       // Tjekker op på hvilke checkboxe der er true i Wrap delen
-      // this.listOfWrapOptions[0].bool ? this.unwrap() : null
       this.listOfOtherOptions.wrapWithWords ? this.wrapTxtWithWords() : null
       this.listOfWrapOptions[0].bool ? this.wrapTxtWithQuotes() : null
       this.listOfWrapOptions[1].bool ? this.wrapTxtWithBrackets() : null
@@ -647,19 +668,6 @@ export default {
 </script>
 
 <style scoped>
-
-#resetbtn {
-  background-color: #033760;
-}
-
-#generatebtn {
-  background-color: #29BB9C;
-}
-
-#sort {
-  display: flex;
-  right: 15px;
-}
 
 .btn:hover {
   color: lightgray;
@@ -691,5 +699,37 @@ h4, h5 {
   outline: none !important;
   border: 1px solid #0FB5C8;
   box-shadow: 0 0 5px #0FB5C8;
+}
+
+.col-sm-5 {
+  padding: 0px !important;
+}
+
+#mixer {
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#btnGroup {
+  margin-top: -35px;
+}
+
+#resetbtn:focus {
+  outline: none;
+}
+
+#resetbtn {
+  margin-left: 10px;
+  color: white;
+}
+
+#generatebtn:focus {
+  outline: none;
+}
+
+#sort {
+  display: flex;
+  right: 15px;
 }
 </style>

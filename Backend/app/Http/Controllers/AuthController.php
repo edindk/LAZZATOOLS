@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Mockery\Exception;
 
 class AuthController extends Controller
 {
-
     /**
      * @param Request $request
      * @param null $registerToken
@@ -18,9 +19,14 @@ class AuthController extends Controller
      */
     public function login(Request $request, $registerToken = null)
     {
-        $http = new \GuzzleHttp\Client;
+        // Opretter et nyt GuzzleHttp Client objekt
+        $http = new Client;
+
+        // Response fra HTTP requestet
         $response = null;
+
         try {
+            // Udsteder access_token
             $response = $http->post('http://api.lazzatools.dk/oauth/token', [
                 'form_params' => [
                     'grant_type' => 'password',
@@ -30,23 +36,35 @@ class AuthController extends Controller
                     'password' => $request->password,
                 ]
             ]);
+
+            // Afkoder reponse for at få fat i access_token
             $response = json_decode($response->getBody()->getContents());
 
+            // Henter brugeroplysninger ud fra access_token
             $user = $this->retrieveUser($response);
 
+            // Hvis brugerens email er verificeret returner access_token
             if ($user->email_verified_at) {
                 return $response->access_token;
             }
+
+            // Hvis registerToken er true returner access_token
             if ($registerToken) {
                 return $response;
-            } else {
-                $logoutResponse = $http->post('https://api.lazzatools.dk/api/logout', [
+            }
+
+            // Ellers så kaldes /logout endpointet for at fjerne alle generede access_tokens
+            else {
+                $http->post('https://api.lazzatools.dk/api/logout', [
                     'headers' => ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . $response->access_token]
                 ]);
 
+                // Thrower en ny exception
                 throw new Exception('Email not verified', 500);
             }
-        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+        }
+        // Alt efter hvilken exception der opstår, returneres der en passende fejlmeddelelse
+        catch (BadResponseException $e) {
             if ($e->getCode() === 400) {
                 return response()->json('Invalid Request. Please enter a username or a password.', $e->getCode());
             }
@@ -81,7 +99,10 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // Funktionen sendVerification tager et $request i parameteren
+        // og returnerer en HTTP response
         $response = $this->sendVerification($request);
+
         return $response->getBody();
     }
 
@@ -96,7 +117,7 @@ class AuthController extends Controller
         $loginResponse = $this->login(new Request(['username' => $request->email, 'password' => $request->password]), $registerToken = true);
 
         // Sender verificerings mail
-        $http = new \GuzzleHttp\Client;
+        $http = new Client;
         return $http->get('https://api.lazzatools.dk/api/email/resend', [
             'headers' => [
                 'accept' => 'application/json',
@@ -112,12 +133,15 @@ class AuthController extends Controller
      */
     public function retrieveUser($response)
     {
-        $http = new \GuzzleHttp\Client;
+        // Opretter nyt Client objekt
+        $http = new Client;
 
+        // Henter brugeroplysninger
         $userResponse = $http->get('https://api.lazzatools.dk/api/user', [
             'headers' => ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . $response->access_token]
         ]);
 
+        // Returnerer afkodede brugeroplysninger
         return json_decode($userResponse->getBody()->getContents());
     }
 
@@ -126,10 +150,12 @@ class AuthController extends Controller
      */
     public function logout()
     {
+        // Fjerner alle access_tokens fra databasen der er tilknyttet brugeren
         auth()->user()->tokens->each(function ($token, $key) {
             $token->delete();
         });
 
+        // Returnerer json besked
         return response()->json('Logged out successfully', 200);
     }
 }

@@ -121,12 +121,18 @@ export default {
     }
   },
   created() {
+    // Sætter headeren til at indeholde access_token som default
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
+
+    // Henter bool værdi fra store.js og sætter registeredSuccessfully i Login.vue til denne værdi
     this.registeredSuccessfully = this.$store.getters.registeredSuccessfully
+
+    // Henter bool værdi fra store.js og sætter resetSuccess i Login.vue til denne værdi
     this.resetSuccess = this.$store.getters.resetSuccess
   },
   methods: {
     resend() {
+      // post HTTP request til API'en hvori email og password sendes med som data
       axios
           .post('https://api.lazzatools.dk/api/email/verification', {
             email: this.email,
@@ -134,31 +140,44 @@ export default {
           })
     },
     resetPass() {
+      // Pusher til resetemail view
       this.$router.push({name: 'resetemail'})
     },
     login() {
-
+      // Starter login spinner
       this.isLoading = true
+
+      // Sætter badrequest til false
       this.badrequest = false
+
+      // Trigger retrieveToken action i store.js og sender email samt password med
       this.$store.dispatch('retrieveToken', {
         username: this.email,
         password: this.password,
       })
+          // Hvis der ingen fejl opstår pushes der til dashboard view
           .then(response => {
             this.$router.push({name: 'dashboard'})
           })
+
+          // I tilfælde af fejl så håndter denne
           .catch((error) => {
+            // Stopper login spinner
             this.isLoading = false
 
+            // Hvis email ikke er verificeret sæt notVerified til true og vis passende fejlmeddelelse
             if (error.response.data === 'Email not verified') {
               this.notVerified = true
-            } else {
+            }
+            // Hvis email er verificeret så sæt badrequest til true og vis passende fejlmeddelelse
+            else {
               this.badrequest = true
             }
 
           })
     },
     register() {
+      // Pusher til register view
       this.$router.push({name: 'register'})
     },
   }
@@ -182,16 +201,32 @@ h2, h4 {
   font-family: "Sofia Pro Regular";
 }
 
-#register {
-  background-color: #0B6A90 !important;
-}
-
 @media screen and (max-width: 991px) {
   .btn-link {
     color: #033760 !important;
     text-align: center;
     display: block;
   }
+}
+
+.btn:hover {
+  color: lightgray;
+}
+
+.btn, .btn:focus, .btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+  color: white;
+}
+
+.form-control:focus {
+  outline: none !important;
+  border: 1px solid #0FB5C8;
+  box-shadow: 0 0 5px #0FB5C8;
+}
+
+#register {
+  background-color: #0B6A90 !important;
 }
 
 #loginbtn {
@@ -214,21 +249,4 @@ h2, h4 {
 #resendBtn:hover {
   color: white
 }
-
-.btn:hover {
-  color: lightgray;
-}
-
-.btn, .btn:focus, .btn:active {
-  outline: none !important;
-  box-shadow: none !important;
-  color: white;
-}
-
-.form-control:focus {
-  outline: none !important;
-  border: 1px solid #0FB5C8;
-  box-shadow: 0 0 5px #0FB5C8;
-}
-
 </style>

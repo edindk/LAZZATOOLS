@@ -4,13 +4,9 @@
     <CWrapper>
       <TheHeader/>
       <div class="c-body">
-        <main class="c-main">
-          <CContainer fluid>
-            <transition name="fade" mode="out-in">
-              <router-view :key="$route.path"></router-view>
-            </transition>
-          </CContainer>
-        </main>
+        <transition name="fade" mode="out-in">
+          <router-view :key="$route.path"></router-view>
+        </transition>
       </div>
       <TheFooter/>
     </CWrapper>
@@ -37,6 +33,7 @@ export default {
 .fade-leave-active {
   transition: opacity 0.3s;
 }
+
 .fade-enter,
 .fade-leave-to {
   opacity: 0;

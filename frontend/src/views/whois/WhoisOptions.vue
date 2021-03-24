@@ -69,11 +69,14 @@ export default {
   },
   methods: {
     storeWhoisXmlApiKey() {
+      // Får api nøglen fra input feltet
       const apiKey = this.$refs.whoisApiKey.value
       axios
+          // API kald til /whois/credentials/store, sender api nglen med
           .post('https://api.lazzatools.dk/api/whois/credentials/store', {
             key: apiKey
           })
+          // Sætter succesfullyUpdate til true
           .then(this.successfullyUpdated = true)
     }
   }
@@ -94,10 +97,6 @@ p {
   color: black
 }
 
-#updateBtn {
-  background-color: #29BB9C;
-}
-
 .btn:hover {
   color: lightgray;
 }
@@ -113,5 +112,9 @@ p {
   outline: none !important;
   border: 1px solid #0FB5C8;
   box-shadow: 0 0 5px #0FB5C8;
+}
+
+#updateBtn {
+  background-color: #29BB9C;
 }
 </style>

@@ -91,51 +91,82 @@ export default {
   },
   methods: {
     register() {
+      // Starter register spinner
       this.isLoading = true
+
+      // Sætter errors kollektionen til tom
       this.errors = []
 
+      // Hvis sandt eksekver indeholdet af if sætningen
       if (this.name && this.email && this.password && this.validatePassword(this.password, this.repeatPassword) && this.validateLength(this.password)) {
+        // Sætter badrequest til false
         this.badrequest = false
 
+        // Trigger register action i store.js og sender name, email og password med
         this.$store.dispatch('register', {
           name: this.name,
           email: this.email,
           password: this.password
         })
             .then(response => {
+              // Sætter successfullyRegistered til true
               this.successfullyRegistered = true
+
+              // Ændre succes state i store.js til true
               this.$store.commit('storeSuccess', this.successfullyRegistered)
+
+              // Ændre resetSuccess state i store.js til false
               this.$store.commit('storeResetSuccess', false)
 
+              // Pusher til login view
               this.$router.push({name: 'login'})
             })
-      } else {
+      }
+      // Hvis ikke sandt eksekver else sætningen
+      else {
+        // Ændre succes state i store.js til false
         this.$store.dispatch('successfullyRegistered', this.successfullyRegistered)
+
+        // Sætter badrequest til true
         this.badrequest = true
+
+        // Stopper register spinner
         this.isLoading = false
       }
+      // Hvis navn ikke er indtastet, push fejlmeddelelse til errors kollektionen
       if (!this.name) {
         this.errors.push('Navn påkrævet.')
       }
+      // Hvis email ikke er indtastet, push fejlmeddelelse til errors kollektionen
       if (!this.email) {
         this.errors.push('Email påkrævet.')
-      } else if (!this.validEmail(this.email)) {
+      }
+      // Hvis valideringen af mailen ikke er true, push fejlmeddelelse til errors kollektionen
+      else if (!this.validEmail(this.email)) {
         this.errors.push('Ugyldig email.')
       }
+      // Hvis password ikke er indtastet, push fejlmeddelelse til errors kollektionen
       if (!this.password) {
         this.errors.push('Adgangskode påkrævet.')
       }
+      // Hvis valideringen af adgangskodens længde ikke er true, push fejlmeddelelse til errors kollektionen
       if (!this.validateLength(this.password)) {
         this.errors.push('Adgangskoden skal minimum indeholde 6 tegn.')
-      } else if (!this.validatePassword(this.password, this.repeatPassword)) {
+      }
+      // Hvis de indtastede adgangskoder ikke stemmer overens, push fejlmeddelelse til errors kollektionen
+      else if (!this.validatePassword(this.password, this.repeatPassword)) {
         this.errors.push('Adgangskoderne stemmer ikke overens.')
       }
     },
     validEmail(email) {
+      // Symbolerne der skal tjekkes op på
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+      // Tjekker op på alt efter om mailen indeholder symbolerne og returnerer enten true eller false
       return re.test(email)
     },
     validatePassword(password, repeatPassword) {
+      // Tjekker op på om de indtastede adgangskoder stemmer overens og returnerer true eller false
       if (password === repeatPassword) {
         return true
       } else {
@@ -143,6 +174,7 @@ export default {
       }
     },
     validateLength(password) {
+      // Tjekker op på at længden af adgangskoden er mindre end 6 og returnerer false ellers returners true
       if (password.length < 6) {
         return false
       } else {
@@ -163,10 +195,6 @@ export default {
   box-shadow: 0 0 5px #0FB5C8;
 }
 
-#registerbtn {
-  background-color: #29BB9C;
-  border-color: transparent !important;
-}
 
 .btn:hover {
   color: lightgray;
@@ -180,5 +208,10 @@ export default {
 
 .form-group, p {
   font-family: "Sofia Pro Light";
+}
+
+#registerbtn {
+  background-color: #29BB9C;
+  border-color: transparent !important;
 }
 </style>

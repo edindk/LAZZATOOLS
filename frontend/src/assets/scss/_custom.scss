@@ -1,7 +1,4 @@
-// Here you can add other styles
-.c-main {
-  background-color: #F8F9FC !important;
-}
+ //Here you can add other styles
 
 .c-sidebar .c-sidebar-minimizer:hover::before {
   background-image: url("../public/cropped-lazzaweb-favicon-32x32.png");
@@ -20,26 +17,32 @@
 }
 
 .c-sidebar-nav {
-  background-color: #0B6A90 !important;
+  background-color: #0b6a90!important;
 }
 
 @media (hover: hover), not all {
   .c-sidebar .c-sidebar-nav-link:hover, .c-sidebar .c-sidebar-nav-dropdown-toggle:hover {
-    background: #0E8EAC;
+    background: #3BB5C8 !important;
   }
 }
 
-.vm2__header {
-  font-family: "Sofia Pro Light";
+.nav-dropdown-toggle{
+  background-color: black;
 }
 
-.vm2__green, .vm2__btn, .vm2__green:focus, vm2__btn:focus, .vm2__green:active, vm2__btn:active {
-  outline: none !important;
-  box-shadow: none !important;
-  font-family: "Sofia Pro Regular";
-  color: white;
+.c-header .c-subheader {
+  margin-top: 0px;
 }
 
-.vm2__green:hover, .vm2__btn:hover {
-  color: lightgray;
+.c-footer {
+  margin-bottom: 1px;
+  background-color: white !important;
+}
+
+.c-footer a {
+  color: #394455 !important
+}
+
+.c-body {
+  background-color: white !important;
 }
