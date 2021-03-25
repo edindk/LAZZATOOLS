@@ -73,7 +73,7 @@ DB_PASSWORD=PASSWORD
 ```
 5. Importer SQL Dump ind i databasen.
 ```sh
-Indsæt link her!!
+https://github.com/edindk/LAZZATOOLS/blob/main/lazzatools_backendapp.sql
 ```
 
 ## Deployment
