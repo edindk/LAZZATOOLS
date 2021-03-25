@@ -25,6 +25,16 @@
 LAZZATOOLS er en applikation der er udviklet til LAZZAWEB, som skulle være med til at optimere virksomhedens arbejdsprocesser. Projektet består af en frontend der er udviklet i Vue.js og en backend der er udviklet i Laravel.
 
 
+## Skærmbilleder af LAZZATOOLS
+![alt text](https://raw.githubusercontent.com/edindk/LAZZATOOLS/main/screenshots_LAZZATOOLS/Log%20ind.png?token=AMTBAYOLF7BH3HUAJ3FB3HTALSLVG)
+![alt text](https://raw.githubusercontent.com/edindk/LAZZATOOLS/main/screenshots_LAZZATOOLS/Registrer.png?token=AMTBAYI5BH264PGO4CKY2MDALSLW6)
+![alt text](https://raw.githubusercontent.com/edindk/LAZZATOOLS/main/screenshots_LAZZATOOLS/Gendan%20adgangskode.png?token=AMTBAYN4VKCYVIRSNQC3PWDALSLYA)
+![alt text](https://raw.githubusercontent.com/edindk/LAZZATOOLS/main/screenshots_LAZZATOOLS/Kontrolpanel.png?token=AMTBAYPHIGNIVUNRKYFKMBTALSLZM)
+![alt text](https://raw.githubusercontent.com/edindk/LAZZATOOLS/main/screenshots_LAZZATOOLS/Mixer.png?token=AMTBAYJ3WSCA7DIKYUFH47DALSL2M)
+![alt text](https://raw.githubusercontent.com/edindk/LAZZATOOLS/main/screenshots_LAZZATOOLS/Dom%C3%A6ne%20status.png?token=AMTBAYMEDLXLGMXDDSY53ITALSL34)
+![alt text](https://raw.githubusercontent.com/edindk/LAZZATOOLS/main/screenshots_LAZZATOOLS/Map%20Scraper.png?token=AMTBAYPXYVTYNXAOO3LLFALALSL5W)
+![alt text](https://raw.githubusercontent.com/edindk/LAZZATOOLS/main/screenshots_LAZZATOOLS/S%C3%B8geordsh%C3%B8ster.png?token=AMTBAYK3QYFRBAEIUEAYUHLALSL6W)
+
 ### Bygget med
 
 * [Laravel](https://laravel.com/)
