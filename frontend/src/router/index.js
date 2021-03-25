@@ -27,7 +27,8 @@ Vue.use(Router)
 
 export default new Router({
     // sættes til history mode
-    mode: 'hash',
+    //hash
+    mode: 'history',
     linkActiveClass: 'active',
     scrollBehavior: () => ({y: 0}),
     routes: configRoutes()
@@ -114,4 +115,3 @@ function configRoutes() {
         },
     ]
 }
-
