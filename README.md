@@ -23,7 +23,7 @@
 
 ## Om LAZZATOOLS
 
-LAZZATOOLS er en applikation der er udviklet til LAZZAWEB, som skulle være med til at optimere virksomhedens arbejdsprocesser. Projektet består af en frontend der er udviklet i Vue.js og en backend der er udviklet i Laravel.
+LAZZATOOLS er en applikation der er udviklet til LAZZAWEB, som skulle være med til at optimere virksomhedens arbejdsprocesser. Projektet består af en frontend der er udviklet i Vue.js og en backend der er udviklet i Laravel. Projektet er udviklet under mit praktikforløb på datamatikeruddannelsen.
 
 
 ## Skærmbilleder af LAZZATOOLS
